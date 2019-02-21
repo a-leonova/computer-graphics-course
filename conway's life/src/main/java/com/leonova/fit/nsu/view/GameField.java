@@ -6,15 +6,10 @@ import java.awt.image.BufferedImage;
 
 public class GameField extends JPanel {
 
-    private int width;
-    private int height;
-    private int edge;
+    private GraphiscOptions options;
 
-    public GameField(int width, int height, int edge){
-        super();
-        this.edge = edge;
-        this.height = height;
-        this.width = width;
+    public GameField(GraphiscOptions options) {
+        this.options = options;
     }
 
     private BufferedImage img = new BufferedImage(500,500, BufferedImage.TYPE_INT_BGR);

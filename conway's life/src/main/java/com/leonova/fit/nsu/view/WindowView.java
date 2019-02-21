@@ -1,24 +1,20 @@
 package com.leonova.fit.nsu.view;
 
+import com.leonova.fit.nsu.model.GameOptions;
+
 import javax.swing.*;
 
 public class WindowView {
 
-    private int cellsInRow;
-    private int cellsInColumn;
-    private int edge;
-    private int borderWidth;
+    private GraphiscOptions options;
 
     private JFrame frame = new JFrame("Conway's Life");
     private GameField field;
 
-    public WindowView(int cellsInRow, int cellsInColumn, int edge, int borderWidth){
-        this.edge = edge;
-        this.cellsInColumn = cellsInColumn;
-        this.cellsInRow = cellsInRow;
-        this.borderWidth = borderWidth;
+    public WindowView(GraphiscOptions options){
+        this.options = options;
 
-        field = new GameField(cellsInRow, cellsInColumn, edge);
+        field = new GameField(options);
         JMenuBar menu = createMenu();
         frame.setJMenuBar(menu);
         frame.setSize(800, 500);
