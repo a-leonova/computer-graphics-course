@@ -7,6 +7,7 @@ public class GraphicsOptions {
 
     private int lineWidth = 1;
     private int cellEdge = 10;
+    private boolean showImpact = false;
 
     public GraphicsOptions(){
 
@@ -49,5 +50,13 @@ public class GraphicsOptions {
 
     public void setCellEdge(int cellEdge) {
         this.cellEdge = cellEdge;
+    }
+
+    public boolean isShowImpact() {
+        return showImpact;
+    }
+
+    public void setShowImpact(boolean showImpact) {
+        this.showImpact = showImpact;
     }
 }

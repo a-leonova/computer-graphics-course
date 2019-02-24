@@ -29,4 +29,8 @@ public class Position {
     public void setY(int y) {
         this.y = y;
     }
+
+    public Position plus(Position p1){
+        return new Position(this.getX() + p1.getX(), this.getY() + p1.getY());
+    }
 }

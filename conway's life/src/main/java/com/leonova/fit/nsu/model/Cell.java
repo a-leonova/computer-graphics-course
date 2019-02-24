@@ -4,10 +4,6 @@ public class Cell {
     private boolean alive;
     private double impact = 0.0;
 
-    public Cell(boolean alive) {
-        this.alive = alive;
-    }
-
     public boolean isAlive() {
         return alive;
     }

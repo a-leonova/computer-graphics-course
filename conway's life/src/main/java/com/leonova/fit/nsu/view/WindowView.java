@@ -108,17 +108,22 @@ public class WindowView {
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
 
-        toolBar.add(aboutButton);
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);
         toolBar.add(saveButton);
+        toolBar.addSeparator();
         toolBar.add(displayImpactButton);
+        toolBar.addSeparator();
         toolBar.add(xorButton);
         toolBar.add(replaceButton);
+        toolBar.addSeparator();
         toolBar.add(clearButton);
         toolBar.add(parametersButton);
+        toolBar.addSeparator();
         toolBar.add(stepButton);
         toolBar.add(runButton);
+        toolBar.addSeparator();
+        toolBar.add(aboutButton);
         return toolBar;
 
     }

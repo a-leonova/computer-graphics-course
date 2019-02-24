@@ -9,7 +9,7 @@ public class GameOptions {
     private double birthBegin = 2.3;
     private double birthEnd = 2.9;
 
-    private boolean modeReplace = true;
+    private boolean modeXor = false;
 
     public GameOptions(double firstImpact, double secondImpact, double liveBegin, double liveEnd, double birthBegin, double birthEnd, boolean modeReplace) {
         this.firstImpact = firstImpact;
@@ -18,7 +18,7 @@ public class GameOptions {
         this.liveEnd = liveEnd;
         this.birthBegin = birthBegin;
         this.birthEnd = birthEnd;
-        this.modeReplace = modeReplace;
+        this.modeXor = modeReplace;
     }
 
     public double getFirstImpact() {
@@ -69,11 +69,11 @@ public class GameOptions {
         this.birthEnd = birthEnd;
     }
 
-    public boolean isModeReplace() {
-        return modeReplace;
+    public boolean isModeXor() {
+        return modeXor;
     }
 
-    public void setModeReplace(boolean modeReplace) {
-        this.modeReplace = modeReplace;
+    public void setModeXor(boolean mode) {
+        this.modeXor = mode;
     }
 }
