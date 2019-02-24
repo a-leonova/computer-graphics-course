@@ -4,6 +4,12 @@ public class Cell {
     private boolean alive;
     private double impact = 0.0;
 
+    private Position position;
+
+    public Cell(Position position) {
+        this.position = position;
+    }
+
     public boolean isAlive() {
         return alive;
     }
@@ -18,5 +24,13 @@ public class Cell {
 
     public void setImpact(double impact) {
         this.impact = impact;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

@@ -18,7 +18,8 @@ public class Field implements FieldModel, Observable {
     private Position[] shiftsForSecondLevelImpactCells = {new Position(-2, 0),new Position(-1, -2),
             new Position(-1, 1), new Position(1, 2),new Position(1, 1),new Position(2, 0)};
 
-    public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions, ArrayList<Position> aliveCells) {
+
+    public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions){
         this.cellsInRow = cellsInRow;
         this.cellsInColumn = cellsInColumn;
         this.gameOptions = gameOptions;
@@ -27,9 +28,13 @@ public class Field implements FieldModel, Observable {
         for(int i = 0; i < cellsInRow; ++i){
             field[i] = new Cell[cellsInColumn];
             for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j){
-                field[i][j] = new Cell();
+                field[i][j] = new Cell(new Position(i, j));
             }
         }
+    }
+
+    public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions, ArrayList<Position> aliveCells) {
+        this(cellsInRow, cellsInColumn, gameOptions);
         for(Position aliveCell : aliveCells){
             field[aliveCell.getX()][aliveCell.getY()].setAlive(true);
         }
@@ -65,6 +70,46 @@ public class Field implements FieldModel, Observable {
         HashSet<Cell> impactChangedCells = countImpact();
         impactChangedCells.addAll(lifeChangedCells);
         notifyAboutCellsChange(impactChangedCells);
+    }
+
+    @Override
+    public void clearField() {
+        HashSet<Cell> changedCells = new HashSet<>(cellsInColumn * cellsInRow);
+        for (int i = 0; i < cellsInRow; ++i) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j) {
+                Cell cell = field[i][j];
+                cell.setAlive(false);
+                cell.setImpact(0.0);
+                changedCells.add(cell);
+            }
+        }
+        notifyAboutCellsChange(changedCells);
+    }
+
+    @Override
+    public void displayImpact() {
+        HashSet<Cell> cells = getAllCells();
+        for(Observer observer : observers){
+            observer.displayImpact(cells);
+        }
+    }
+
+    @Override
+    public void stopDisplayImpact() {
+        HashSet<Cell> cells = getAllCells();
+        for(Observer observer : observers){
+            observer.stopDisplayImpact(cells);
+        }
+    }
+
+    private HashSet<Cell> getAllCells(){
+        HashSet<Cell> cells = new HashSet<>();
+        for (int i = 0; i < cellsInRow; ++i) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j) {
+                cells.add(field[i][j]);
+            }
+        }
+        return cells;
     }
 
     private HashSet<Cell> countLife() {

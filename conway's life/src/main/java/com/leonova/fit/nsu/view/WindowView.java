@@ -1,39 +1,38 @@
 package com.leonova.fit.nsu.view;
 
+import com.leonova.fit.nsu.controller.GameController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class WindowView {
+public class WindowView extends JFrame{
 
     private GraphicsOptions options;
-
-    private JFrame frame = new JFrame("Conway's Life");
     private GameField field;
+    private GameController gameController;
 
     public WindowView(GraphicsOptions options){
+        super("Conway's Life");
         this.options = options;
 
         field = new GameField(options);
         JMenuBar menu = createMenu();
         JToolBar toolBar = createToolBar();
-        frame.add(toolBar);
-        frame.setLayout(new BorderLayout());
-        frame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+        add(toolBar);
+        setLayout(new BorderLayout());
+        getContentPane().add(toolBar, BorderLayout.PAGE_START);
         JScrollPane scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(500,500));
         scrollPane.setViewportView(field);
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-        frame.setJMenuBar(menu);
-        frame.setSize(800, 500);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      //  frame.getContentPane().add(field);
-       // frame.add(field);
-
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        setJMenuBar(menu);
+        setSize(800, 500);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    public void setVisible(boolean value){
-        frame.setVisible(value);
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 
     private JMenuBar createMenu(){
@@ -87,26 +86,37 @@ public class WindowView {
 
         JButton newFileButton = new JButton();
         newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
+        newFileButton.setToolTipText("New file");
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
+        openFileButton.setToolTipText("Open file");
         JButton saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
+        saveButton.setToolTipText("Save game");
         JButton displayImpactButton = new JButton();
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
+        displayImpactButton.setToolTipText("Display impact");
         JButton xorButton = new JButton();
         xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
+        xorButton.setToolTipText("XOR");
         JButton replaceButton = new JButton();
         replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
+        replaceButton.setToolTipText("Replace");
         JButton clearButton = new JButton();
         clearButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-trash-can-16.png"))));
+        clearButton.setToolTipText("Clear");
         JButton parametersButton = new JButton();
         parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
+        parametersButton.setToolTipText("Parameters");
         JButton stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
+        stepButton.setToolTipText("Next step");
         JButton runButton = new JButton();
         runButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
+        runButton.setToolTipText("Run");
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
+        aboutButton.setToolTipText("About");
 
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);

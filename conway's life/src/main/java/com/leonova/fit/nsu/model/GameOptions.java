@@ -11,6 +11,9 @@ public class GameOptions {
 
     private boolean modeXor = false;
 
+    public GameOptions() {
+    }
+
     public GameOptions(double firstImpact, double secondImpact, double liveBegin, double liveEnd, double birthBegin, double birthEnd, boolean modeReplace) {
         this.firstImpact = firstImpact;
         this.secondImpact = secondImpact;
