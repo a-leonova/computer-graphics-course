@@ -3,6 +3,9 @@ package com.leonova.fit.nsu.view;
 import com.leonova.fit.nsu.draft.model.Position;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class CellsManager {
 
@@ -10,6 +13,8 @@ public class CellsManager {
     private int edgeWithBorder;
     private int insideRadius;
     private int shiftY;
+    private int widthInPixels;
+    private int heightInPixels;
 
     public CellsManager(GraphicsOptions options) {
         this.options = options;
@@ -25,7 +30,53 @@ public class CellsManager {
         edgeWithBorder = options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5);
         insideRadius = (int) Math.round(edgeWithBorder * Math.cos(Math.PI / 6));
         shiftY = (int) Math.round(edgeWithBorder * Math.sin(Math.PI / 6));
+        widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
+        heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
     }
+
+    public void fillCell(Position startPosition, Color oldColor, Color newColor, BufferedImage image) throws AWTException {
+        Queue<Position> pixelsToDraw = new LinkedList<>();
+        Color pixelColor = new Color(image.getRGB(startPosition.getX(), startPosition.getY()));
+        if(!pixelColor.equals(oldColor)){
+            return;
+        }
+        Graphics2D g = image.createGraphics();
+        g.setPaint(newColor);
+        pixelsToDraw.add(startPosition);
+        while(!pixelsToDraw.isEmpty()){
+            Position position = pixelsToDraw.poll();
+            pixelColor = new Color(image.getRGB(position.getX(), position.getY()));
+            if(pixelColor.equals(oldColor)){
+                Position west = new Position(position);
+                Position east = new Position(position);
+
+                while(isInside(west) && (new Color(image.getRGB(west.getX(), west.getY())).equals(oldColor))){
+                    west.setX(west.getX() + 1);
+                }
+                while(isInside(east) && (new Color(image.getRGB(east.getX(), east.getY())).equals(oldColor))){
+                    east.setX(east.getX() - 1);
+                }
+
+                for(int i = east.getX() + 1; i < west.getX(); ++i){
+
+                    //image.setRGB(i, west.getY(), newColor.getRGB());
+                    g.drawLine(i, west.getY(), i, west.getY());
+
+                    Position northPosition = new Position(i, west.getY() + 1);
+                    Position southPosition = new Position(i, west.getY() - 1);
+
+                    if(isInside(northPosition) && (new Color(image.getRGB(northPosition.getX(), northPosition.getY())).equals(oldColor))){
+                        pixelsToDraw.add(northPosition);
+                    }
+
+                    if(isInside(southPosition) && (new Color(image.getRGB(southPosition.getX(), southPosition.getY())).equals(oldColor))){
+                        pixelsToDraw.add(southPosition);
+                    }
+                }
+            }
+        }
+    }
+
 
     //TODO: check border!!!
     public Position getSelectedCell(Position position){
@@ -150,5 +201,9 @@ public class CellsManager {
                 error += dx;
             }
         }
+    }
+
+    private boolean isInside(Position position){
+        return position.getX() >= 0 && position.getX() < widthInPixels && position.getY() >= 0 && position.getY() < heightInPixels;
     }
 }
