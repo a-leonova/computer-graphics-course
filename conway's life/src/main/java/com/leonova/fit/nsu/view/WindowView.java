@@ -3,6 +3,8 @@ package com.leonova.fit.nsu.view;
 import com.leonova.fit.nsu.model.GameOptions;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.Objects;
 
 public class WindowView {
 
@@ -16,6 +18,10 @@ public class WindowView {
 
         field = new GameField(options);
         JMenuBar menu = createMenu();
+        JToolBar toolBar = createToolBar();
+        frame.add(toolBar);
+        frame.setLayout(new BorderLayout());
+        frame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
         frame.setJMenuBar(menu);
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -73,6 +79,47 @@ public class WindowView {
         menuBar.add(help);
 
         return menuBar;
+    }
+
+    private JToolBar createToolBar(){
+        JToolBar toolBar = new JToolBar();
+
+        JButton newFileButton = new JButton();
+        newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
+        JButton openFileButton = new JButton();
+        openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
+        JButton saveButton = new JButton();
+        saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
+        JButton displayImpactButton = new JButton();
+        displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
+        JButton xorButton = new JButton();
+        xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
+        JButton replaceButton = new JButton();
+        replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
+        JButton clearButton = new JButton();
+        clearButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-trash-can-16.png"))));
+        JButton parametersButton = new JButton();
+        parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
+        JButton stepButton = new JButton();
+        stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
+        JButton runButton = new JButton();
+        runButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
+        JButton aboutButton = new JButton();
+        aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
+
+        toolBar.add(aboutButton);
+        toolBar.add(newFileButton);
+        toolBar.add(openFileButton);
+        toolBar.add(saveButton);
+        toolBar.add(displayImpactButton);
+        toolBar.add(xorButton);
+        toolBar.add(replaceButton);
+        toolBar.add(clearButton);
+        toolBar.add(parametersButton);
+        toolBar.add(stepButton);
+        toolBar.add(runButton);
+        return toolBar;
+
     }
 
 }
