@@ -1,6 +1,6 @@
 package com.leonova.fit.nsu.view;
 
-public class GraphiscOptions {
+public class GraphicsOptions {
 
     private int cellsInRow = 10;
     private int cellsInColumn = 10;
@@ -8,7 +8,11 @@ public class GraphiscOptions {
     private int lineWidth = 1;
     private int cellEdge = 10;
 
-    public GraphiscOptions(int cellsInRow, int cellsInColumn, int lineWidth, int cellEdge) {
+    public GraphicsOptions(){
+
+    }
+
+    public GraphicsOptions(int cellsInRow, int cellsInColumn, int lineWidth, int cellEdge) {
         this.cellsInRow = cellsInRow;
         this.cellsInColumn = cellsInColumn;
         this.lineWidth = lineWidth;

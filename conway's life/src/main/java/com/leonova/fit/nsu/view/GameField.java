@@ -6,13 +6,29 @@ import java.awt.image.BufferedImage;
 
 public class GameField extends JPanel {
 
-    private GraphiscOptions options;
+    private GraphicsOptions options;
+    private CellsManager cellsManager;
+    private BufferedImage img;
 
-    public GameField(GraphiscOptions options) {
+    public GameField(GraphicsOptions options) {
         this.options = options;
+        cellsManager = new CellsManager(options);
+
+        int width = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
+        int height = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
+        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
+        setPreferredSize(new Dimension(width , height));
     }
 
-    private BufferedImage img = new BufferedImage(500,500, BufferedImage.TYPE_INT_BGR);
+    @Override
+    public void setPreferredSize(Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+    }
+
+    public void setOptions(GraphicsOptions options) {
+        this.options = options;
+        cellsManager.setOptions(options);
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -25,19 +41,10 @@ public class GameField extends JPanel {
     private void createImageField() {
         Graphics2D g = img.createGraphics();
         g.setPaint (Color.WHITE);
-        g.fillRect(0,0,500,500);
+        g.fillRect(0,0,img.getWidth(),img.getHeight());
         g.setPaint(Color.BLACK);
 
-
-
-//        HexagonalGridCreator creator = new HexagonalGridCreator();
-//        creator.draw(20,20, g);
-//        CellDrawer drawer = new CellDrawer(Globals.WIDTH, Globals.HEIGHT, Globals.EDGE);
-//        try {
-//            drawer.fillCell(new Position(60, 15), new Color(img.getRGB(30,15)), Color.BLUE, img);
-//        } catch (AWTException e) {
-//            e.printStackTrace();
-//        }
+        cellsManager.drawGrid(g);
     }
 
 

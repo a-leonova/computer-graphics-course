@@ -1,19 +1,17 @@
 package com.leonova.fit.nsu.view;
 
-import com.leonova.fit.nsu.model.GameOptions;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
 public class WindowView {
 
-    private GraphiscOptions options;
+    private GraphicsOptions options;
 
     private JFrame frame = new JFrame("Conway's Life");
     private GameField field;
 
-    public WindowView(GraphiscOptions options){
+    public WindowView(GraphicsOptions options){
         this.options = options;
 
         field = new GameField(options);
@@ -22,13 +20,16 @@ public class WindowView {
         frame.add(toolBar);
         frame.setLayout(new BorderLayout());
         frame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+        JScrollPane scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(500,500));
+        scrollPane.setViewportView(field);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         frame.setJMenuBar(menu);
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().add(field);
-        frame.add(field);
+      //  frame.getContentPane().add(field);
+       // frame.add(field);
 
-        //frame.setVisible(true);
     }
 
     public void setVisible(boolean value){

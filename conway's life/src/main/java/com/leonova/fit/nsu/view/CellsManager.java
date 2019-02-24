@@ -6,17 +6,17 @@ import java.awt.*;
 
 public class CellsManager {
 
-    private GraphiscOptions options;
+    private GraphicsOptions options;
     private int edgeWithBorder;
     private int insideRadius;
     private int shiftY;
 
-    public CellsManager(GraphiscOptions options) {
+    public CellsManager(GraphicsOptions options) {
         this.options = options;
         recountParams();
     }
 
-    public void setOptions(GraphiscOptions options) {
+    public void setOptions(GraphicsOptions options) {
         this.options = options;
         recountParams();
     }
