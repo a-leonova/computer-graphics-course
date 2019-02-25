@@ -1,12 +1,15 @@
 package com.leonova.fit.nsu.view;
 
 import com.leonova.fit.nsu.controller.GameController;
+import com.leonova.fit.nsu.model.Cell;
+import com.leonova.fit.nsu.observer.Observer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Objects;
 
-public class WindowView extends JFrame{
+public class WindowView extends JFrame implements Observer {
 
     private GraphicsOptions options;
     private GameField field;
@@ -33,6 +36,7 @@ public class WindowView extends JFrame{
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
+        field.setGameController(gameController);
     }
 
     private JMenuBar createMenu(){
@@ -52,8 +56,11 @@ public class WindowView extends JFrame{
 
         JMenu edit = new JMenu("Edit");
         JMenuItem xor = new JMenuItem("XOR");
+        xor.addActionListener(e -> gameController.setXor());
         JMenuItem replace = new JMenuItem("Replace");
+        replace.addActionListener(e -> gameController.setReplace());
         JMenuItem clear = new JMenuItem("Clear");
+        clear.addActionListener(e -> gameController.clearField());
         JMenuItem parameters = new JMenuItem("Parameters");
         edit.add(xor);
         edit.add(replace);
@@ -66,7 +73,9 @@ public class WindowView extends JFrame{
 
         JMenu simulation = new JMenu("Simulation");
         JMenuItem step = new JMenuItem("Step");
+        step.addActionListener(e -> gameController.nextStep());
         JMenuItem run = new JMenuItem("Run");
+        //run.addActionListener(e -> gameController);
         simulation.add(step);
         simulation.add(run);
 
@@ -138,4 +147,18 @@ public class WindowView extends JFrame{
 
     }
 
+    @Override
+    public void updateGraphicField(HashSet<Cell> changedCells) {
+        field.updateGraphicField(changedCells);
+    }
+
+    @Override
+    public void stopDisplayImpact(HashSet<Cell> cells) {
+        field.stopDisplayImpact(cells);
+    }
+
+    @Override
+    public void displayImpact(HashSet<Cell> cells) {
+        field.displayImpact(cells);
+    }
 }

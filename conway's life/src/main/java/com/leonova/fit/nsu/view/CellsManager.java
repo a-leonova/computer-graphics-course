@@ -1,6 +1,7 @@
 package com.leonova.fit.nsu.view;
 
-import com.leonova.fit.nsu.draft.model.Position;
+import com.leonova.fit.nsu.model.Cell;
+import com.leonova.fit.nsu.model.Position;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,8 +12,8 @@ public class CellsManager {
 
     private GraphicsOptions options;
     private int edgeWithBorder;
-    private int insideRadius;
-    private int shiftY;
+    private int insideRadiusWithBorder;
+    private int shiftYWithBorder;
     private int widthInPixels;
     private int heightInPixels;
 
@@ -28,13 +29,17 @@ public class CellsManager {
 
     private void recountParams(){
         edgeWithBorder = options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5);
-        insideRadius = (int) Math.round(edgeWithBorder * Math.cos(Math.PI / 6));
-        shiftY = (int) Math.round(edgeWithBorder * Math.sin(Math.PI / 6));
+        insideRadiusWithBorder = (int) Math.round(edgeWithBorder * Math.cos(Math.PI / 6));
+        shiftYWithBorder = (int) Math.round(edgeWithBorder * Math.sin(Math.PI / 6));
         widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
         heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
     }
 
-    public void fillCell(Position startPosition, Color oldColor, Color newColor, BufferedImage image) throws AWTException {
+    public int getInsideRadiusWithBorder() {
+        return insideRadiusWithBorder;
+    }
+
+    public void fillCell(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
         Queue<Position> pixelsToDraw = new LinkedList<>();
         Color pixelColor = new Color(image.getRGB(startPosition.getX(), startPosition.getY()));
         if(!pixelColor.equals(oldColor)){
@@ -76,7 +81,6 @@ public class CellsManager {
             }
         }
     }
-
 
     //TODO: check border!!!
     public Position getSelectedCell(Position position){
@@ -128,33 +132,36 @@ public class CellsManager {
         return new Position(row, column);
     }
 
-    public void drawGrid(Graphics2D graphics){
+    public void drawGrid(int shiftFromBorder, Graphics2D graphics){
 
-        int x0 = 10 + edgeWithBorder;
-        int y0 = 10 + edgeWithBorder;
+        int x0 = shiftFromBorder + edgeWithBorder;
+        int y0 = shiftFromBorder + edgeWithBorder;
 
         int startX;
 
         graphics.setStroke(new BasicStroke(options.getLineWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         for(int h = 0; h < options.getCellsInRow(); ++h){
             if(h % 2 == 1){
-                startX = x0 + insideRadius;
+                startX = x0 + insideRadiusWithBorder;
             }
             else{
                 startX = x0;
             }
             for(int w = 0; w < options.getCellsInColumn() - (h % 2 == 0 ? 0 : 1); ++w){
-                int currentX = startX + 2 * w * insideRadius;
+                int currentX = startX + 2 * w * insideRadiusWithBorder;
                 int currentY = (y0 + h * (int)Math.floor(1.5 * edgeWithBorder));
-
-                drawLine(currentX, (currentY + edgeWithBorder), (currentX + insideRadius), (currentY + shiftY), graphics);
-                drawLine((currentX + insideRadius), (currentY + shiftY), (currentX + insideRadius), (currentY - shiftY), graphics);
-                drawLine((currentX + insideRadius), (currentY - shiftY), currentX, (currentY - edgeWithBorder), graphics);
-                drawLine(currentX, (currentY - edgeWithBorder), (currentX - insideRadius), (currentY - shiftY), graphics);
-                drawLine((currentX - insideRadius), (currentY - shiftY), (currentX - insideRadius), (currentY + shiftY), graphics);
-                drawLine((currentX - insideRadius), (currentY + shiftY), currentX, currentY + edgeWithBorder, graphics);
+                drawCell(new Position(currentX, currentY), graphics);
             }
         }
+    }
+
+    private void drawCell(Position center, Graphics2D graphics){
+        drawLine(center.getX(), (center.getY() + edgeWithBorder), (center.getX() + insideRadiusWithBorder), (center.getY() + shiftYWithBorder), graphics);
+        drawLine((center.getX() + insideRadiusWithBorder), (center.getY() + shiftYWithBorder), (center.getX() + insideRadiusWithBorder), (center.getY() - shiftYWithBorder), graphics);
+        drawLine((center.getX() + insideRadiusWithBorder), (center.getY() - shiftYWithBorder), center.getX(), (center.getY() - edgeWithBorder), graphics);
+        drawLine(center.getX(), (center.getY() - edgeWithBorder), (center.getX() - insideRadiusWithBorder), (center.getY() - shiftYWithBorder), graphics);
+        drawLine((center.getX() - insideRadiusWithBorder), (center.getY() - shiftYWithBorder), (center.getX() - insideRadiusWithBorder), (center.getY() + shiftYWithBorder), graphics);
+        drawLine((center.getX() - insideRadiusWithBorder), (center.getY() + shiftYWithBorder), center.getX(), center.getY() + edgeWithBorder, graphics);
     }
 
     private void drawLine(int x0, int y0, int x1, int y1, Graphics2D g){

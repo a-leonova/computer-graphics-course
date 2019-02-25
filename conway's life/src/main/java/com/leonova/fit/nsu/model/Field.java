@@ -27,7 +27,7 @@ public class Field implements FieldModel, Observable {
         field = new Cell[cellsInRow][cellsInColumn];
         for(int i = 0; i < cellsInRow; ++i){
             field[i] = new Cell[cellsInColumn];
-            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j){
+            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
                 field[i][j] = new Cell(new Position(i, j));
             }
         }
@@ -76,7 +76,7 @@ public class Field implements FieldModel, Observable {
     public void clearField() {
         HashSet<Cell> changedCells = new HashSet<>(cellsInColumn * cellsInRow);
         for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
                 Cell cell = field[i][j];
                 cell.setAlive(false);
                 cell.setImpact(0.0);
@@ -105,7 +105,7 @@ public class Field implements FieldModel, Observable {
     private HashSet<Cell> getAllCells(){
         HashSet<Cell> cells = new HashSet<>();
         for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
                 cells.add(field[i][j]);
             }
         }
@@ -115,7 +115,7 @@ public class Field implements FieldModel, Observable {
     private HashSet<Cell> countLife() {
         HashSet<Cell> changedCells = new HashSet<>();
         for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
                 Cell cell = field[i][j];
                 double impact = cell.getImpact();
                 if(!cell.isAlive() && impact >= gameOptions.getBirthBegin() && impact <= gameOptions.getBirthEnd()){
@@ -140,7 +140,7 @@ public class Field implements FieldModel, Observable {
     private HashSet<Cell> countImpact(){
         HashSet<Cell> changedCells = new HashSet<>();
         for(int i = 0; i < cellsInRow; ++i){
-            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? -1 : 0); ++j){
+            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
                 int firstCount = 0;
                 int secondCount = 0;
                 for(int k = 0; k < shiftsForFirstLevelImpactCells.length; ++k){
