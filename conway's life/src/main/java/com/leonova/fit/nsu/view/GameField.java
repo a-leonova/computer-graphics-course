@@ -37,7 +37,11 @@ public class GameField extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(img.getRGB(e.getX(), e.getY()) != GlobalConsts.borderColor.getRGB()){
-                    Position cellCoordinate = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()));
+                    Position cellCoordinate = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()), shiftFromBorder);
+                    if(cellCoordinate.getY() < 0 || cellCoordinate.getX() < 0){
+                        System.err.println("position out of border ( " + cellCoordinate.getX() + "; " + cellCoordinate.getY() + ")");
+                        return;
+                    }
                     gameController.pressCell(cellCoordinate);
                 }
             }
@@ -94,21 +98,17 @@ public class GameField extends JPanel {
     }
 
     private Position modelPositionToPixelsPosition(Position position){
-        //shift in odd
-
-        int insideRadiusWithBorder = cellsManager.getInsideRadiusWithBorder();
-        int x0 = 2 * insideRadiusWithBorder * (1 + position.getY()) + shiftFromBorder;
+        int insideRadius = (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
+        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
+        int x0 = (shiftFromBorder + options.getLineWidth() + insideRadius) + (insideDiameter + options.getLineWidth()) * position.getY();
+        //int x0 = (shiftFromBorder + options.getLineWidth() + insideRadius) + (int)Math.round((2 * options.getCellEdge() * Math.cos(Math.PI / 6)) + options.getLineWidth()) * position.getY();
+        //int x0 = 2 * insideRadius * (1 + position.getY()) + shiftFromBorder;
         //int y0 = (1 + (int)Math.round(1.5 * position.getX())) * (options.getLineWidth() + options.getCellEdge()) + shiftFromBorder;
-        int y0 = (options.getLineWidth() + options.getCellEdge()) + ((int)Math.round(1.5 * options.getCellEdge()) + options.getLineWidth()) * position.getX() + shiftFromBorder;
-        if(position.getX() % 2 == 0){
-            x0 -= insideRadiusWithBorder;
+        int y0 = (shiftFromBorder + options.getLineWidth() + options.getCellEdge()) + (int)Math.round((1.5 * options.getCellEdge() + options.getLineWidth()) * position.getX());
+        //int y0 = (shiftFromBorder + options.getLineWidth() + options.getCellEdge()) + ()
+        if(position.getX() % 2 == 1){
+            x0 += insideRadius + Math.round(options.getLineWidth()/2.0);
         }
-
-//        int x0 = (options.getCellEdge() + options.getLineWidth()) + (options.getCellEdge() + options.getLineWidth()) * 2 * position.getY() + shiftFromBorder;
-//        int y0 = insideRadiusWithBorder + insideRadiusWithBorder * 2 * position.getX() + shiftFromBorder;
-//        if(position.getX() % 2 == 1){
-//            y0 -= insideRadiusWithBorder;
-//        }
         return new Position(x0, y0);
     }
 

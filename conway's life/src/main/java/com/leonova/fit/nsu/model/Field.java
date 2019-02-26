@@ -13,10 +13,10 @@ public class Field implements FieldModel, Observable {
     private ArrayList<Observer> observers = new ArrayList<>();
     private Cell[][] field;
     private GameOptions gameOptions;
-    private Position[] shiftsForFirstLevelImpactCells = {new Position(-1, -1), new Position(-1, 0),
-            new Position(0, -1), new Position(0, 1), new Position(1, -1),new Position(1, 0)};
-    private Position[] shiftsForSecondLevelImpactCells = {new Position(-2, 0),new Position(-1, -2),
-            new Position(-1, 1), new Position(1, 2),new Position(1, 1),new Position(2, 0)};
+    private Position[] shiftsForFirstLevelImpactCells = {new Position(-1, 0), new Position(-1, 1),
+            new Position(0, -1), new Position(0, 1), new Position(1, 0),new Position(1, 1)};
+    private Position[] shiftsForSecondLevelImpactCells = {new Position(-2, 0),new Position(-1, -1),
+            new Position(-1, 2), new Position(1, -1),new Position(1, 2),new Position(2, 0)};
 
 
     public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions){
@@ -59,7 +59,9 @@ public class Field implements FieldModel, Observable {
         else{
             cell.setAlive(true);
         }
-        HashSet<Cell> changedCells = countImpact();
+        //todo: dont forget to uncomment it
+        //HashSet<Cell> changedCells = countImpact();
+        HashSet<Cell> changedCells = new HashSet<>();
         changedCells.add(cell);
         notifyAboutCellsChange(changedCells);
     }
@@ -151,9 +153,16 @@ public class Field implements FieldModel, Observable {
                 }
                 for(int k = 0; k < shiftsForSecondLevelImpactCells.length; ++k){
                     Position neighbour = new Position(i, j).plus(shiftsForSecondLevelImpactCells[k]);
-                    if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
-                        ++secondCount;
+                    try{
+                        if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
+                            ++secondCount;
+                        }
+                    } catch (NullPointerException e){
+                        System.err.println("(i, j, k) = (" +i + " " + j + " " + k + ")");
+                        System.err.println("neighbour = (" + neighbour.getX() + "; " + neighbour.getY() + ")");
+                        System.err.println("isInside = " + isInside(neighbour));
                     }
+
                 }
                 Cell cell = field[i][j];
                 double oldImpact = cell.getImpact();
@@ -168,12 +177,13 @@ public class Field implements FieldModel, Observable {
     }
 
     private boolean isInside(Position position){
-        if (position.getX() < 0 || position.getY() < 0 || position.getY() >= cellsInColumn){
+        if(position.getX() < 0 || position.getY() < 0 || position.getY() >= cellsInRow || position.getX() >= cellsInColumn){
             return false;
         }
-        if((position.getX() % 2 == 1 && position.getX() >= cellsInRow - 1) || position.getX() >= cellsInRow){
+        else if((position.getX() % 2 == 1 && position.getY() >= cellsInRow - 1)){
             return false;
         }
+
         return true;
     }
 
