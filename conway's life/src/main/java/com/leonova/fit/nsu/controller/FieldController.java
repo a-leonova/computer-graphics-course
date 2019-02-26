@@ -5,9 +5,11 @@ import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.model.Position;
 
 public class FieldController implements GameController {
+    private final static int TIME_TO_SLEEP = 1000;
     private FieldModel field;
     private GameOptions gameOptions;
     private boolean displayImpact = false;
+    private boolean running = false;
 
     public FieldController(GameOptions gameOptions) {
         this.gameOptions = gameOptions;
@@ -26,6 +28,28 @@ public class FieldController implements GameController {
     @Override
     public void nextStep() {
         field.nextStep();
+    }
+
+    @Override
+    public void run() {
+        running = !running;
+        if(running){
+            Thread timer = new Thread(){
+                @Override
+                public void run(){
+                    super.run();
+                    while (running){
+                        try {
+                            field.nextStep();
+                            sleep(TIME_TO_SLEEP);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            timer.start();
+        }
     }
 
     @Override

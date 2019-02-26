@@ -120,9 +120,10 @@ public class WindowView extends JFrame implements Observer {
         JButton stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
         stepButton.setToolTipText("Next step");
-        JButton runButton = new JButton();
+        JToggleButton runButton = new JToggleButton();
         runButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
         runButton.setToolTipText("Run");
+        runButton.addActionListener(e -> gameController.run());
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
         aboutButton.setToolTipText("About");

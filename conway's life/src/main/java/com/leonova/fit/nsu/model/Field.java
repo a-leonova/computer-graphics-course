@@ -168,12 +168,6 @@ public class Field implements FieldModel, Observable {
                     if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
                         ++secondCount;
                     }
-//                    } catch (NullPointerException e){
-//                        System.err.println("(i, j, k) = (" +i + " " + j + " " + k + ")");
-//                        System.err.println("neighbour = (" + neighbour.getX() + "; " + neighbour.getY() + ")");
-//                        System.err.println("isInside = " + isInside(neighbour));
-//                    }
-
                 }
                 Cell cell = field[i][j];
                 double oldImpact = cell.getImpact();

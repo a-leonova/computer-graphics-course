@@ -150,12 +150,6 @@ public class CellsManager {
 
     public void drawGrid(int shiftFromBorder, Graphics2D graphics){
 
-//        int x0 = shiftFromBorder + options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
-//        int y0 = shiftFromBorder + options.getCellEdge() + options.getLineWidth();
-//        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
-//        int insideRadius = (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
-//        int startX;
-
         int x0 = shiftFromBorder + edgeWithHalfBorder;
         int y0 = shiftFromBorder + edgeWithHalfBorder;
 
