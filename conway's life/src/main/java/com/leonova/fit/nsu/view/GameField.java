@@ -68,7 +68,7 @@ public class GameField extends JPanel {
     public void updateGraphicField(HashSet<Cell> changedCells){
         //TODO:implementation
         for(Cell cell : changedCells){
-            Position pixels = modelPositionToPixelsPosition(cell.getPosition());
+            Position pixels = cellsManager.modelPositionToPixelsPosition(cell.getPosition(), shiftFromBorder);
              Color oldColor = new Color(img.getRGB(pixels.getX(), pixels.getY()));
             if(cell.isAlive() && !oldColor.equals(GlobalConsts.aliveCell)){
                 cellsManager.fillCell(pixels, oldColor, GlobalConsts.aliveCell, img);
@@ -96,22 +96,6 @@ public class GameField extends JPanel {
     private void paintImpact(Position position, String impact){
         img.createGraphics().drawString(impact, position.getX(), position.getY());
     }
-
-    private Position modelPositionToPixelsPosition(Position position){
-        int insideRadius = (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
-        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
-        int x0 = (shiftFromBorder + options.getLineWidth() + insideRadius) + (insideDiameter + options.getLineWidth()) * position.getY();
-        //int x0 = (shiftFromBorder + options.getLineWidth() + insideRadius) + (int)Math.round((2 * options.getCellEdge() * Math.cos(Math.PI / 6)) + options.getLineWidth()) * position.getY();
-        //int x0 = 2 * insideRadius * (1 + position.getY()) + shiftFromBorder;
-        //int y0 = (1 + (int)Math.round(1.5 * position.getX())) * (options.getLineWidth() + options.getCellEdge()) + shiftFromBorder;
-        int y0 = (shiftFromBorder + options.getLineWidth() + options.getCellEdge()) + (int)Math.round((1.5 * options.getCellEdge() + options.getLineWidth()) * position.getX());
-        //int y0 = (shiftFromBorder + options.getLineWidth() + options.getCellEdge()) + ()
-        if(position.getX() % 2 == 1){
-            x0 += insideRadius + Math.round(options.getLineWidth()/2.0);
-        }
-        return new Position(x0, y0);
-    }
-
 
     private void createImageField() {
         Graphics2D g = img.createGraphics();

@@ -15,6 +15,8 @@ public class CellsManager {
     private int shiftYWithHalfBorder;
     private int widthInPixels;
     private int heightInPixels;
+    private int a;
+    private int halfBorder;
 
     public CellsManager(GraphicsOptions options) {
         this.options = options;
@@ -27,11 +29,13 @@ public class CellsManager {
     }
 
     private void recountParams(){
-        edgeWithHalfBorder = options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5);
+        halfBorder = (int)Math.round(options.getLineWidth() * 0.5);
+        edgeWithHalfBorder = options.getCellEdge() + halfBorder;
         insideRadiusWithHalfBorder = (int) Math.round((options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
         shiftYWithHalfBorder = (int) Math.round(edgeWithHalfBorder * Math.sin(Math.PI / 6));
         widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
         heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
+        a = (edgeWithHalfBorder + shiftYWithHalfBorder);
     }
 
     public void fillCell(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
@@ -76,17 +80,17 @@ public class CellsManager {
     }
 
     //TODO: check cells border!!!
-    public Position getSelectedCell(Position position, int border){
+    public Position getSelectedCell(Position position, int shiftFromBorder){
 
-        Position relativePosition = new Position(position.getX() - border - Math.round(options.getLineWidth()/2.0f), position.getY() - border);
+        Position relativePosition = new Position(position.getX() - shiftFromBorder - halfBorder, position.getY() - shiftFromBorder - halfBorder);
 
         //double gridWidth = 2 * (options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6)));
-        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
-        double gridWidth = insideDiameter + options.getLineWidth();
+        //int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
+        double gridWidth = 2 * insideRadiusWithHalfBorder;
         double halfWidth = gridWidth / 2;
-        double gridHeight = Math.round(1.5 * options.getCellEdge()) + options.getLineWidth();
+        double gridHeight = a;
 
-        int row = (int)(relativePosition.getY() / gridHeight);
+        int row = (int) (relativePosition.getY() / gridHeight);
         int column;
 
         boolean rowIsOdd = row % 2 == 1;
@@ -111,7 +115,7 @@ public class CellsManager {
             relX = relativePosition.getX() - (column * gridWidth);
         }
 
-        double c = options.getCellEdge() - options.getCellEdge() * Math.sin(Math.PI/6);
+        double c = edgeWithHalfBorder - shiftYWithHalfBorder;
         double m = c / (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
 
         // LEFT edgeWithHalfBorder
@@ -127,29 +131,50 @@ public class CellsManager {
                 column++;
         }
 
+        System.out.println("Pressed position is:("+ row + "; " + column + ")");
         return new Position(row, column);
     }
 
+    public Position modelPositionToPixelsPosition(Position position, int shiftFromBorder){
+
+       int x0 = shiftFromBorder + edgeWithHalfBorder + position.getY() * 2 * insideRadiusWithHalfBorder;
+       if(position.getX() % 2 == 1){
+           x0 += insideRadiusWithHalfBorder;
+       }
+       int y0 = shiftFromBorder + edgeWithHalfBorder + position.getX() * a;
+
+
+        return new Position(x0, y0);
+    }
+
+
     public void drawGrid(int shiftFromBorder, Graphics2D graphics){
 
-        int x0 = shiftFromBorder + options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
-        int y0 = shiftFromBorder + options.getCellEdge() + options.getLineWidth();
-        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
-        int insideRadius = (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
+//        int x0 = shiftFromBorder + options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
+//        int y0 = shiftFromBorder + options.getCellEdge() + options.getLineWidth();
+//        int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
+//        int insideRadius = (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
+//        int startX;
+
+        int x0 = shiftFromBorder + edgeWithHalfBorder;
+        int y0 = shiftFromBorder + edgeWithHalfBorder;
+
         int startX;
 
         graphics.setStroke(new BasicStroke(options.getLineWidth() - 1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         for(int h = 0; h < options.getCellsInRow(); ++h){
             if(h % 2 == 1){
-                startX = (int) (x0 + insideRadius + Math.round(options.getLineWidth()/2.0));
+                //startX = (int) (x0 + insideRadius + Math.round(options.getLineWidth()/2.0));
+                startX = x0 + insideRadiusWithHalfBorder;
             }
             else{
                 startX = x0;
             }
             for(int w = 0; w < options.getCellsInColumn() - (h % 2 == 0 ? 0 : 1); ++w){
-                int currentX = startX + (insideDiameter + options.getLineWidth()) * w;
-                // int currentX = startX + 2 * w * insideRadiusWithHalfBorder;
-                int currentY = (y0 + (int)Math.ceil((1.5 * options.getCellEdge() + options.getLineWidth())) * h);
+                //int currentX = startX + (insideDiameter + options.getLineWidth()) * w;
+                int currentX = startX + 2 * w * insideRadiusWithHalfBorder;
+                //int currentY = (y0 + (int)Math.ceil((1.5 * options.getCellEdge() + options.getLineWidth())) * h);
+                int currentY = (y0 + a * h);
                 drawCell(new Position(currentX, currentY), graphics);
             }
         }
