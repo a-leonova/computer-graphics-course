@@ -15,6 +15,9 @@ public class WindowView extends JFrame implements Observer {
     private GameField field;
     private GameController gameController;
 
+    private JCheckBoxMenuItem run;
+    private JToggleButton runButton;
+
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
         this.options = options;
@@ -74,7 +77,14 @@ public class WindowView extends JFrame implements Observer {
         JMenu simulation = new JMenu("Simulation");
         JMenuItem step = new JMenuItem("Step");
         step.addActionListener(e -> gameController.nextStep());
-        JMenuItem run = new JMenuItem("Run");
+        //JMenuItem run = new JMenuItem("Run");
+        run = new JCheckBoxMenuItem("Run");
+        run.setSelected(false);
+        run.addActionListener(e -> {
+           // run.setSelected(!run.isSelected());
+            runButton.setSelected(!runButton.isSelected());
+            gameController.run();
+        });
         //run.addActionListener(e -> gameController);
         simulation.add(step);
         simulation.add(run);
@@ -120,10 +130,14 @@ public class WindowView extends JFrame implements Observer {
         JButton stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
         stepButton.setToolTipText("Next step");
-        JToggleButton runButton = new JToggleButton();
+        stepButton.addActionListener(e -> gameController.nextStep());
+        runButton = new JToggleButton();
         runButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
         runButton.setToolTipText("Run");
-        runButton.addActionListener(e -> gameController.run());
+        runButton.addActionListener(e ->{
+            run.setSelected(!run.isSelected());
+            gameController.run();
+        });
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
         aboutButton.setToolTipText("About");
