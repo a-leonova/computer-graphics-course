@@ -116,9 +116,11 @@ public class WindowView extends JFrame implements Observer {
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
         displayImpactButton.setToolTipText("Display impact");
         JButton xorButton = new JButton();
+        xorButton.addActionListener(e->gameController.setXor());
         xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
         xorButton.setToolTipText("XOR");
         JButton replaceButton = new JButton();
+        replaceButton.addActionListener(e->gameController.setReplace());
         replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
         replaceButton.setToolTipText("Replace");
         JButton clearButton = new JButton();
