@@ -89,18 +89,10 @@ public class Field implements FieldModel, Observable {
     }
 
     @Override
-    public void displayImpact() {
+    public void impactPressed() {
         HashSet<Cell> cells = getAllCells();
         for(Observer observer : observers){
             observer.displayImpact(cells);
-        }
-    }
-
-    @Override
-    public void stopDisplayImpact() {
-        HashSet<Cell> cells = getAllCells();
-        for(Observer observer : observers){
-            observer.stopDisplayImpact(cells);
         }
     }
 

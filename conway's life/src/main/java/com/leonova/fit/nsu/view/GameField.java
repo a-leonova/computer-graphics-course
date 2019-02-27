@@ -19,6 +19,7 @@ public class GameField extends JPanel {
     private GameController gameController;
     private BufferedImage img;
     private int shiftFromBorder = 10;
+    private JLayeredPane pane;
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
@@ -30,7 +31,11 @@ public class GameField extends JPanel {
 
         int width = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
         int height = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
+        pane = new JLayeredPane();
+        pane.setPreferredSize(new Dimension(width, height));
+        add(pane);
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
+       // pane.add(img, 0);
 
         setPreferredSize(new Dimension(width , height));
         this.addMouseListener(new MouseAdapter() {
@@ -66,36 +71,41 @@ public class GameField extends JPanel {
     }
 
     public void updateGraphicField(HashSet<Cell> changedCells){
-        //TODO:implementation
         for(Cell cell : changedCells){
             Position pixels = cellsManager.modelPositionToPixelsPosition(cell.getPosition(), shiftFromBorder);
-             Color oldColor = new Color(img.getRGB(pixels.getX(), pixels.getY()));
-            if(cell.isAlive() && !oldColor.equals(GlobalConsts.aliveCell)){
-                cellsManager.fillCell(pixels, oldColor, GlobalConsts.aliveCell, img);
+            //Color oldColor = new Color(img.getRGB(pixels.getX(), pixels.getY()));
+            if(cell.isAlive()){
+                cellsManager.repaintCell(pixels, GlobalConsts.borderColor, GlobalConsts.aliveCell, img);
             }
-            else if (!cell.isAlive() && !oldColor.equals(GlobalConsts.deadCell)){
-                cellsManager.fillCell(pixels, oldColor, GlobalConsts.deadCell, img);
+            else{
+                cellsManager.repaintCell(pixels, GlobalConsts.borderColor, GlobalConsts.deadCell, img);
             }
             if(options.isShowImpact()){
-                paintImpact(pixels, String.valueOf(cell.getImpact()));
+                paintImpact(pixels, String.format("%.1f", cell.getImpact()));
             }
         }
         repaint();
     }
 
-    public void stopDisplayImpact(HashSet<Cell> cells) {
-        options.setShowImpact(false);
-        updateGraphicField(cells);
-    }
-
-    public void displayImpact(HashSet<Cell> cells) {
-        options.setShowImpact(false);
-        updateGraphicField(cells);
-    }
 
     private void paintImpact(Position position, String impact){
-        img.createGraphics().drawString(impact, position.getX(), position.getY());
+        Graphics2D g = img.createGraphics();
+
+        if(options.getCellEdge() >= GlobalConsts.minEdgeForCellToShowImpact){
+
+            Font myFont = new Font("Serif",Font.PLAIN, GlobalConsts.impactSize);
+            g.setFont(myFont);
+
+            g.setPaint(GlobalConsts.impactColor);
+//            Rectangle2D rectangle2d = g.getFontMetrics().getStringBounds(impact, g);
+//            System.out.println(rectangle2d.getX() + " " + rectangle2d.getCenterY() + " " + rectangle2d.getWidth() + " "+ rectangle2d.getHeight());
+
+            //System.out.println("Impact: " + g.getFontMetrics().str(impact));
+            g.drawString(impact, position.getX() - GlobalConsts.impactSize/2, position.getY() + GlobalConsts.impactSize/2);
+
+        }
     }
+
 
     private void createImageField() {
         Graphics2D g = img.createGraphics();

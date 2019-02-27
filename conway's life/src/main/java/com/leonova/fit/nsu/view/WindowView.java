@@ -112,9 +112,11 @@ public class WindowView extends JFrame implements Observer {
         JButton saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
         saveButton.setToolTipText("Save game");
+
         JButton displayImpactButton = new JButton();
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
         displayImpactButton.setToolTipText("Display impact");
+        displayImpactButton.addActionListener(e -> gameController.displayImpact());
         JButton xorButton = new JButton();
         xorButton.addActionListener(e->gameController.setXor());
         xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
@@ -170,12 +172,11 @@ public class WindowView extends JFrame implements Observer {
     }
 
     @Override
-    public void stopDisplayImpact(HashSet<Cell> cells) {
-        field.stopDisplayImpact(cells);
-    }
-
-    @Override
     public void displayImpact(HashSet<Cell> cells) {
-        field.displayImpact(cells);
+
+        options.setShowImpact(!options.isShowImpact());
+
+        field.updateGraphicField(cells);
+
     }
 }

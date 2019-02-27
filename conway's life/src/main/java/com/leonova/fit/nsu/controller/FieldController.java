@@ -64,13 +64,7 @@ public class FieldController implements GameController {
 
     @Override
     public void displayImpact() {
-        displayImpact = !displayImpact;
-        if(displayImpact){
-            field.displayImpact();
-        }
-        else {
-            field.stopDisplayImpact();
-        }
+        field.impactPressed();
     }
 
     @Override

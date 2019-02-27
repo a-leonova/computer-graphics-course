@@ -4,6 +4,6 @@ public interface FieldModel {
     void pressedCell(Position position);
     void nextStep();
     void clearField();
-    void displayImpact();
-    void stopDisplayImpact();
+    void impactPressed();
+    //void clear();
 }

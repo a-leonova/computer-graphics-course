@@ -5,6 +5,5 @@ import java.util.HashSet;
 
 public interface Observer {
     void updateGraphicField(HashSet<Cell> changedCells);
-    void stopDisplayImpact(HashSet<Cell> cells);
     void displayImpact(HashSet<Cell> cells);
 }
