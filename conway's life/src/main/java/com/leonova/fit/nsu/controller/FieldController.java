@@ -126,17 +126,20 @@ public class FieldController implements GameController, FileManager {
     @Override
     public void open(File file) {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))){
-            String firstLine = reader.readLine();
-            String[] widthHeight = firstLine.split(" ");
+            String line = reader.readLine();
+            line = getLineWithoutComments(line);
+            String[] widthHeight = line.split(" ");
             int width = Integer.parseInt(widthHeight[0]);
             int height = Integer.parseInt(widthHeight[1]);
 
-            int weight = Integer.parseInt(reader.readLine());
-            int edge = Integer.parseInt(reader.readLine());
-            int k = Integer.parseInt(reader.readLine());
+            line = getLineWithoutComments(reader.readLine());
+            int weight = Integer.parseInt(line);
+            int edge = Integer.parseInt(getLineWithoutComments(reader.readLine()));
+            int k = Integer.parseInt(getLineWithoutComments(reader.readLine()));
             ArrayList<Position> aliveCells = new ArrayList<>();
             while (k--> 0){
                 String positionsLine = reader.readLine();
+                positionsLine = getLineWithoutComments(positionsLine);
                 String[] positions = positionsLine.split(" ");
                 int x = Integer.parseInt(positions[0]);
                 int y = Integer.parseInt(positions[1]);
@@ -151,5 +154,14 @@ public class FieldController implements GameController, FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getLineWithoutComments(String string){
+        if(string.contains("//")){
+           int i = string.indexOf("//");
+           String subStr = string.substring(0,i);
+           return subStr;
+        }
+        return string;
     }
 }
