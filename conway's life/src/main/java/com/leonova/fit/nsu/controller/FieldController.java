@@ -3,6 +3,7 @@ package com.leonova.fit.nsu.controller;
 import com.leonova.fit.nsu.model.FieldModel;
 import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.model.Position;
+import com.leonova.fit.nsu.view.GraphicsOptions;
 
 public class FieldController implements GameController {
     private final static int TIME_TO_SLEEP = 1000;
@@ -70,5 +71,11 @@ public class FieldController implements GameController {
     @Override
     public void pressCell(Position position) {
         field.pressedCell(position);
+    }
+
+    @Override
+    public void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
+        gameOptions = gameOptions;
+        field.newOptions(gameOptions, graphicsOptions);
     }
 }

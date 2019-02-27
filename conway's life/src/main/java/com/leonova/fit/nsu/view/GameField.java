@@ -29,8 +29,13 @@ public class GameField extends JPanel {
         this.options = options;
         cellsManager = new CellsManager(options);
 
-        int width = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
-        int height = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
+        int insideRadiusWithHalfBorder = (int) Math.round((options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
+        int width = 2 * insideRadiusWithHalfBorder * options.getCellsInRow() + shiftFromBorder * 2;
+        int halfBorder = (int)Math.round(options.getLineWidth() * 0.5);
+        int edgeWithHalfBorder = options.getCellEdge() + halfBorder;
+        int shiftYWithHalfBorder = (int) Math.round(edgeWithHalfBorder * Math.sin(Math.PI / 6));
+        int a = (edgeWithHalfBorder + shiftYWithHalfBorder);
+        int height = a * options.getCellsInColumn() + shiftFromBorder * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
         pane = new JLayeredPane();
         pane.setPreferredSize(new Dimension(width, height));
         add(pane);
@@ -68,6 +73,10 @@ public class GameField extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(img, 0,0,this);
+    }
+
+    public void repaint(HashSet<Cell> cells, GraphicsOptions graphicsOptions){
+        img.createGraphics().clearRect(0,0, img.getWidth(), img.getHeight());
     }
 
     public void updateGraphicField(HashSet<Cell> changedCells){

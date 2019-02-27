@@ -42,7 +42,6 @@ public class AboutWindow {
         window.add(cr, BorderLayout.SOUTH);
 
         window.pack();
-
     }
 
     public void show(){

@@ -2,6 +2,7 @@ package com.leonova.fit.nsu.model;
 
 import com.leonova.fit.nsu.observer.Observable;
 import com.leonova.fit.nsu.observer.Observer;
+import com.leonova.fit.nsu.view.GraphicsOptions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ public class Field implements FieldModel, Observable {
 
     private int cellsInRow;
     private int cellsInColumn;
+
     private ArrayList<Observer> observers = new ArrayList<>();
     private Cell[][] field;
     private GameOptions gameOptions;
@@ -96,6 +98,35 @@ public class Field implements FieldModel, Observable {
         }
     }
 
+    @Override
+    public void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
+        this.gameOptions = gameOptions;
+
+        Cell[][] newField = new Cell[graphicsOptions.getCellsInRow()][graphicsOptions.getCellsInColumn()];
+        for(int i = 0; i < graphicsOptions.getCellsInRow(); ++i){
+            newField[i] = new Cell[graphicsOptions.getCellsInColumn()];
+            for(int j = 0; j < graphicsOptions.getCellsInColumn() - (i % 2 == 1 ? 1 : 0); ++j){
+                newField[i][j] = new Cell(new Position(i, j));
+                if(i < cellsInRow && j < cellsInColumn - (i % 2 == 1 ? 1 : 0)){
+                    try{
+                        newField[i][j].setAlive(field[i][j].isAlive());
+                    } catch (NullPointerException e){
+                        System.out.println();
+                    }
+                }
+            }
+        }
+        cellsInColumn = graphicsOptions.getCellsInColumn();
+        cellsInRow = graphicsOptions.getCellsInRow();
+
+        field = newField;
+        countImpact();
+        HashSet<Cell> cells = getAllCells();
+        for(Observer observer : observers){
+           observer.repaintAll(cells, graphicsOptions);
+        }
+    }
+
     private HashSet<Cell> getAllCells(){
         HashSet<Cell> cells = new HashSet<>();
         for (int i = 0; i < cellsInRow; ++i) {
@@ -133,46 +164,52 @@ public class Field implements FieldModel, Observable {
     }
 
     private HashSet<Cell> countImpact(){
-        HashSet<Cell> changedCells = new HashSet<>();
-        for(int i = 0; i < cellsInRow; ++i){
-            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
-                int firstCount = 0;
-                int secondCount = 0;
-                for(int k = 0; k < shiftsForFirstLevelImpactCellsOdd.length; ++k){
+        try{
+            HashSet<Cell> changedCells = new HashSet<>();
+            for(int i = 0; i < cellsInRow; ++i){
+                for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
+                    int firstCount = 0;
+                    int secondCount = 0;
+                    for(int k = 0; k < shiftsForFirstLevelImpactCellsOdd.length; ++k){
 
-                    int x0 = i + shiftsForFirstLevelImpactCellsOdd[k].getX();
-                    int y0 = j + shiftsForFirstLevelImpactCellsOdd[k].getY();
-                    if(i % 2 == 0 && shiftsForFirstLevelImpactCellsOdd[k].getX() != 0){
-                        y0 -= 1;
+                        int x0 = i + shiftsForFirstLevelImpactCellsOdd[k].getX();
+                        int y0 = j + shiftsForFirstLevelImpactCellsOdd[k].getY();
+                        if(i % 2 == 0 && shiftsForFirstLevelImpactCellsOdd[k].getX() != 0){
+                            y0 -= 1;
+                        }
+                        Position neighbour = new Position(x0, y0);
+                        if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
+                            ++firstCount;
+                        }
                     }
-                    Position neighbour = new Position(x0, y0);
-                    if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
-                        ++firstCount;
+                    for(int k = 0; k < shiftsForSecondLevelImpactCellsOdd.length; ++k){
+                        int x0 = i + shiftsForSecondLevelImpactCellsOdd[k].getX();
+                        int y0 = j + shiftsForSecondLevelImpactCellsOdd[k].getY();
+                        if(i % 2 == 0 && shiftsForSecondLevelImpactCellsOdd[k].getY() != 0){
+                            y0 -= 1;
+                        }
+                        Position neighbour = new Position(x0, y0);
+                        if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
+                            ++secondCount;
+                        }
+
                     }
+                    Cell cell = field[i][j];
+                    double oldImpact = cell.getImpact();
+                    double newImpact = gameOptions.getFirstImpact() * firstCount + gameOptions.getSecondImpact() * secondCount;
+                    if(oldImpact != newImpact){
+                        changedCells.add(cell);
+                        cell.setImpact(newImpact);
+                    }
+                    System.out.print("(" + cell.getImpact() + ")");
                 }
-                for(int k = 0; k < shiftsForSecondLevelImpactCellsOdd.length; ++k){
-                    int x0 = i + shiftsForSecondLevelImpactCellsOdd[k].getX();
-                    int y0 = j + shiftsForSecondLevelImpactCellsOdd[k].getY();
-                    if(i % 2 == 0 && shiftsForSecondLevelImpactCellsOdd[k].getY() != 0){
-                        y0 -= 1;
-                    }
-                    Position neighbour = new Position(x0, y0);
-                    if(isInside(neighbour) && field[neighbour.getX()][neighbour.getY()].isAlive()){
-                        ++secondCount;
-                    }
-                }
-                Cell cell = field[i][j];
-                double oldImpact = cell.getImpact();
-                double newImpact = gameOptions.getFirstImpact() * firstCount + gameOptions.getSecondImpact() * secondCount;
-                if(oldImpact != newImpact){
-                    changedCells.add(cell);
-                    cell.setImpact(newImpact);
-                }
-                System.out.print("(" + cell.getImpact() + ")");
+                System.out.println();
             }
+            return changedCells;
+        } catch (Exception e){
             System.out.println();
+            throw e;
         }
-        return changedCells;
     }
 
     private boolean isInside(Position position){

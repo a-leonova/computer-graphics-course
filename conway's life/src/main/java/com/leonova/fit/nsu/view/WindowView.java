@@ -4,6 +4,7 @@ import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.Cell;
 import com.leonova.fit.nsu.observer.Observer;
 import com.leonova.fit.nsu.view.windows.AboutWindow;
+import com.leonova.fit.nsu.view.windows.ParametersWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +19,15 @@ public class WindowView extends JFrame implements Observer {
 
     private JCheckBoxMenuItem run;
     private JToggleButton runButton;
+    private JScrollPane scrollPane;
 
     private AboutWindow aboutWindow = new AboutWindow();
+    private ParametersWindow parametersWindow;
 
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
         this.options = options;
+        parametersWindow = new ParametersWindow(options);
 
         field = new GameField(options);
         JMenuBar menu = createMenu();
@@ -31,7 +35,7 @@ public class WindowView extends JFrame implements Observer {
         add(toolBar);
         setLayout(new BorderLayout());
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
-        JScrollPane scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(500,500));
         scrollPane.setViewportView(field);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -43,6 +47,7 @@ public class WindowView extends JFrame implements Observer {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
         field.setGameController(gameController);
+        parametersWindow.setController(gameController);
     }
 
     private JMenuBar createMenu(){
@@ -140,6 +145,7 @@ public class WindowView extends JFrame implements Observer {
         JButton parametersButton = new JButton();
         parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
         parametersButton.setToolTipText("Parameters");
+        parametersButton.addActionListener(e->parametersWindow.show());
         JButton stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
         stepButton.setToolTipText("Next step");
@@ -191,4 +197,21 @@ public class WindowView extends JFrame implements Observer {
         field.updateGraphicField(cells);
 
     }
+
+    @Override
+    public void repaintAll(HashSet<Cell> cells, GraphicsOptions graphicsOptions) {
+        options = graphicsOptions;
+        getContentPane().remove(scrollPane);
+
+        field = new GameField(options);
+        field.setGameController(gameController);
+        field.updateGraphicField(cells);
+        scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(500,500));
+        scrollPane.setViewportView(field);
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        getContentPane().validate();
+    }
+
 }
