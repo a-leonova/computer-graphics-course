@@ -9,10 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
 
-public class GameField extends JPanel {
+public class GameField extends JPanel implements MouseMotionListener {
 
     private GraphicsOptions options;
     private CellsManager cellsManager;
@@ -21,11 +22,13 @@ public class GameField extends JPanel {
     private int shiftFromBorder = 10;
     private JLayeredPane pane;
 
+    private Position lastCell = null;
+
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 
-    public GameField(GraphicsOptions options) {
+    public GameField(GraphicsOptions options)  {
         this.options = options;
         cellsManager = new CellsManager(options);
 
@@ -42,17 +45,21 @@ public class GameField extends JPanel {
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
        // pane.add(img, 0);
 
+        addMouseMotionListener(this);
         setPreferredSize(new Dimension(width , height));
         this.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//
+//            }
+
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
                 if(img.getRGB(e.getX(), e.getY()) != GlobalConsts.borderColor.getRGB()){
-                    Position cellCoordinate = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()), shiftFromBorder);
-                    if(cellCoordinate.getY() < 0 || cellCoordinate.getX() < 0){
-                        System.err.println("position out of border ( " + cellCoordinate.getX() + "; " + cellCoordinate.getY() + ")");
-                        return;
-                    }
-                    gameController.pressCell(cellCoordinate);
+                    lastCell = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()), shiftFromBorder);
+                    //TODO: index out of border in controller
+                    gameController.pressCell(lastCell);
                 }
             }
         });
@@ -126,4 +133,17 @@ public class GameField extends JPanel {
     }
 
 
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Position newCell = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()), shiftFromBorder);
+        if(!newCell.equals(lastCell)){
+            gameController.pressCell(newCell);
+            lastCell = newCell;
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        //System.out.println("moved");
+    }
 }
