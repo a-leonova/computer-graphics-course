@@ -11,7 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        GraphicsOptions graphicsOptions = new GraphicsOptions(5, 5, 10, 15);
+        GraphicsOptions graphicsOptions = new GraphicsOptions(5, 5, 5, 10);
         GameOptions gameOptions = new GameOptions();
 
         FieldController controller = new FieldController(gameOptions, graphicsOptions.getCellsInRow(), graphicsOptions.getCellsInColumn());

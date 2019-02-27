@@ -41,6 +41,8 @@ public class CellsManager {
         heightInPixels = a * options.getCellsInColumn() + 10 * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
     }
 
+    //TODO: check cells border!!!
+
     private void spanPaint(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
         Queue<Position> pixelsToDraw = new LinkedList<>();
         Color pixelColor = new Color(image.getRGB(startPosition.getX(), startPosition.getY()));
@@ -130,10 +132,9 @@ public class CellsManager {
         spanPaint(centerCell, GlobalConsts.someColor, newColor, image);
     }
 
-    //TODO: check cells border!!!
     public Position getSelectedCell(Position position, int shiftFromBorder){
 
-        Position relativePosition = new Position(position.getX() - shiftFromBorder - halfBorder * 0, position.getY() - shiftFromBorder - halfBorder*0);
+        Position relativePosition = new Position(position.getX() - shiftFromBorder - halfBorder, position.getY() - shiftFromBorder - halfBorder);
 
         //double gridWidth = 2 * (options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6)));
         //int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
@@ -141,7 +142,7 @@ public class CellsManager {
         double halfWidth = gridWidth / 2;
         double gridHeight = a;
 
-        int row = (int) (relativePosition.getY() / gridHeight);
+        int row = (int) ((relativePosition.getY()+10*gridHeight) / gridHeight)-10;
         int column;
 
         boolean rowIsOdd = row % 2 == 1;
@@ -149,12 +150,13 @@ public class CellsManager {
 
         // Yes: Offset x to match the indent of the row
         if (rowIsOdd){
-            column = (int) ((relativePosition.getX() - halfWidth) / gridWidth);
+            column = (int) ((relativePosition.getX() - halfWidth + 10 * gridWidth) / gridWidth) - 10;
         }
         // No: Calculate normally
         else{
-            column = (int) (relativePosition.getX() / gridWidth);
+            column = (int) ((relativePosition.getX() +10*gridWidth)/ gridWidth)-10;
         }
+
 
         double relY = relativePosition.getY() - (row * gridHeight);
         double relX;
@@ -165,6 +167,10 @@ public class CellsManager {
         else {
             relX = relativePosition.getX() - (column * gridWidth);
         }
+
+        System.out.println("y: " + relY  + " x: " + relX);
+        //System.out.println("Col: " + column + " Row: " + row);
+
 
         double c = edgeWithHalfBorder - shiftYWithHalfBorder + halfBorder;
         double m = c / insideRadiusWithHalfBorder;
@@ -182,17 +188,17 @@ public class CellsManager {
                 column++;
         }
 
-        System.out.println("Pressed position is:("+ row + "; " + column + ")");
+    //    System.out.println("Pressed position is:("+ row + "; " + column + ")");
         return new Position(row, column);
     }
 
     public Position modelPositionToPixelsPosition(Position position, int shiftFromBorder){
 
-       int x0 = shiftFromBorder + edgeWithHalfBorder + position.getY() * 2 * insideRadiusWithHalfBorder;
+       int x0 = shiftFromBorder + insideRadiusWithHalfBorder + halfBorder + position.getY() * 2 * insideRadiusWithHalfBorder;
        if(position.getX() % 2 == 1){
            x0 += insideRadiusWithHalfBorder;
        }
-       int y0 = shiftFromBorder + edgeWithHalfBorder + position.getX() * a;
+       int y0 = shiftFromBorder + options.getCellEdge() + options.getLineWidth() + position.getX() * a;
 
 
         return new Position(x0, y0);
@@ -201,8 +207,8 @@ public class CellsManager {
 
     public void drawGrid(int shiftFromBorder, Graphics2D graphics){
 
-        int x0 = shiftFromBorder + edgeWithHalfBorder;
-        int y0 = shiftFromBorder + edgeWithHalfBorder;
+        int x0 = shiftFromBorder + insideRadiusWithHalfBorder + halfBorder;
+        int y0 = shiftFromBorder + options.getCellEdge() + options.getLineWidth();
 
         int startX;
 

@@ -236,9 +236,7 @@ public class Field implements FieldModel, Observable {
                         changedCells.add(cell);
                         cell.setImpact(newImpact);
                     }
-                    System.out.print("(" + cell.getImpact() + ")");
                 }
-                System.out.println();
             }
             return changedCells;
         } catch (Exception e){
