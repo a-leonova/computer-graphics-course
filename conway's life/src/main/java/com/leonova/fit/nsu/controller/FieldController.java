@@ -79,7 +79,11 @@ public class FieldController implements GameController, FileManager {
 
     @Override
     public void pressCell(Position position) {
-        field.pressedCell(position);
+
+        if(position.getX() >= 0 && position.getX() < cellsInColumn &&
+         position.getY() >= 0 && position.getY() < cellsInRow - (position.getX() % 2 == 1 ? 1 : 0)) {
+            field.pressedCell(position);
+        }
     }
 
     @Override

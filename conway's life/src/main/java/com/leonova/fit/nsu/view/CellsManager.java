@@ -34,9 +34,11 @@ public class CellsManager {
         edgeWithHalfBorder = options.getCellEdge() + halfBorder;
         insideRadiusWithHalfBorder = (int) Math.round((options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
         shiftYWithHalfBorder = (int) Math.round(edgeWithHalfBorder * Math.sin(Math.PI / 6));
-        widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
-        heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
         a = (edgeWithHalfBorder + shiftYWithHalfBorder);
+        // widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
+        widthInPixels = 2 * insideRadiusWithHalfBorder * options.getCellsInRow() + 10 * 2;
+        //heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
+        heightInPixels = a * options.getCellsInColumn() + 10 * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
     }
 
     private void spanPaint(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
