@@ -3,6 +3,7 @@ package com.leonova.fit.nsu.view;
 import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.Cell;
 import com.leonova.fit.nsu.observer.Observer;
+import com.leonova.fit.nsu.view.windows.AboutWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,8 @@ public class WindowView extends JFrame implements Observer {
 
     private JCheckBoxMenuItem run;
     private JToggleButton runButton;
+
+    private AboutWindow aboutWindow = new AboutWindow();
 
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
@@ -89,7 +92,12 @@ public class WindowView extends JFrame implements Observer {
         simulation.add(step);
         simulation.add(run);
 
-        JMenu help = new JMenu("Help");
+        JMenu help = new JMenu("About");
+        JMenuItem  about = new JMenuItem("About");
+        about.addActionListener(e -> aboutWindow.show());
+        JMenuItem  helpIt = new JMenuItem("Help");
+        help.add(about);
+        help.add(helpIt);
 
         menuBar.add(file);
         menuBar.add(edit);
@@ -146,6 +154,9 @@ public class WindowView extends JFrame implements Observer {
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
         aboutButton.setToolTipText("About");
+        aboutButton.addActionListener(e->{
+            aboutWindow.show();
+        });
 
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);
