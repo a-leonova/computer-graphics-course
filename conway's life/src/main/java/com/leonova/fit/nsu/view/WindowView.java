@@ -3,8 +3,10 @@ package com.leonova.fit.nsu.view;
 import com.leonova.fit.nsu.controller.FileManager;
 import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.Cell;
+import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.observer.Observer;
 import com.leonova.fit.nsu.view.windows.AboutWindow;
+import com.leonova.fit.nsu.view.windows.AskSaveWindow;
 import com.leonova.fit.nsu.view.windows.ParametersWindow;
 
 import javax.swing.*;
@@ -13,7 +15,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Objects;
 
-public class WindowView extends JFrame implements Observer {
+public class WindowView extends JFrame implements Observer, ParametersWindowHandler {
 
     private GraphicsOptions options;
     private GameField field;
@@ -26,11 +28,12 @@ public class WindowView extends JFrame implements Observer {
 
     private AboutWindow aboutWindow = new AboutWindow();
     private ParametersWindow parametersWindow;
+    private AskSaveWindow askSaveWindow = new AskSaveWindow(this);
 
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
         this.options = options;
-        parametersWindow = new ParametersWindow(options);
+        parametersWindow = new ParametersWindow(options, this);
 
         field = new GameField(options);
         JMenuBar menu = createMenu();
@@ -50,7 +53,6 @@ public class WindowView extends JFrame implements Observer {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
         field.setGameController(gameController);
-        parametersWindow.setController(gameController);
     }
 
     public void setFileManager(FileManager fileManager) {
@@ -126,6 +128,9 @@ public class WindowView extends JFrame implements Observer {
         JButton newFileButton = new JButton();
         newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
         newFileButton.setToolTipText("New file");
+        newFileButton.addActionListener(e->{
+            askSaveWindow.show();
+        });
 
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
@@ -169,7 +174,10 @@ public class WindowView extends JFrame implements Observer {
         JButton parametersButton = new JButton();
         parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
         parametersButton.setToolTipText("Parameters");
-        parametersButton.addActionListener(e->parametersWindow.show());
+        parametersButton.addActionListener(e->{
+                parametersWindow.setHandler(this);
+                parametersWindow.show();
+            });
         JButton stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
         stepButton.setToolTipText("Next step");
@@ -238,4 +246,27 @@ public class WindowView extends JFrame implements Observer {
         getContentPane().validate();
     }
 
+    public void handleAskSave(Answer answer){
+        switch (answer){
+            case YES:
+                JFileChooser jFileChooser = new JFileChooser();
+                if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+                    File file =  jFileChooser.getSelectedFile();
+                    fileManager.save(file, options);
+                }
+                parametersWindow.setHandler(new ParametersNewFileHandler(gameController));
+                parametersWindow.show();
+                break;
+            case NO:
+                parametersWindow.show();
+                break;
+            case CANCEL:
+                break;
+        }
+    }
+
+    @Override
+    public void handle(GraphicsOptions graphicsOptions, GameOptions gameOptions) {
+        gameController.newOptions(gameOptions, graphicsOptions);
+    }
 }

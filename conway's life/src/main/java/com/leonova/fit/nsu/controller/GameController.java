@@ -15,4 +15,6 @@ public interface GameController {
 
     void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions);
 
+    void createNewField(GameOptions gameOptions, GraphicsOptions graphicsOptions);
+
 }

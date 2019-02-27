@@ -5,7 +5,6 @@ import com.leonova.fit.nsu.model.FieldModel;
 import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.model.Position;
 import com.leonova.fit.nsu.view.GraphicsOptions;
-import sun.text.normalizer.UTF16;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class FieldController implements GameController, FileManager {
     private final static int TIME_TO_SLEEP = 1000;
     private FieldModel field;
     private GameOptions gameOptions;
-    private boolean displayImpact = false;
     private boolean running = false;
 
     private int cellsInRow;
@@ -93,6 +91,15 @@ public class FieldController implements GameController, FileManager {
     }
 
     @Override
+    public void createNewField(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
+        this.gameOptions = gameOptions;
+        cellsInColumn = graphicsOptions.getCellsInColumn();
+        cellsInRow = graphicsOptions.getCellsInRow();
+
+        field.newField(gameOptions, graphicsOptions, new ArrayList<>());
+    }
+
+    @Override
     public void save(File file, GraphicsOptions graphicsOptions) {
         try(PrintWriter write = new PrintWriter(new FileOutputStream(file))) {
 
@@ -133,7 +140,7 @@ public class FieldController implements GameController, FileManager {
             }
 
             GraphicsOptions graphicsOptions = new GraphicsOptions(width, height, weight, edge);
-            field.newField(graphicsOptions, aliveCells);
+            field.newField(gameOptions, graphicsOptions, aliveCells);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

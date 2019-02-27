@@ -12,7 +12,7 @@ public interface FieldModel {
     void impactPressed();
     void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions);
 
-    void newField(GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells);
+    void newField(GameOptions gameOptions, GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells);
 
     HashSet<Cell> getAliveCells();
 }

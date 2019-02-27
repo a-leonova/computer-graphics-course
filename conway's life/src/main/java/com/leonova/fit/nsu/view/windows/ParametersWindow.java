@@ -3,6 +3,8 @@ package com.leonova.fit.nsu.view.windows;
 import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.view.GraphicsOptions;
+import com.leonova.fit.nsu.view.ParametersWindowHandler;
+import com.leonova.fit.nsu.view.WindowView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -16,7 +18,7 @@ public class ParametersWindow {
 
     private GraphicsOptions graphicsOptions;
 
-    private GameController controller;
+    private ParametersWindowHandler handler;
     private JFrame window;
 
     private JRadioButton xor;
@@ -36,7 +38,8 @@ public class ParametersWindow {
     private JTextField birthEndTF;
 
 
-    public ParametersWindow(GraphicsOptions graphicsOptions) {
+    public ParametersWindow(GraphicsOptions graphicsOptions, ParametersWindowHandler handler) {
+        this.handler = handler;
         this.graphicsOptions = graphicsOptions;
         window = new JFrame("Parameters");
         //window.setSize(100, 100);
@@ -55,10 +58,6 @@ public class ParametersWindow {
 
     public void show(){
         window.setVisible(true);
-    }
-
-    public void setController(GameController controller) {
-        this.controller = controller;
     }
 
     private JPanel createGamePanel(){
@@ -127,7 +126,7 @@ public class ParametersWindow {
             graphicsOptions.setCellsInRow(height);
             graphicsOptions.setLineWidth(line);
 
-            controller.newOptions(gameOptions, graphicsOptions);
+            handler.handle(graphicsOptions, gameOptions);
             window.setVisible(false);
         });
 
@@ -139,6 +138,10 @@ public class ParametersWindow {
         gamePanel.add(cancel);
 
         return gamePanel;
+    }
+
+    public void setHandler(ParametersWindowHandler handler) {
+        this.handler = handler;
     }
 
     private JPanel createCellPanel(){

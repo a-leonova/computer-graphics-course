@@ -128,7 +128,8 @@ public class Field implements FieldModel, Observable {
     }
 
     @Override
-    public void newField(GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells) {
+    public void newField(GameOptions gameOptions, GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells) {
+        this.gameOptions = gameOptions;
         cellsInRow = graphicsOptions.getCellsInRow();
         cellsInColumn = graphicsOptions.getCellsInColumn();
 
