@@ -128,6 +128,7 @@ public class WindowView extends JFrame implements Observer {
         JButton clearButton = new JButton();
         clearButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-trash-can-16.png"))));
         clearButton.setToolTipText("Clear");
+        clearButton.addActionListener(e->gameController.clearField());
         JButton parametersButton = new JButton();
         parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
         parametersButton.setToolTipText("Parameters");

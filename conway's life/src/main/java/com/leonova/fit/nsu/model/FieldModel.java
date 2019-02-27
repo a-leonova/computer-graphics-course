@@ -5,5 +5,4 @@ public interface FieldModel {
     void nextStep();
     void clearField();
     void impactPressed();
-    //void clear();
 }
