@@ -14,10 +14,11 @@ public class Main {
         GraphicsOptions graphicsOptions = new GraphicsOptions(5, 5, 10, 15);
         GameOptions gameOptions = new GameOptions();
 
-        FieldController controller = new FieldController(gameOptions);
+        FieldController controller = new FieldController(gameOptions, graphicsOptions.getCellsInRow(), graphicsOptions.getCellsInColumn());
         Field field = new Field(graphicsOptions.getCellsInRow(), graphicsOptions.getCellsInColumn(), gameOptions);
         WindowView view = new WindowView(graphicsOptions);
         view.setGameController(controller);
+        view.setFileManager(controller);
         controller.setField(field);
         field.addObserver(view);
 

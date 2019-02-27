@@ -136,7 +136,7 @@ public class GameField extends JPanel implements MouseMotionListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         Position newCell = cellsManager.getSelectedCell(new Position(e.getX(), e.getY()), shiftFromBorder);
-        if(!newCell.equals(lastCell)){
+        if(!newCell.equals(lastCell) && img.getRGB(e.getX(), e.getY()) != GlobalConsts.borderColor.getRGB()){
             gameController.pressCell(newCell);
             lastCell = newCell;
         }

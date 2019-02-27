@@ -127,6 +127,40 @@ public class Field implements FieldModel, Observable {
         }
     }
 
+    @Override
+    public void newField(GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells) {
+        cellsInRow = graphicsOptions.getCellsInRow();
+        cellsInColumn = graphicsOptions.getCellsInColumn();
+
+        field = new Cell[cellsInRow][cellsInColumn];
+        for(int i = 0; i < cellsInRow; ++i){
+            field[i] = new Cell[cellsInColumn];
+            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
+                field[i][j] = new Cell(new Position(i, j));
+            }
+        }
+        for(Position aliveCell : aliveCells){
+            field[aliveCell.getX()][aliveCell.getY()].setAlive(true);
+        }
+        countImpact();
+        for(Observer observer : observers){
+            observer.repaintAll(getAllCells(), graphicsOptions);
+        }
+    }
+
+    @Override
+    public HashSet<Cell> getAliveCells() {
+        HashSet<Cell> cells = new HashSet<>();
+        for (int i = 0; i < cellsInRow; ++i) {
+            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
+                if(field[i][j].isAlive()){
+                    cells.add(field[i][j]);
+                }
+            }
+        }
+        return cells;
+    }
+
     private HashSet<Cell> getAllCells(){
         HashSet<Cell> cells = new HashSet<>();
         for (int i = 0; i < cellsInRow; ++i) {

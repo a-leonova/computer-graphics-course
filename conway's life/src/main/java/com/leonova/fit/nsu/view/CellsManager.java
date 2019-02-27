@@ -39,7 +39,7 @@ public class CellsManager {
         a = (edgeWithHalfBorder + shiftYWithHalfBorder);
     }
 
-    public void spanPaint(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
+    private void spanPaint(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
         Queue<Position> pixelsToDraw = new LinkedList<>();
         Color pixelColor = new Color(image.getRGB(startPosition.getX(), startPosition.getY()));
         if(!pixelColor.equals(oldColor)){
@@ -128,15 +128,10 @@ public class CellsManager {
         spanPaint(centerCell, GlobalConsts.someColor, newColor, image);
     }
 
-
-
-
-
-
     //TODO: check cells border!!!
     public Position getSelectedCell(Position position, int shiftFromBorder){
 
-        Position relativePosition = new Position(position.getX() - shiftFromBorder - halfBorder, position.getY() - shiftFromBorder - halfBorder);
+        Position relativePosition = new Position(position.getX() - shiftFromBorder - halfBorder * 0, position.getY() - shiftFromBorder - halfBorder*0);
 
         //double gridWidth = 2 * (options.getLineWidth() + (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6)));
         //int insideDiameter = (int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6) * 2);
@@ -169,8 +164,8 @@ public class CellsManager {
             relX = relativePosition.getX() - (column * gridWidth);
         }
 
-        double c = edgeWithHalfBorder - shiftYWithHalfBorder;
-        double m = c / (int) Math.round(options.getCellEdge() * Math.cos(Math.PI / 6));
+        double c = edgeWithHalfBorder - shiftYWithHalfBorder + halfBorder;
+        double m = c / insideRadiusWithHalfBorder;
 
         // LEFT edgeWithHalfBorder
         if (relY < (-m * relX) + c){

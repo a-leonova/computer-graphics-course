@@ -1,5 +1,6 @@
 package com.leonova.fit.nsu.view;
 
+import com.leonova.fit.nsu.controller.FileManager;
 import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.Cell;
 import com.leonova.fit.nsu.observer.Observer;
@@ -8,6 +9,7 @@ import com.leonova.fit.nsu.view.windows.ParametersWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ public class WindowView extends JFrame implements Observer {
     private GraphicsOptions options;
     private GameField field;
     private GameController gameController;
+    private FileManager fileManager;
 
     private JCheckBoxMenuItem run;
     private JToggleButton runButton;
@@ -48,6 +51,10 @@ public class WindowView extends JFrame implements Observer {
         this.gameController = gameController;
         field.setGameController(gameController);
         parametersWindow.setController(gameController);
+    }
+
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
     }
 
     private JMenuBar createMenu(){
@@ -119,12 +126,29 @@ public class WindowView extends JFrame implements Observer {
         JButton newFileButton = new JButton();
         newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
         newFileButton.setToolTipText("New file");
+
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
         openFileButton.setToolTipText("Open file");
+        openFileButton.addActionListener(e->{
+            JFileChooser jFileChooser = new JFileChooser();
+            if(jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+                File file =  jFileChooser.getSelectedFile();
+                fileManager.open(file);
+            }
+        });
         JButton saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
         saveButton.setToolTipText("Save game");
+
+        saveButton.addActionListener(e->{
+
+            JFileChooser jFileChooser = new JFileChooser();
+            if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+                File file =  jFileChooser.getSelectedFile();
+                fileManager.save(file, options);
+            }
+        });
 
         JButton displayImpactButton = new JButton();
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));

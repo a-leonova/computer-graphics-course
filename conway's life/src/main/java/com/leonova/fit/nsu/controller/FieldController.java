@@ -1,19 +1,30 @@
 package com.leonova.fit.nsu.controller;
 
+import com.leonova.fit.nsu.model.Cell;
 import com.leonova.fit.nsu.model.FieldModel;
 import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.model.Position;
 import com.leonova.fit.nsu.view.GraphicsOptions;
+import sun.text.normalizer.UTF16;
 
-public class FieldController implements GameController {
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+public class FieldController implements GameController, FileManager {
     private final static int TIME_TO_SLEEP = 1000;
     private FieldModel field;
     private GameOptions gameOptions;
     private boolean displayImpact = false;
     private boolean running = false;
 
-    public FieldController(GameOptions gameOptions) {
+    private int cellsInRow;
+    private int cellsInColumn;
+
+    public FieldController(GameOptions gameOptions, int cellsInRow, int cellsInColumn) {
         this.gameOptions = gameOptions;
+        this.cellsInRow = cellsInRow;
+        this.cellsInColumn = cellsInColumn;
     }
 
     public void setField(FieldModel field) {
@@ -76,6 +87,58 @@ public class FieldController implements GameController {
     @Override
     public void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
         gameOptions = gameOptions;
+        cellsInColumn = graphicsOptions.getCellsInColumn();
+        cellsInRow = graphicsOptions.getCellsInRow();
         field.newOptions(gameOptions, graphicsOptions);
+    }
+
+    @Override
+    public void save(File file, GraphicsOptions graphicsOptions) {
+        try(PrintWriter write = new PrintWriter(new FileOutputStream(file))) {
+
+            write.println(graphicsOptions.getCellsInRow() + " " + graphicsOptions.getCellsInColumn());
+            write.println(graphicsOptions.getLineWidth());
+
+            write.println(graphicsOptions.getCellEdge());
+
+            HashSet<Cell> aliveCells = field.getAliveCells();
+
+            write.println(aliveCells.size());
+            for(Cell cell : aliveCells){
+                write.println(cell.getPosition().getX() + " " + cell.getPosition().getY());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void open(File file) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))){
+            String firstLine = reader.readLine();
+            String[] widthHeight = firstLine.split(" ");
+            int width = Integer.parseInt(widthHeight[0]);
+            int height = Integer.parseInt(widthHeight[1]);
+
+            int weight = Integer.parseInt(reader.readLine());
+            int edge = Integer.parseInt(reader.readLine());
+            int k = Integer.parseInt(reader.readLine());
+            ArrayList<Position> aliveCells = new ArrayList<>();
+            while (k--> 0){
+                String positionsLine = reader.readLine();
+                String[] positions = positionsLine.split(" ");
+                int x = Integer.parseInt(positions[0]);
+                int y = Integer.parseInt(positions[1]);
+                aliveCells.add(new Position(x, y));
+            }
+
+            GraphicsOptions graphicsOptions = new GraphicsOptions(width, height, weight, edge);
+            field.newField(graphicsOptions, aliveCells);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
