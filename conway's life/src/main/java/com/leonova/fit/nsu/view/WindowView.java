@@ -62,17 +62,34 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     private JMenuBar createMenu(){
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu file = new JMenu("File");
+        JMenu fileMenu = new JMenu("File");
         JMenuItem newFile = new JMenuItem("New file");
         JMenuItem open = new JMenuItem("Open");
         JMenuItem save = new JMenuItem("Save");
-        JMenuItem saveAs = new JMenuItem("Save as...");
-        JMenuItem exit = new JMenuItem("Exit");
-        file.add(newFile);
-        file.add(open);
-        file.add(save);
-        file.add(saveAs);
-        file.add(exit);
+        fileMenu.add(newFile);
+        fileMenu.add(open);
+        fileMenu.add(save);
+
+        newFile.addActionListener(e->{
+            askSaveWindow.show();
+        });
+
+        save.addActionListener(e->{
+
+            JFileChooser jFileChooser = new JFileChooser();
+            if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+                File file =  jFileChooser.getSelectedFile();
+                fileManager.save(file, options);
+            }
+        });
+        open.addActionListener(e->{
+            JFileChooser jFileChooser = new JFileChooser();
+            if(jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+                File file =  jFileChooser.getSelectedFile();
+                fileManager.open(file);
+            }
+        });
+
 
         JMenu edit = new JMenu("Edit");
         JMenuItem xor = new JMenuItem("XOR");
@@ -82,27 +99,24 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         JMenuItem clear = new JMenuItem("Clear");
         clear.addActionListener(e -> gameController.clearField());
         JMenuItem parameters = new JMenuItem("Parameters");
+        parameters.addActionListener(e->{
+            parametersWindow.setHandler(this);
+            parametersWindow.show();
+        });
         edit.add(xor);
         edit.add(replace);
         edit.add(clear);
         edit.add(parameters);
 
-
-
-        JMenu view = new JMenu("View");
-
         JMenu simulation = new JMenu("Simulation");
         JMenuItem step = new JMenuItem("Step");
         step.addActionListener(e -> gameController.nextStep());
-        //JMenuItem run = new JMenuItem("Run");
         run = new JCheckBoxMenuItem("Run");
         run.setSelected(false);
         run.addActionListener(e -> {
-           // run.setSelected(!run.isSelected());
             runButton.setSelected(!runButton.isSelected());
             gameController.run();
         });
-        //run.addActionListener(e -> gameController);
         simulation.add(step);
         simulation.add(run);
 
@@ -113,9 +127,8 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         help.add(about);
         help.add(helpIt);
 
-        menuBar.add(file);
+        menuBar.add(fileMenu);
         menuBar.add(edit);
-        menuBar.add(view);
         menuBar.add(simulation);
         menuBar.add(help);
 
