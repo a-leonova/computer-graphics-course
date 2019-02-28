@@ -69,7 +69,9 @@ public class FieldController implements GameController, FileManager {
 
     @Override
     public void setReplace() {
-        gameOptions.setModeXor(false);
+        if(gameOptions.isModeXor()){
+            gameOptions.setModeXor(false);
+        }
     }
 
     @Override
