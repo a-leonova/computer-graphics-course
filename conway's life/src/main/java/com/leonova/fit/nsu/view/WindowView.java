@@ -189,12 +189,19 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
         displayImpactButton.setToolTipText("Display impact");
         displayImpactButton.addActionListener(e -> gameController.displayImpact());
-        JButton xorButton = new JButton();
-        xorButton.addActionListener(e->gameController.setXor());
+        JToggleButton xorButton = new JToggleButton();
+        JToggleButton replaceButton = new JToggleButton();
+        replaceButton.setSelected(true);
+        xorButton.addActionListener(e-> {
+            gameController.setXor();
+            replaceButton.setSelected(!replaceButton.isSelected());
+        });
         xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
         xorButton.setToolTipText("XOR");
-        JButton replaceButton = new JButton();
-        replaceButton.addActionListener(e->gameController.setReplace());
+        replaceButton.addActionListener(e->{
+            gameController.setReplace();
+            xorButton.setSelected(!xorButton.isSelected());
+        });
         replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
         replaceButton.setToolTipText("Replace");
         clearButton = new JButton();
