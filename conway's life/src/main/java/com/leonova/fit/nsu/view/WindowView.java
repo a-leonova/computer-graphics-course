@@ -12,7 +12,6 @@ import com.leonova.fit.nsu.view.windows.ParametersWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -40,6 +39,12 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     private JButton parametersButton;
     private JButton stepButton;
 
+    private JToggleButton xorButton = new JToggleButton();
+    private JToggleButton replaceButton = new JToggleButton();
+    private JRadioButtonMenuItem xorMI = new JRadioButtonMenuItem("XOR");
+    private JRadioButtonMenuItem replaceMI = new JRadioButtonMenuItem("REPLACE");
+    private XorReplaceHandler xorReplaceHandler = new XorReplaceHandler(xorButton, replaceButton, xorMI, replaceMI);
+
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
         this.options = options;
@@ -48,6 +53,18 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         field = new GameField(options);
         JMenuBar menu = createMenu();
         JToolBar toolBar = createToolBar();
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(replaceButton);
+        buttonGroup.add(xorButton);
+        ButtonGroup buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(xorMI);
+        buttonGroup1.add(replaceMI);
+
+        replaceButton.setSelected(true);
+        replaceMI.setSelected(true);
+//        xorMI.setSelected(false);
+//        xorButton.setSelected(false);
         add(toolBar);
         setLayout(new BorderLayout());
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -102,10 +119,13 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
 
 
         JMenu edit = new JMenu("Edit");
-        JMenuItem xor = new JMenuItem("XOR");
-        xor.addActionListener(e -> gameController.setXor());
-        JMenuItem replace = new JMenuItem("Replace");
-        replace.addActionListener(e -> gameController.setReplace());
+        xorMI.addActionListener(e -> {
+            xorReplaceHandler.xorPressed(gameController);
+        });
+        replaceMI.addActionListener(e -> {
+            xorReplaceHandler.replacePressed(gameController);
+            });
+        replaceMI.setSelected(true);
         clearMI = new JMenuItem("Clear");
         clearMI.addActionListener(e -> gameController.clearField());
         parametersMI = new JMenuItem("Parameters");
@@ -113,8 +133,8 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
             parametersWindow.setHandler(this);
             parametersWindow.show();
         });
-        edit.add(xor);
-        edit.add(replace);
+        edit.add(xorMI);
+        edit.add(replaceMI);
         edit.add(clearMI);
         edit.add(parametersMI);
 
@@ -189,18 +209,13 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         displayImpactButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-1-key-16.png"))));
         displayImpactButton.setToolTipText("Display impact");
         displayImpactButton.addActionListener(e -> gameController.displayImpact());
-        JToggleButton xorButton = new JToggleButton();
-        JToggleButton replaceButton = new JToggleButton();
-        replaceButton.setSelected(true);
         xorButton.addActionListener(e-> {
-            gameController.setXor();
-            replaceButton.setSelected(!replaceButton.isSelected());
+            xorReplaceHandler.xorPressed(gameController);
         });
         xorButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
         xorButton.setToolTipText("XOR");
         replaceButton.addActionListener(e->{
-            gameController.setReplace();
-            xorButton.setSelected(!xorButton.isSelected());
+            xorReplaceHandler.replacePressed(gameController);
         });
         replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
         replaceButton.setToolTipText("Replace");
@@ -310,6 +325,14 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
 
     @Override
     public void handle(GraphicsOptions graphicsOptions, GameOptions gameOptions) {
+        if(gameOptions.isModeXor()){
+            xorReplaceHandler.xorPressed(gameController);
+        }
+        else{
+            xorReplaceHandler.replacePressed(gameController);
+        }
+        replaceMI.setSelected(!gameOptions.isModeXor());
+        xorMI.setSelected(gameOptions.isModeXor());
         gameController.newOptions(gameOptions, graphicsOptions);
     }
 }
