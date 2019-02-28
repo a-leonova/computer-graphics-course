@@ -12,6 +12,7 @@ import com.leonova.fit.nsu.view.windows.ParametersWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -29,6 +30,15 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     private AboutWindow aboutWindow = new AboutWindow();
     private ParametersWindow parametersWindow;
     private AskSaveWindow askSaveWindow = new AskSaveWindow(this);
+
+    //private HashMap<JButton, JMenuItem> pairsToolBarMenu = new HashMap<>();
+
+    private JMenuItem clearMI;
+    private JMenuItem parametersMI;
+    private JMenuItem stepMI;
+    private JButton clearButton;
+    private JButton parametersButton;
+    private JButton stepButton;
 
     public WindowView(GraphicsOptions options){
         super("Conway's Life");
@@ -96,28 +106,35 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         xor.addActionListener(e -> gameController.setXor());
         JMenuItem replace = new JMenuItem("Replace");
         replace.addActionListener(e -> gameController.setReplace());
-        JMenuItem clear = new JMenuItem("Clear");
-        clear.addActionListener(e -> gameController.clearField());
-        JMenuItem parameters = new JMenuItem("Parameters");
-        parameters.addActionListener(e->{
+        clearMI = new JMenuItem("Clear");
+        clearMI.addActionListener(e -> gameController.clearField());
+        parametersMI = new JMenuItem("Parameters");
+        parametersMI.addActionListener(e->{
             parametersWindow.setHandler(this);
             parametersWindow.show();
         });
         edit.add(xor);
         edit.add(replace);
-        edit.add(clear);
-        edit.add(parameters);
+        edit.add(clearMI);
+        edit.add(parametersMI);
 
         JMenu simulation = new JMenu("Simulation");
-        JMenuItem step = new JMenuItem("Step");
-        step.addActionListener(e -> gameController.nextStep());
+        stepMI = new JMenuItem("Step");
+        stepMI.addActionListener(e -> gameController.nextStep());
         run = new JCheckBoxMenuItem("Run");
         run.setSelected(false);
         run.addActionListener(e -> {
             runButton.setSelected(!runButton.isSelected());
+            parametersButton.setEnabled(!parametersButton.isEnabled());
+            clearButton.setEnabled(!clearButton.isEnabled());
+            stepButton.setEnabled(!stepButton.isEnabled());
+            stepMI.setEnabled(!stepMI.isEnabled());
+            clearMI.setEnabled(!clearMI.isEnabled());
+            parametersMI.setEnabled(!parametersMI.isEnabled());
+
             gameController.run();
         });
-        simulation.add(step);
+        simulation.add(stepMI);
         simulation.add(run);
 
         JMenu help = new JMenu("About");
@@ -180,18 +197,18 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         replaceButton.addActionListener(e->gameController.setReplace());
         replaceButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-circle-16.png"))));
         replaceButton.setToolTipText("Replace");
-        JButton clearButton = new JButton();
+        clearButton = new JButton();
         clearButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-trash-can-16.png"))));
         clearButton.setToolTipText("Clear");
         clearButton.addActionListener(e->gameController.clearField());
-        JButton parametersButton = new JButton();
+        parametersButton = new JButton();
         parametersButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-table-of-content-16.png"))));
         parametersButton.setToolTipText("Parameters");
         parametersButton.addActionListener(e->{
                 parametersWindow.setHandler(this);
                 parametersWindow.show();
             });
-        JButton stepButton = new JButton();
+        stepButton = new JButton();
         stepButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-resume-button-16.png"))));
         stepButton.setToolTipText("Next step");
         stepButton.addActionListener(e -> gameController.nextStep());
@@ -200,6 +217,12 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
         runButton.setToolTipText("Run");
         runButton.addActionListener(e ->{
             run.setSelected(!run.isSelected());
+            parametersButton.setEnabled(!parametersButton.isEnabled());
+            clearButton.setEnabled(!clearButton.isEnabled());
+            stepButton.setEnabled(!stepButton.isEnabled());
+            stepMI.setEnabled(!stepMI.isEnabled());
+            clearMI.setEnabled(!clearMI.isEnabled());
+            parametersMI.setEnabled(!parametersMI.isEnabled());
             gameController.run();
         });
         JButton aboutButton = new JButton();

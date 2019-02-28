@@ -43,15 +43,10 @@ public class GameField extends JPanel implements MouseMotionListener {
         pane.setPreferredSize(new Dimension(width, height));
         add(pane);
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
-       // pane.add(img, 0);
 
         addMouseMotionListener(this);
         setPreferredSize(new Dimension(width , height));
         this.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//
-//            }
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -113,10 +108,6 @@ public class GameField extends JPanel implements MouseMotionListener {
             g.setFont(myFont);
 
             g.setPaint(GlobalConsts.impactColor);
-//            Rectangle2D rectangle2d = g.getFontMetrics().getStringBounds(impact, g);
-//            System.out.println(rectangle2d.getX() + " " + rectangle2d.getCenterY() + " " + rectangle2d.getWidth() + " "+ rectangle2d.getHeight());
-
-            //System.out.println("Impact: " + g.getFontMetrics().str(impact));
             g.drawString(impact, position.getX() - GlobalConsts.impactSize/2, position.getY() + GlobalConsts.impactSize/2);
 
         }
@@ -144,6 +135,6 @@ public class GameField extends JPanel implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        //System.out.println("moved");
+
     }
 }
