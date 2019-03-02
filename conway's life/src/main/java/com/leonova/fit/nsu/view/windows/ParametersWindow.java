@@ -120,6 +120,9 @@ public class ParametersWindow {
                 int height = Integer.parseInt(rowsTF.getText());
                 int line = Integer.parseInt(lineTF.getText());
                 int edge = Integer.parseInt(edgeTF.getText());
+                if(width * height > 200 * 200){
+                    throw new IllegalArgumentException("Very big field! Make it smaller!");
+                }
                 newGraphicsOptions.setCellEdge(edge);
                 newGraphicsOptions.setColumns(width);
                 newGraphicsOptions.setRows(height);
@@ -130,7 +133,7 @@ public class ParametersWindow {
                 handler.handle(newGraphicsOptions, newGameOptions);
                 window.setVisible(false);
             } catch (IllegalArgumentException e1){
-                BadParametersErrorWindow errorWindow = new BadParametersErrorWindow("Check parameters you have written! Mistake: " + e1);
+                BadParametersErrorWindow errorWindow = new BadParametersErrorWindow("Check parameters! Mistake: " + e1.getMessage());
                 errorWindow.show();
             }
         });
