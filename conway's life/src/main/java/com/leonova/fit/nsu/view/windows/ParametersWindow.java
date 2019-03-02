@@ -35,7 +35,6 @@ public class ParametersWindow {
     private JTextField birthBeginTF;
     private JTextField birthEndTF;
 
-
     public ParametersWindow(GraphicsOptions graphicsOptions, GameOptions gameOptions,ParametersWindowHandler handler) {
         this.handler = handler;
         this.graphicsOptions = graphicsOptions;
@@ -97,38 +96,43 @@ public class ParametersWindow {
         ok.addActionListener(e->{
 
             //TODO: window on ERROR
-            GameOptions newGameOptions = new GameOptions();
+            try{
+                GameOptions newGameOptions = new GameOptions();
 
-            newGameOptions.setModeXor(xor.isSelected());
-            double frs = Double.parseDouble(frsImpTF.getText());
-            double scd = Double.parseDouble(scdImpTF.getText());
-            double lBeg = Double.parseDouble(liveBegTF.getText());
-            double lEnd = Double.parseDouble(liveEndTF.getText());
-            double bBeg = Double.parseDouble(birthBeginTF.getText());
-            double bEnd = Double.parseDouble(birthEndTF.getText());
+                newGameOptions.setModeXor(xor.isSelected());
+                double frs = Double.parseDouble(frsImpTF.getText());
+                double scd = Double.parseDouble(scdImpTF.getText());
+                double lBeg = Double.parseDouble(liveBegTF.getText());
+                double lEnd = Double.parseDouble(liveEndTF.getText());
+                double bBeg = Double.parseDouble(birthBeginTF.getText());
+                double bEnd = Double.parseDouble(birthEndTF.getText());
 
-            newGameOptions.setLiveEnd(lEnd);
-            newGameOptions.setBirthBegin(bBeg);
-            newGameOptions.setBirthEnd(bEnd);
-            newGameOptions.setFirstImpact(frs);
-            newGameOptions.setSecondImpact(scd);
-            newGameOptions.setLiveBegin(lBeg);
+                newGameOptions.setLiveEnd(lEnd);
+                newGameOptions.setBirthBegin(bBeg);
+                newGameOptions.setBirthEnd(bEnd);
+                newGameOptions.setFirstImpact(frs);
+                newGameOptions.setSecondImpact(scd);
+                newGameOptions.setLiveBegin(lBeg);
 
-            GraphicsOptions newGraphicsOptions = new GraphicsOptions();
-            newGraphicsOptions.setShowImpact(this.graphicsOptions.isShowImpact());
-            int width = Integer.parseInt(columnsTF.getText());
-            int height = Integer.parseInt(rowsTF.getText());
-            int line = Integer.parseInt(lineTF.getText());
-            int edge = Integer.parseInt(edgeTF.getText());
-            newGraphicsOptions.setCellEdge(edge);
-            newGraphicsOptions.setColumns(width);
-            newGraphicsOptions.setRows(height);
-            newGraphicsOptions.setLineWidth(line);
+                GraphicsOptions newGraphicsOptions = new GraphicsOptions();
+                newGraphicsOptions.setShowImpact(this.graphicsOptions.isShowImpact());
+                int width = Integer.parseInt(columnsTF.getText());
+                int height = Integer.parseInt(rowsTF.getText());
+                int line = Integer.parseInt(lineTF.getText());
+                int edge = Integer.parseInt(edgeTF.getText());
+                newGraphicsOptions.setCellEdge(edge);
+                newGraphicsOptions.setColumns(width);
+                newGraphicsOptions.setRows(height);
+                newGraphicsOptions.setLineWidth(line);
 
-            this.gameOptions = newGameOptions;
-            this.graphicsOptions = newGraphicsOptions;
-            handler.handle(newGraphicsOptions, newGameOptions);
-            window.setVisible(false);
+                this.gameOptions = newGameOptions;
+                this.graphicsOptions = newGraphicsOptions;
+                handler.handle(newGraphicsOptions, newGameOptions);
+                window.setVisible(false);
+            } catch (IllegalArgumentException e1){
+                BadParametersErrorWindow errorWindow = new BadParametersErrorWindow("Check parameters you have written! Mistake: " + e1);
+                errorWindow.show();
+            }
         });
 
         cancel.addActionListener(e->{
