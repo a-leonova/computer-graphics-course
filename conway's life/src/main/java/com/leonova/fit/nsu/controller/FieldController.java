@@ -16,13 +16,13 @@ public class FieldController implements GameController, FileManager {
     private GameOptions gameOptions;
     private boolean running = false;
 
-    private int cellsInRow;
-    private int cellsInColumn;
+    private int rows;
+    private int columns;
 
-    public FieldController(GameOptions gameOptions, int cellsInRow, int cellsInColumn) {
+    public FieldController(GameOptions gameOptions, int rows, int columns) {
         this.gameOptions = gameOptions;
-        this.cellsInRow = cellsInRow;
-        this.cellsInColumn = cellsInColumn;
+        this.rows = rows;
+        this.columns = columns;
     }
 
     public void setField(FieldModel field) {
@@ -82,25 +82,25 @@ public class FieldController implements GameController, FileManager {
     @Override
     public void pressCell(Position position) {
 
-        if(position.getX() >= 0 && position.getX() < cellsInColumn &&
-         position.getY() >= 0 && position.getY() < cellsInRow - (position.getX() % 2 == 1 ? 1 : 0)) {
+        if(position.getX() >= 0 && position.getX() < rows &&
+         position.getY() >= 0 && position.getY() < columns - (position.getX() % 2 == 1 ? 1 : 0)) {
             field.pressedCell(position);
         }
     }
 
     @Override
     public void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
-        gameOptions = gameOptions;
-        cellsInColumn = graphicsOptions.getCellsInColumn();
-        cellsInRow = graphicsOptions.getCellsInRow();
+        this.gameOptions = gameOptions;
+        columns = graphicsOptions.getColumns();
+        rows = graphicsOptions.getRows();
         field.newOptions(gameOptions, graphicsOptions);
     }
 
     @Override
     public void createNewField(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
         this.gameOptions = gameOptions;
-        cellsInColumn = graphicsOptions.getCellsInColumn();
-        cellsInRow = graphicsOptions.getCellsInRow();
+        columns = graphicsOptions.getColumns();
+        rows = graphicsOptions.getRows();
 
         field.newField(gameOptions, graphicsOptions, new ArrayList<>());
     }
@@ -109,7 +109,7 @@ public class FieldController implements GameController, FileManager {
     public void save(File file, GraphicsOptions graphicsOptions) {
         try(PrintWriter write = new PrintWriter(new FileOutputStream(file))) {
 
-            write.println(graphicsOptions.getCellsInRow() + " " + graphicsOptions.getCellsInColumn());
+            write.println(graphicsOptions.getRows() + " " + graphicsOptions.getColumns());
             write.println(graphicsOptions.getLineWidth());
 
             write.println(graphicsOptions.getCellEdge());

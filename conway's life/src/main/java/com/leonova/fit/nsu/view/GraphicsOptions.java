@@ -2,8 +2,8 @@ package com.leonova.fit.nsu.view;
 
 public class GraphicsOptions {
 
-    private int cellsInRow = 10;
-    private int cellsInColumn = 10;
+    private int rows = 10;
+    private int columns = 10;
 
     private int lineWidth = 1;
     private int cellEdge = 10;
@@ -13,27 +13,27 @@ public class GraphicsOptions {
 
     }
 
-    public GraphicsOptions(int cellsInRow, int cellsInColumn, int lineWidth, int cellEdge) {
-        this.cellsInRow = cellsInRow;
-        this.cellsInColumn = cellsInColumn;
+    public GraphicsOptions(int rows, int columns, int lineWidth, int cellEdge) {
+        this.rows = rows;
+        this.columns = columns;
         this.lineWidth = lineWidth;
         this.cellEdge = cellEdge;
     }
 
-    public int getCellsInRow() {
-        return cellsInRow;
+    public int getRows() {
+        return rows;
     }
 
-    public void setCellsInRow(int cellsInRow) {
-        this.cellsInRow = cellsInRow;
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 
-    public int getCellsInColumn() {
-        return cellsInColumn;
+    public int getColumns() {
+        return columns;
     }
 
-    public void setCellsInColumn(int cellsInColumn) {
-        this.cellsInColumn = cellsInColumn;
+    public void setColumns(int columns) {
+        this.columns = columns;
     }
 
     public int getLineWidth() {

@@ -15,7 +15,7 @@ import java.util.HashSet;
 
 public class GameField extends JPanel implements MouseMotionListener {
 
-    private GraphicsOptions options;
+    private GraphicsOptions graphicsOptions;
     private CellsManager cellsManager;
     private GameController gameController;
     private BufferedImage img;
@@ -28,17 +28,17 @@ public class GameField extends JPanel implements MouseMotionListener {
         this.gameController = gameController;
     }
 
-    public GameField(GraphicsOptions options)  {
-        this.options = options;
-        cellsManager = new CellsManager(options);
+    public GameField(GraphicsOptions graphicsOptions)  {
+        this.graphicsOptions = graphicsOptions;
+        cellsManager = new CellsManager(graphicsOptions);
 
-        int insideRadiusWithHalfBorder = (int) Math.round((options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
-        int width = 2 * insideRadiusWithHalfBorder * options.getCellsInRow() + shiftFromBorder * 2;
-        int halfBorder = (int)Math.round(options.getLineWidth() * 0.5);
-        int edgeWithHalfBorder = options.getCellEdge() + halfBorder;
+        int insideRadiusWithHalfBorder = (int) Math.round((graphicsOptions.getCellEdge() + (int)Math.round(graphicsOptions.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
+        int width = 2 * insideRadiusWithHalfBorder * graphicsOptions.getColumns() + shiftFromBorder * 2;
+        int halfBorder = (int)Math.round(graphicsOptions.getLineWidth() * 0.5);
+        int edgeWithHalfBorder = graphicsOptions.getCellEdge() + halfBorder;
         int shiftYWithHalfBorder = (int) Math.round(edgeWithHalfBorder * Math.sin(Math.PI / 6));
         int a = (edgeWithHalfBorder + shiftYWithHalfBorder);
-        int height = a * options.getCellsInColumn() + shiftFromBorder * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
+        int height = a * graphicsOptions.getRows() + shiftFromBorder * 2 + graphicsOptions.getCellEdge() - shiftYWithHalfBorder + halfBorder;
         pane = new JLayeredPane();
         pane.setPreferredSize(new Dimension(width, height));
         add(pane);
@@ -66,9 +66,9 @@ public class GameField extends JPanel implements MouseMotionListener {
         super.setPreferredSize(preferredSize);
     }
 
-    public void setOptions(GraphicsOptions options) {
-        this.options = options;
-        cellsManager.setOptions(options);
+    public void setGraphicsOptions(GraphicsOptions graphicsOptions) {
+        this.graphicsOptions = graphicsOptions;
+        cellsManager.setOptions(graphicsOptions);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class GameField extends JPanel implements MouseMotionListener {
             else{
                 cellsManager.repaintCell(pixels, GlobalConsts.borderColor, GlobalConsts.deadCell, img);
             }
-            if(options.isShowImpact()){
+            if(graphicsOptions.isShowImpact()){
                 paintImpact(pixels, String.format("%.1f", cell.getImpact()));
             }
         }
@@ -102,7 +102,7 @@ public class GameField extends JPanel implements MouseMotionListener {
     private void paintImpact(Position position, String impact){
         Graphics2D g = img.createGraphics();
 
-        if(options.getCellEdge() >= GlobalConsts.minEdgeForCellToShowImpact){
+        if(graphicsOptions.getCellEdge() >= GlobalConsts.minEdgeForCellToShowImpact){
 
             Font myFont = new Font("Serif",Font.PLAIN, GlobalConsts.impactSize);
             g.setFont(myFont);

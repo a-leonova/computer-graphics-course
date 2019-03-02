@@ -9,8 +9,8 @@ import java.util.HashSet;
 
 public class Field implements FieldModel, Observable {
 
-    private int cellsInRow;
-    private int cellsInColumn;
+    private int rows;
+    private int columns;
 
     private ArrayList<Observer> observers = new ArrayList<>();
     private Cell[][] field;
@@ -21,24 +21,17 @@ public class Field implements FieldModel, Observable {
             new Position(-1, 2), new Position(1, -1),new Position(1, 2),new Position(2, 0)};
 
 
-    public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions){
-        this.cellsInRow = cellsInRow;
-        this.cellsInColumn = cellsInColumn;
+    public Field(int rows, int columns, GameOptions gameOptions){
+        this.rows = rows;
+        this.columns = columns;
         this.gameOptions = gameOptions;
 
-        field = new Cell[cellsInRow][cellsInColumn];
-        for(int i = 0; i < cellsInRow; ++i){
-            field[i] = new Cell[cellsInColumn];
-            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
+        field = new Cell[rows][columns];
+        for(int i = 0; i < rows; ++i){
+            field[i] = new Cell[columns];
+            for(int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j){
                 field[i][j] = new Cell(new Position(i, j));
             }
-        }
-    }
-
-    public Field(int cellsInRow, int cellsInColumn, GameOptions gameOptions, ArrayList<Position> aliveCells) {
-        this(cellsInRow, cellsInColumn, gameOptions);
-        for(Position aliveCell : aliveCells){
-            field[aliveCell.getX()][aliveCell.getY()].setAlive(true);
         }
     }
 
@@ -61,9 +54,7 @@ public class Field implements FieldModel, Observable {
         else{
             cell.setAlive(true);
         }
-        //todo: dont forget to uncomment it
         HashSet<Cell> changedCells = countImpact();
-        //HashSet<Cell> changedCells = new HashSet<>();
         changedCells.add(cell);
         notifyAboutCellsChange(changedCells);
     }
@@ -78,9 +69,9 @@ public class Field implements FieldModel, Observable {
 
     @Override
     public void clearField() {
-        HashSet<Cell> changedCells = new HashSet<>(cellsInColumn * cellsInRow);
-        for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
+        HashSet<Cell> changedCells = new HashSet<>(columns * rows);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j) {
                 Cell cell = field[i][j];
                 cell.setAlive(false);
                 cell.setImpact(0.0);
@@ -102,22 +93,21 @@ public class Field implements FieldModel, Observable {
     public void newOptions(GameOptions gameOptions, GraphicsOptions graphicsOptions) {
         this.gameOptions = gameOptions;
 
-        Cell[][] newField = new Cell[graphicsOptions.getCellsInRow()][graphicsOptions.getCellsInColumn()];
-        for(int i = 0; i < graphicsOptions.getCellsInRow(); ++i){
-            newField[i] = new Cell[graphicsOptions.getCellsInColumn()];
-            for(int j = 0; j < graphicsOptions.getCellsInColumn() - (i % 2 == 1 ? 1 : 0); ++j){
+        int newRows = graphicsOptions.getRows();
+        int newColumns = graphicsOptions.getColumns();
+
+        Cell[][] newField = new Cell[newRows][newColumns];
+        for(int i = 0; i < newRows; ++i){
+            newField[i] = new Cell[newColumns];
+            for(int j = 0; j < newColumns - (i % 2 == 1 ? 1 : 0); ++j){
                 newField[i][j] = new Cell(new Position(i, j));
-                if(i < cellsInRow && j < cellsInColumn - (i % 2 == 1 ? 1 : 0)){
-                    try{
-                        newField[i][j].setAlive(field[i][j].isAlive());
-                    } catch (NullPointerException e){
-                        System.out.println();
-                    }
+                if(i < rows && j < columns - (i % 2 == 1 ? 1 : 0)){
+                    newField[i][j].setAlive(field[i][j].isAlive());
                 }
             }
         }
-        cellsInColumn = graphicsOptions.getCellsInColumn();
-        cellsInRow = graphicsOptions.getCellsInRow();
+        columns = newColumns;
+        rows = newRows;
 
         field = newField;
         countImpact();
@@ -130,13 +120,13 @@ public class Field implements FieldModel, Observable {
     @Override
     public void newField(GameOptions gameOptions, GraphicsOptions graphicsOptions, ArrayList<Position> aliveCells) {
         this.gameOptions = gameOptions;
-        cellsInRow = graphicsOptions.getCellsInRow();
-        cellsInColumn = graphicsOptions.getCellsInColumn();
+        rows = graphicsOptions.getRows();
+        columns = graphicsOptions.getColumns();
 
-        field = new Cell[cellsInRow][cellsInColumn];
-        for(int i = 0; i < cellsInRow; ++i){
-            field[i] = new Cell[cellsInColumn];
-            for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
+        field = new Cell[rows][columns];
+        for(int i = 0; i < rows; ++i){
+            field[i] = new Cell[columns];
+            for(int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j){
                 field[i][j] = new Cell(new Position(i, j));
             }
         }
@@ -152,8 +142,8 @@ public class Field implements FieldModel, Observable {
     @Override
     public HashSet<Cell> getAliveCells() {
         HashSet<Cell> cells = new HashSet<>();
-        for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j) {
                 if(field[i][j].isAlive()){
                     cells.add(field[i][j]);
                 }
@@ -164,8 +154,8 @@ public class Field implements FieldModel, Observable {
 
     private HashSet<Cell> getAllCells(){
         HashSet<Cell> cells = new HashSet<>();
-        for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j) {
                 cells.add(field[i][j]);
             }
         }
@@ -174,8 +164,8 @@ public class Field implements FieldModel, Observable {
 
     private HashSet<Cell> countLife() {
         HashSet<Cell> changedCells = new HashSet<>();
-        for (int i = 0; i < cellsInRow; ++i) {
-            for (int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j) {
 
                 Cell cell = field[i][j];
                 double impact = cell.getImpact();
@@ -201,8 +191,8 @@ public class Field implements FieldModel, Observable {
     private HashSet<Cell> countImpact(){
         try{
             HashSet<Cell> changedCells = new HashSet<>();
-            for(int i = 0; i < cellsInRow; ++i){
-                for(int j = 0; j < cellsInColumn - (i % 2 == 1 ? 1 : 0); ++j){
+            for(int i = 0; i < rows; ++i){
+                for(int j = 0; j < columns - (i % 2 == 1 ? 1 : 0); ++j){
                     int firstCount = 0;
                     int secondCount = 0;
                     for(int k = 0; k < shiftsForFirstLevelImpactCellsOdd.length; ++k){
@@ -246,10 +236,10 @@ public class Field implements FieldModel, Observable {
     }
 
     private boolean isInside(Position position){
-        if(position.getX() < 0 || position.getY() < 0 || position.getY() >= cellsInRow || position.getX() >= cellsInColumn){
+        if(position.getX() < 0 || position.getY() < 0 || position.getY() >= columns || position.getX() >= rows){
             return false;
         }
-        else if((position.getX() % 2 == 1 && position.getY() >= cellsInRow - 1)){
+        else if((position.getX() % 2 == 1 && position.getY() >= columns - 1)){
             return false;
         }
 

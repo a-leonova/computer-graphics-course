@@ -35,10 +35,8 @@ public class CellsManager {
         insideRadiusWithHalfBorder = (int) Math.round((options.getCellEdge() + (int)Math.round(options.getLineWidth() * 0.5)) * Math.cos(Math.PI / 6));
         shiftYWithHalfBorder = (int) Math.round(edgeWithHalfBorder * Math.sin(Math.PI / 6));
         a = (edgeWithHalfBorder + shiftYWithHalfBorder);
-        // widthInPixels = 2 * ((int)Math.round(options.getCellEdge() * Math.cos(Math.PI/6)) + options.getLineWidth()) * options.getCellsInRow();
-        widthInPixels = 2 * insideRadiusWithHalfBorder * options.getCellsInRow() + 10 * 2;
-        //heightInPixels = 2 * (options.getCellEdge() + options.getLineWidth()) * options.getCellsInColumn();
-        heightInPixels = a * options.getCellsInColumn() + 10 * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
+        widthInPixels = 2 * insideRadiusWithHalfBorder * options.getColumns() + 10 * 2;
+        heightInPixels = a * options.getRows() + 10 * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
     }
 
     //TODO: check cells border!!!
@@ -213,7 +211,7 @@ public class CellsManager {
         int startX;
 
         graphics.setStroke(new BasicStroke(options.getLineWidth() - 1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        for(int h = 0; h < options.getCellsInRow(); ++h){
+        for(int h = 0; h < options.getRows(); ++h){
             if(h % 2 == 1){
                 //startX = (int) (x0 + insideRadius + Math.round(options.getLineWidth()/2.0));
                 startX = x0 + insideRadiusWithHalfBorder;
@@ -221,7 +219,7 @@ public class CellsManager {
             else{
                 startX = x0;
             }
-            for(int w = 0; w < options.getCellsInColumn() - (h % 2 == 0 ? 0 : 1); ++w){
+            for(int w = 0; w < options.getColumns() - (h % 2 == 0 ? 0 : 1); ++w){
                 //int currentX = startX + (insideDiameter + options.getLineWidth()) * w;
                 int currentX = startX + 2 * w * insideRadiusWithHalfBorder;
                 //int currentY = (y0 + (int)Math.ceil((1.5 * options.getCellEdge() + options.getLineWidth())) * h);

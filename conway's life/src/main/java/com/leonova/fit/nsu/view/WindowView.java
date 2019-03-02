@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class WindowView extends JFrame implements Observer, ParametersWindowHandler {
 
-    private GraphicsOptions options;
+    private GraphicsOptions graphicsOptions;
     private GameField field;
     private GameController gameController;
     private FileManager fileManager;
@@ -45,12 +45,12 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     private JRadioButtonMenuItem replaceMI = new JRadioButtonMenuItem("REPLACE");
     private XorReplaceHandler xorReplaceHandler = new XorReplaceHandler(xorButton, replaceButton, xorMI, replaceMI);
 
-    public WindowView(GraphicsOptions options){
+    public WindowView(GraphicsOptions graphicsOptions){
         super("Conway's Life");
-        this.options = options;
-        parametersWindow = new ParametersWindow(options, this);
+        this.graphicsOptions = graphicsOptions;
+        parametersWindow = new ParametersWindow(graphicsOptions, this);
 
-        field = new GameField(options);
+        field = new GameField(graphicsOptions);
         JMenuBar menu = createMenu();
         JToolBar toolBar = createToolBar();
 
@@ -106,7 +106,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
             JFileChooser jFileChooser = new JFileChooser();
             if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
                 File file =  jFileChooser.getSelectedFile();
-                fileManager.save(file, options);
+                fileManager.save(file, graphicsOptions);
             }
         });
         open.addActionListener(e->{
@@ -201,7 +201,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
             JFileChooser jFileChooser = new JFileChooser();
             if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
                 File file =  jFileChooser.getSelectedFile();
-                fileManager.save(file, options);
+                fileManager.save(file, graphicsOptions);
             }
         });
 
@@ -282,7 +282,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     @Override
     public void displayImpact(HashSet<Cell> cells) {
 
-        options.setShowImpact(!options.isShowImpact());
+        graphicsOptions.setShowImpact(!graphicsOptions.isShowImpact());
 
         field.updateGraphicField(cells);
 
@@ -290,10 +290,10 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
 
     @Override
     public void repaintAll(HashSet<Cell> cells, GraphicsOptions graphicsOptions) {
-        options = graphicsOptions;
+        this.graphicsOptions = graphicsOptions;
         getContentPane().remove(scrollPane);
 
-        field = new GameField(options);
+        field = new GameField(this.graphicsOptions);
         field.setGameController(gameController);
         field.updateGraphicField(cells);
         scrollPane = new JScrollPane(field,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -310,7 +310,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
                 JFileChooser jFileChooser = new JFileChooser();
                 if(jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
                     File file =  jFileChooser.getSelectedFile();
-                    fileManager.save(file, options);
+                    fileManager.save(file, graphicsOptions);
                 }
                 parametersWindow.setHandler(new ParametersNewFileHandler(gameController));
                 parametersWindow.show();

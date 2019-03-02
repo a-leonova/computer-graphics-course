@@ -1,10 +1,8 @@
 package com.leonova.fit.nsu.view.windows;
 
-import com.leonova.fit.nsu.controller.GameController;
 import com.leonova.fit.nsu.model.GameOptions;
 import com.leonova.fit.nsu.view.GraphicsOptions;
 import com.leonova.fit.nsu.view.ParametersWindowHandler;
-import com.leonova.fit.nsu.view.WindowView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -12,7 +10,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Objects;
 
 public class ParametersWindow {
 
@@ -122,8 +119,8 @@ public class ParametersWindow {
             int line = Integer.parseInt(lineTF.getText());
             int edge = Integer.parseInt(edgeTF.getText());
             graphicsOptions.setCellEdge(edge);
-            graphicsOptions.setCellsInColumn(width);
-            graphicsOptions.setCellsInRow(height);
+            graphicsOptions.setColumns(width);
+            graphicsOptions.setRows(height);
             graphicsOptions.setLineWidth(line);
 
             handler.handle(graphicsOptions, gameOptions);

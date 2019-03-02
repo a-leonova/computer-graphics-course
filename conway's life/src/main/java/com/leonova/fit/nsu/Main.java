@@ -11,11 +11,11 @@ public class Main {
 
 
     public static void main(String[] args) {
-        GraphicsOptions graphicsOptions = new GraphicsOptions(5, 5, 5, 10);
+        GraphicsOptions graphicsOptions = new GraphicsOptions(5, 2, 5, 10);
         GameOptions gameOptions = new GameOptions();
 
-        FieldController controller = new FieldController(gameOptions, graphicsOptions.getCellsInRow(), graphicsOptions.getCellsInColumn());
-        Field field = new Field(graphicsOptions.getCellsInRow(), graphicsOptions.getCellsInColumn(), gameOptions);
+        FieldController controller = new FieldController(gameOptions, graphicsOptions.getRows(), graphicsOptions.getColumns());
+        Field field = new Field(graphicsOptions.getRows(), graphicsOptions.getColumns(), gameOptions);
         WindowView view = new WindowView(graphicsOptions);
         view.setGameController(controller);
         view.setFileManager(controller);
