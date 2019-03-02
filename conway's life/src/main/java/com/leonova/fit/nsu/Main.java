@@ -16,7 +16,7 @@ public class Main {
 
         FieldController controller = new FieldController(gameOptions, graphicsOptions.getRows(), graphicsOptions.getColumns());
         Field field = new Field(graphicsOptions.getRows(), graphicsOptions.getColumns(), gameOptions);
-        WindowView view = new WindowView(graphicsOptions);
+        WindowView view = new WindowView(graphicsOptions, gameOptions);
         view.setGameController(controller);
         view.setFileManager(controller);
         controller.setField(field);

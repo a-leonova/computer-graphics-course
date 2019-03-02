@@ -39,8 +39,6 @@ public class CellsManager {
         heightInPixels = a * options.getRows() + 10 * 2 + options.getCellEdge() - shiftYWithHalfBorder + halfBorder;
     }
 
-    //TODO: check cells border!!!
-
     private void spanPaint(Position startPosition, Color oldColor, Color newColor, BufferedImage image) {
         Queue<Position> pixelsToDraw = new LinkedList<>();
         Color pixelColor = new Color(image.getRGB(startPosition.getX(), startPosition.getY()));

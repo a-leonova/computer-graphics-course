@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 public class ParametersWindow {
 
     private GraphicsOptions graphicsOptions;
+    private GameOptions gameOptions;
 
     private ParametersWindowHandler handler;
     private JFrame window;
@@ -21,8 +22,8 @@ public class ParametersWindow {
     private JRadioButton xor;
     private JRadioButton replace;
 
-    private JTextField widthTF;
-    private JTextField heightTF;
+    private JTextField columnsTF;
+    private JTextField rowsTF;
 
     private JTextField lineTF;
     private JTextField edgeTF;
@@ -35,9 +36,10 @@ public class ParametersWindow {
     private JTextField birthEndTF;
 
 
-    public ParametersWindow(GraphicsOptions graphicsOptions, ParametersWindowHandler handler) {
+    public ParametersWindow(GraphicsOptions graphicsOptions, GameOptions gameOptions,ParametersWindowHandler handler) {
         this.handler = handler;
         this.graphicsOptions = graphicsOptions;
+        this.gameOptions = gameOptions;
         window = new JFrame("Parameters");
         //window.setSize(100, 100);
         JPanel modePanel = createModePanel();
@@ -75,12 +77,12 @@ public class ParametersWindow {
         gamePanel.add(birthBeginLabel);
         gamePanel.add(birthEndLabel);
 
-        frsImpTF = new JTextField("1");
-        scdImpTF = new JTextField("0.3");
-        liveBegTF = new JTextField("2");
-        liveEndTF = new JTextField("3.3");
-        birthBeginTF = new JTextField("2.3");
-        birthEndTF = new JTextField("2.9");
+        frsImpTF = new JTextField(String.valueOf(gameOptions.getFirstImpact()));
+        scdImpTF = new JTextField(String.valueOf(gameOptions.getSecondImpact()));
+        liveBegTF = new JTextField(String.valueOf(gameOptions.getLiveBegin()));
+        liveEndTF = new JTextField(String.valueOf(gameOptions.getLiveEnd()));
+        birthBeginTF = new JTextField(String.valueOf(gameOptions.getBirthBegin()));
+        birthEndTF = new JTextField(String.valueOf(gameOptions.getLiveEnd()));
 
         gamePanel.add(frsImpTF);
         gamePanel.add(scdImpTF);
@@ -95,9 +97,9 @@ public class ParametersWindow {
         ok.addActionListener(e->{
 
             //TODO: window on ERROR
-            GameOptions gameOptions = new GameOptions();
+            GameOptions newGameOptions = new GameOptions();
 
-            gameOptions.setModeXor(xor.isSelected());
+            newGameOptions.setModeXor(xor.isSelected());
             double frs = Double.parseDouble(frsImpTF.getText());
             double scd = Double.parseDouble(scdImpTF.getText());
             double lBeg = Double.parseDouble(liveBegTF.getText());
@@ -105,25 +107,27 @@ public class ParametersWindow {
             double bBeg = Double.parseDouble(birthBeginTF.getText());
             double bEnd = Double.parseDouble(birthEndTF.getText());
 
-            gameOptions.setLiveEnd(lEnd);
-            gameOptions.setBirthBegin(bBeg);
-            gameOptions.setBirthEnd(bEnd);
-            gameOptions.setFirstImpact(frs);
-            gameOptions.setSecondImpact(scd);
-            gameOptions.setLiveBegin(lBeg);
+            newGameOptions.setLiveEnd(lEnd);
+            newGameOptions.setBirthBegin(bBeg);
+            newGameOptions.setBirthEnd(bEnd);
+            newGameOptions.setFirstImpact(frs);
+            newGameOptions.setSecondImpact(scd);
+            newGameOptions.setLiveBegin(lBeg);
 
-            GraphicsOptions graphicsOptions = new GraphicsOptions();
-            graphicsOptions.setShowImpact(this.graphicsOptions.isShowImpact());
-            int width = Integer.parseInt(widthTF.getText());
-            int height = Integer.parseInt(heightTF.getText());
+            GraphicsOptions newGraphicsOptions = new GraphicsOptions();
+            newGraphicsOptions.setShowImpact(this.graphicsOptions.isShowImpact());
+            int width = Integer.parseInt(columnsTF.getText());
+            int height = Integer.parseInt(rowsTF.getText());
             int line = Integer.parseInt(lineTF.getText());
             int edge = Integer.parseInt(edgeTF.getText());
-            graphicsOptions.setCellEdge(edge);
-            graphicsOptions.setColumns(width);
-            graphicsOptions.setRows(height);
-            graphicsOptions.setLineWidth(line);
+            newGraphicsOptions.setCellEdge(edge);
+            newGraphicsOptions.setColumns(width);
+            newGraphicsOptions.setRows(height);
+            newGraphicsOptions.setLineWidth(line);
 
-            handler.handle(graphicsOptions, gameOptions);
+            this.gameOptions = newGameOptions;
+            this.graphicsOptions = newGraphicsOptions;
+            handler.handle(newGraphicsOptions, newGameOptions);
             window.setVisible(false);
         });
 
@@ -146,8 +150,8 @@ public class ParametersWindow {
         GridLayout layout = new GridLayout(2, 3);
         cellPanel.setLayout(layout);
 
-        Label edgeLabel = new Label("Edge: ");
-        edgeTF = new JTextField("10");
+        Label edgeLabel = new Label("Cell edge: ");
+        edgeTF = new JTextField(String.valueOf(graphicsOptions.getCellEdge()));
         JSlider edgeSlider = new JSlider(1, 100, 10);
         edgeSlider.addChangeListener(new ChangeListener(){
             @Override
@@ -168,8 +172,8 @@ public class ParametersWindow {
             }
         });
 
-        Label lineLabel = new Label("Line weight: ");
-        lineTF = new JTextField("1");
+        Label lineLabel = new Label("Border width: ");
+        lineTF = new JTextField(String.valueOf(graphicsOptions.getLineWidth()));
         JSlider lineSlider = new JSlider(1, 15, 1);
         lineSlider.addChangeListener(new ChangeListener(){
             @Override
@@ -210,15 +214,15 @@ public class ParametersWindow {
         fieldPanel.add(fieldLabel);
         fieldPanel.add(spaces);
 
-        Label width = new Label("Width:");
-        widthTF = new JTextField("10");
-        fieldPanel.add(width);
-        fieldPanel.add(widthTF);
+        Label columns = new Label("Columns:");
+        columnsTF = new JTextField(String.valueOf(graphicsOptions.getColumns()));
+        fieldPanel.add(columns);
+        fieldPanel.add(columnsTF);
 
-        Label heightLabel = new Label("Height: ");
-        heightTF = new JTextField("10");
-        fieldPanel.add(heightLabel);
-        fieldPanel.add(heightTF);
+        Label rowsLabel = new Label("Rows: ");
+        rowsTF = new JTextField(String.valueOf(graphicsOptions.getRows()));
+        fieldPanel.add(rowsLabel);
+        fieldPanel.add(rowsTF);
 
         return fieldPanel;
     }
@@ -230,7 +234,6 @@ public class ParametersWindow {
 
         xor = new JRadioButton("XOR");
         xor.setBounds(75,50,100,30);
-        xor.setSelected(true);
         replace = new JRadioButton("Replace");
         replace.setBounds(75,50,100,30);
         ButtonGroup bg=new ButtonGroup();
@@ -239,6 +242,8 @@ public class ParametersWindow {
         modePanel.add(mode);
         modePanel.add(xor);
         modePanel.add(replace);
+        xor.setSelected(gameOptions.isModeXor());
+        replace.setSelected(!gameOptions.isModeXor());
         return modePanel;
     }
 

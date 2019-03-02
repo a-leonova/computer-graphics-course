@@ -18,6 +18,7 @@ import java.util.Objects;
 public class WindowView extends JFrame implements Observer, ParametersWindowHandler {
 
     private GraphicsOptions graphicsOptions;
+    private GameOptions gameOptions;
     private GameField field;
     private GameController gameController;
     private FileManager fileManager;
@@ -45,10 +46,11 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     private JRadioButtonMenuItem replaceMI = new JRadioButtonMenuItem("REPLACE");
     private XorReplaceHandler xorReplaceHandler = new XorReplaceHandler(xorButton, replaceButton, xorMI, replaceMI);
 
-    public WindowView(GraphicsOptions graphicsOptions){
+    public WindowView(GraphicsOptions graphicsOptions, GameOptions gameOptions){
         super("Conway's Life");
         this.graphicsOptions = graphicsOptions;
-        parametersWindow = new ParametersWindow(graphicsOptions, this);
+        this.gameOptions = gameOptions;
+        parametersWindow = new ParametersWindow(graphicsOptions, gameOptions,this);
 
         field = new GameField(graphicsOptions);
         JMenuBar menu = createMenu();
