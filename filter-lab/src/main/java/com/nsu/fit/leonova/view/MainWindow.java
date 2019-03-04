@@ -2,22 +2,27 @@ package com.nsu.fit.leonova.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainWindow {
-    private JFrame window;
+public class MainWindow extends JFrame{
 
     public MainWindow() throws IOException {
-        window = new JFrame("Minimal photoshop");
-        ImageManager jPanel = new ImageManager();
-        window.add(jPanel);
+        super("Minimal photoshop");
+        ImageManager sourceImage = new ImageManager();
+        ImageManager chosenArea = new ImageManager();
+        ImageManager filteredArea = new ImageManager();
+
+        setLayout(new FlowLayout());
+
 //
         BufferedImage image = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("Picture.bmp")));
-        jPanel.setImage(image);
+        sourceImage.setImage(image);
+        add(sourceImage);
+        add(chosenArea);
+        add(filteredArea);
 //        Image newImage = resizeImage(image);
 //        JLabel l1 = new JLabel("1");
 //        //l1.setSize(350,350);(9
@@ -31,10 +36,10 @@ public class MainWindow {
 //        jPanel.add(l1, BorderLayout.WEST);
 //        jPanel.add(l2, BorderLayout.CENTER);
 //        jPanel.add(l3, BorderLayout.EAST);
-        window.setSize(800, 500);
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.pack();
-        window.setVisible(true);
+        setSize(1000, 700);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
 
 
     }
