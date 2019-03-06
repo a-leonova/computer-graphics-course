@@ -33,6 +33,9 @@ public class ImagesHolder extends JPanel implements MouseMotionListener, MouseLi
     }
 
     public void setSelected(boolean selected) {
+        if(!selected){
+            sourceImage.removeSelectedArea();
+        }
         this.selected = selected;
     }
 
@@ -46,12 +49,13 @@ public class ImagesHolder extends JPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void mousePressed(MouseEvent e) {
-        sourceImage.mousePressed(e.getPoint());
+        if(selected && checkPositionInSourceArea(e.getPoint())){
+            sourceImage.mousePressed(e.getPoint());
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        sourceImage.mouseReleased(e.getPoint());
     }
 
     @Override
@@ -75,10 +79,10 @@ public class ImagesHolder extends JPanel implements MouseMotionListener, MouseLi
     }
 
     private boolean checkPositionInSourceArea(Point position){
-        int x = sourceImage.getX() + sourceImage.getInsideImageWidth();
-        int y = sourceImage.getY() + sourceImage.getInsideImageHeight();
+        int x = sourceImage.getX() + sourceImage.getInsideImageWidth() - Globals.SELECTED_AREA_SIZE/2;
+        int y = sourceImage.getY() + sourceImage.getInsideImageHeight() - Globals.SELECTED_AREA_SIZE/2;
         Point rightBottomCorner = new Point(x, y);
-        Point leftTopCorner = new Point(sourceImage.getX(), sourceImage.getY());
+        Point leftTopCorner = new Point(sourceImage.getX() + Globals.SELECTED_AREA_SIZE/2, sourceImage.getY()+ Globals.SELECTED_AREA_SIZE/2);
         if(position.x < leftTopCorner.x || position.y < leftTopCorner.y || position.x > rightBottomCorner.x || position.y > rightBottomCorner.y){
             System.out.println("OUT");
             return false;

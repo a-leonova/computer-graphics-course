@@ -62,14 +62,19 @@ public class ImageManager extends JPanel {
         repaint();
     }
 
-    public void mouseReleased(Point releasedPoint) {
-        center = null;
-        repaint();
-//        drawToBackground();
-    }
+//    public void mouseReleased(Point releasedPoint) {
+//        center = null;
+//        repaint();
+////        drawToBackground();
+//    }
 
     public void mousePressed(Point pressedPoint) {
         center = pressedPoint;
+    }
+
+    public void removeSelectedArea(){
+        center = null;
+        repaint();
     }
 
 
