@@ -12,19 +12,8 @@ public class MainWindow extends JFrame{
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
-        ImageManager sourceImage = new ImageManager();
-        ImageManager chosenArea = new ImageManager();
-        ImageManager filteredArea = new ImageManager();
 
-        JPanel imagesHolder = new JPanel();
-        imagesHolder.setLayout(new FlowLayout());
-
-        BufferedImage image = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("Picture.bmp")));
-        sourceImage.setImage(image);
-        imagesHolder.add(sourceImage);
-        imagesHolder.add(chosenArea);
-        imagesHolder.add(filteredArea);
-
+        JPanel imagesHolder = new ImagesHolder();
         JToolBar toolBar = createToolBar();
         add(toolBar);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
