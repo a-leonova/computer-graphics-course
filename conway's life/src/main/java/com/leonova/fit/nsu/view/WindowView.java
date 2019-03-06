@@ -319,6 +319,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
                 parametersWindow.show();
                 break;
             case NO:
+                parametersWindow.setHandler(new ParametersNewFileHandler(gameController));
                 parametersWindow.show();
                 break;
             case CANCEL:
