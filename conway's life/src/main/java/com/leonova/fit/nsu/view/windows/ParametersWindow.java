@@ -54,6 +54,16 @@ public class ParametersWindow {
         window.pack();
     }
 
+    public void setGraphicsOptions(GraphicsOptions graphicsOptions) {
+        this.graphicsOptions = graphicsOptions;
+        updateInfo();
+    }
+
+    public void setGameOptions(GameOptions gameOptions) {
+        this.gameOptions = gameOptions;
+        updateInfo();
+    }
+
     public void show(){
         window.setVisible(true);
     }
@@ -95,7 +105,6 @@ public class ParametersWindow {
 
         ok.addActionListener(e->{
 
-            //TODO: window on ERROR
             try{
                 GameOptions newGameOptions = new GameOptions();
 
@@ -146,6 +155,22 @@ public class ParametersWindow {
         gamePanel.add(cancel);
 
         return gamePanel;
+    }
+
+    private void updateInfo(){
+        frsImpTF.setText(String.valueOf(gameOptions.getFirstImpact()));
+        scdImpTF.setText(String.valueOf(gameOptions.getSecondImpact()));
+        liveBegTF.setText(String.valueOf(gameOptions.getLiveBegin()));
+        liveEndTF.setText(String.valueOf(gameOptions.getLiveEnd()));
+        birthBeginTF.setText(String.valueOf(gameOptions.getBirthBegin()));
+        birthEndTF.setText(String.valueOf(gameOptions.getLiveEnd()));
+
+        edgeTF.setText(String.valueOf(graphicsOptions.getCellEdge()));
+        lineTF.setText(String.valueOf(graphicsOptions.getLineWidth()));
+
+        columnsTF.setText(String.valueOf(graphicsOptions.getColumns()));
+        rowsTF.setText(String.valueOf(graphicsOptions.getRows()));
+
     }
 
     public void setHandler(ParametersWindowHandler handler) {

@@ -293,6 +293,7 @@ public class WindowView extends JFrame implements Observer, ParametersWindowHand
     @Override
     public void repaintAll(HashSet<Cell> cells, GraphicsOptions graphicsOptions) {
         this.graphicsOptions = graphicsOptions;
+        parametersWindow.setGraphicsOptions(graphicsOptions);
         getContentPane().remove(scrollPane);
 
         field = new GameField(this.graphicsOptions);
