@@ -1,19 +1,16 @@
 package com.nsu.fit.leonova.view;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
 public class MainWindow extends JFrame{
+    private ImagesHolder imagesHolder = new ImagesHolder();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
 
-        JPanel imagesHolder = new ImagesHolder();
         JToolBar toolBar = createToolBar();
         add(toolBar);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
@@ -143,7 +140,10 @@ public class MainWindow extends JFrame{
 
     }
 
-
+//
+//    public void a(){
+//        imagesHolder.a();
+//    }
 
 
 }
