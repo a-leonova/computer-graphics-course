@@ -6,5 +6,5 @@ public class Globals {
     public static final int HEIGHT = 350;
     public static final int DASH_BORDER_WIDTH = 1;
 
-    public static final int SELECTED_AREA_SIZE = 120;
+    //public static final int SELECTED_AREA_SIZE = 120;
 }

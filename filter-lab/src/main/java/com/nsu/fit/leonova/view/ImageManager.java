@@ -8,13 +8,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageManager extends JPanel {
 
-    private BufferedImage bufferedImage;
-    private Image insideImage;
-
-    private Point center = null;
-//    private Point startPt = null;
-//    private Point endPt = null;
-//    private Point currentPt = null;
+    protected Image insideImage = null;
+    protected BufferedImage bufferedImage;
 
     public ImageManager() {
         bufferedImage = new BufferedImage(Globals.WIDTH + Globals.DASH_BORDER_WIDTH , Globals.HEIGHT+ Globals.DASH_BORDER_WIDTH, BufferedImage.TYPE_INT_ARGB);
@@ -22,25 +17,7 @@ public class ImageManager extends JPanel {
         drawDashedRect(0,0, Globals.WIDTH, Globals.HEIGHT, 5, Color.BLUE, bufferedImage.createGraphics());
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(bufferedImage, 0,0,this);
-
-        if (center != null) {
-            //g.setColor(Color.CYAN);
-
-            int x = center.x - Globals.SELECTED_AREA_SIZE/2 ;
-            int y = center.y - Globals.SELECTED_AREA_SIZE/2;
-            int width = Globals.SELECTED_AREA_SIZE;
-            int height = Globals.SELECTED_AREA_SIZE;
-            drawDashedRect(x,y, width, height, 2, Color.RED,(Graphics2D) g);
-            //g.drawRect(x, y, width, height);
-        }
-
-    }
-
-    public void setImage(BufferedImage image){
+    public void setImage(BufferedImage image) {
         Graphics2D graphics2D = bufferedImage.createGraphics();
         graphics2D.clearRect(0,0,360,360);
         insideImage = resizeImage(image);
@@ -49,7 +26,35 @@ public class ImageManager extends JPanel {
         graphics2D.dispose();
     }
 
-    private void drawDashedRect(int x0, int y0, int width, int height, int freq, Color color,Graphics2D g2){
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        g.drawImage(bufferedImage, 0, 0, this);
+    }
+
+
+    public int getInsideImageWidth(){
+
+        if(insideImage != null){
+            return insideImage.getWidth(null);
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public int getInsideImageHeight() {
+        if(insideImage != null){
+            return insideImage.getHeight(null);
+        }
+        else {
+            return 0;
+        }
+    }
+
+
+    protected void drawDashedRect(int x0, int y0, int width, int height, int freq, Color color, Graphics2D g2){
         g2.setPaint(color);
         Stroke dashed = new BasicStroke(Globals.DASH_BORDER_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{freq}, 0);
         g2.setStroke(dashed);
@@ -57,28 +62,7 @@ public class ImageManager extends JPanel {
         g2.dispose();
     }
 
-    public void mouseDragged(Point newPoint){
-        center = newPoint;
-        repaint();
-    }
-
-//    public void mouseReleased(Point releasedPoint) {
-//        center = null;
-//        repaint();
-////        drawToBackground();
-//    }
-
-    public void mousePressed(Point pressedPoint) {
-        center = pressedPoint;
-    }
-
-    public void removeSelectedArea(){
-        center = null;
-        repaint();
-    }
-
-
-    private Image resizeImage(BufferedImage image){
+    protected Image resizeImage(BufferedImage image){
         int width;
         int height;
         if(image.getWidth() > image.getHeight()){
@@ -93,14 +77,6 @@ public class ImageManager extends JPanel {
         }
         Image newImage = image.getScaledInstance(width,height, Image.SCALE_FAST);
         return newImage;
-    }
-
-    public int getInsideImageWidth(){
-        return insideImage.getWidth(null);
-    }
-
-    public int getInsideImageHeight(){
-        return insideImage.getHeight(null);
     }
 
 }
