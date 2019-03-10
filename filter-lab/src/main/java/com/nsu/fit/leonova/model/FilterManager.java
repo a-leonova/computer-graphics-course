@@ -1,4 +1,8 @@
 package com.nsu.fit.leonova.model;
 
-public class FilterManager {
+import java.awt.image.BufferedImage;
+
+public interface FilterManager {
+    void useFilterWithImage(BufferedImage image, FiltersType filter);
+    void setWorkingImage(BufferedImage image);
 }

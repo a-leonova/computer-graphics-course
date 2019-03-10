@@ -1,7 +1,12 @@
 package com.nsu.fit.leonova.controller;
 
+import com.nsu.fit.leonova.model.FiltersType;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public interface ImageController {
-    void selectImage(Point leftTop, int width, int height);
+    void cropImage(Point leftTop, int width, int height);
+    void setWorkingImage(BufferedImage filteredImage);
+    void filterImage(FiltersType filterType);
 }
