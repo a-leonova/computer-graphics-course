@@ -32,17 +32,4 @@ public class ImagesHolder extends JPanel {
         }
         this.selected = selected;
     }
-//    private boolean checkPositionInSourceArea(Point position){
-//        int x = sourceImage.getX() + sourceImage.getInsideImageWidth() - Globals.SELECTED_AREA_SIZE/2;
-//        int y = sourceImage.getY() + sourceImage.getInsideImageHeight() - Globals.SELECTED_AREA_SIZE/2;
-//        Point rightBottomCorner = new Point(x, y);
-//        Point leftTopCorner = new Point(sourceImage.getX() + Globals.SELECTED_AREA_SIZE/2, sourceImage.getY()+ Globals.SELECTED_AREA_SIZE/2);
-//
-//        if(position.x < leftTopCorner.x || position.y < leftTopCorner.y || position.x > rightBottomCorner.x || position.y > rightBottomCorner.y){
-//            System.out.println("OUT");
-//            return false;
-//        }
-//        System.out.println("IN");
-//        return true;
-//    }
 }

@@ -1,12 +1,16 @@
 package com.nsu.fit.leonova.view;
 
+import com.nsu.fit.leonova.controller.FileManager;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
 public class MainWindow extends JFrame{
     private ImagesHolder imagesHolder = new ImagesHolder();
+    private FileManager fileManager;
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -34,6 +38,13 @@ public class MainWindow extends JFrame{
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
         openFileButton.setToolTipText("Open image");
+        openFileButton.addActionListener(e->{
+            JFileChooser jFileChooser = new JFileChooser();
+            if(jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+                File file =  jFileChooser.getSelectedFile();
+                fileManager.open(file);
+            }
+        });
 
         JButton saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));

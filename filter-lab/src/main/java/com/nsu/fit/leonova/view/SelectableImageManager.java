@@ -34,9 +34,6 @@ public class SelectableImageManager extends ImageManager {
             int y = center.y - relativeAreaSize / 2;
             int width = relativeAreaSize;
             int height = relativeAreaSize;
-            System.out.println("Center: " + center.x + " " + center.y);
-            System.out.println("LeftTop: " + x + " " + y);
-            System.out.println("RightBot: " + width + " " + height);
             drawDashedRect(x, y, width, height, 2, Color.RED, (Graphics2D) g);
         }
     }
@@ -65,9 +62,6 @@ public class SelectableImageManager extends ImageManager {
         @Override
         public void mouseDragged(MouseEvent mEvt) {
 
-//            int x = sourceImage.getX() + sourceImage.getInsideImageWidth() - Globals.SELECTED_AREA_SIZE/2;
-//            int y = sourceImage.getY() + sourceImage.getInsideImageHeight() - Globals.SELECTED_AREA_SIZE/2;
-//
             int x0 = relativeAreaSize / 2;
             int y0 = relativeAreaSize /2;
             int x1 = insideImage.getWidth(null) - relativeAreaSize /2 - Globals.DASH_BORDER_WIDTH;
