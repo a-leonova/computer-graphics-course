@@ -24,6 +24,7 @@ public class ImageManager extends JPanel {
         graphics2D.drawImage(insideImage,0, 0, insideImage.getWidth(null), insideImage.getHeight(null), null);
         drawDashedRect(0,0, Globals.WIDTH, Globals.HEIGHT, 5, Color.BLUE,bufferedImage.createGraphics());
         graphics2D.dispose();
+        repaint();
     }
 
 

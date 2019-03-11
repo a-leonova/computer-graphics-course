@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.view;
 
+import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.globals.Globals;
 
 import java.awt.*;
@@ -10,6 +11,8 @@ import java.awt.image.BufferedImage;
 public class SelectableImageManager extends ImageManager {
 
     private int ABSOLUTE_AREA_SIZE = 350;
+
+    private ImageController imageController;
 
     private BufferedImage realImage;
     private Point center = null;
@@ -24,10 +27,13 @@ public class SelectableImageManager extends ImageManager {
         addMouseMotionListener(mouseAdapter);
     }
 
+    public void setImageController(ImageController imageController) {
+        this.imageController = imageController;
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
         if (center != null) {
             //g.setColor(Color.CYAN);
             int x = center.x - relativeAreaSize / 2;
@@ -50,6 +56,7 @@ public class SelectableImageManager extends ImageManager {
         }
         relativeAreaSize = (int)Math.floor(ABSOLUTE_AREA_SIZE/resizeCoefficient);
         realImage = image;
+        repaint();
     }
 
     public void removeSelectedArea() {
@@ -62,6 +69,7 @@ public class SelectableImageManager extends ImageManager {
         @Override
         public void mouseDragged(MouseEvent mEvt) {
 
+            //TODO - do not recount it everytime
             int x0 = relativeAreaSize / 2;
             int y0 = relativeAreaSize /2;
             int x1 = insideImage.getWidth(null) - relativeAreaSize /2 - Globals.DASH_BORDER_WIDTH;
@@ -85,6 +93,7 @@ public class SelectableImageManager extends ImageManager {
 
             center = new Point(x,y);
             SelectableImageManager.this.repaint();
+            imageController.cropImage(new Point(center.x - relativeAreaSize/2, center.y - relativeAreaSize/2), relativeAreaSize, relativeAreaSize);
         }
 
         @Override

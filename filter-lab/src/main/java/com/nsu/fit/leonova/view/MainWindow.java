@@ -1,16 +1,20 @@
 package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.FileManager;
+import com.nsu.fit.leonova.controller.ImageController;
+import com.nsu.fit.leonova.observer.Observer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame implements Observer {
     private ImagesHolder imagesHolder = new ImagesHolder();
     private FileManager fileManager;
+    private ImageController imageController;
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -24,8 +28,15 @@ public class MainWindow extends JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+    }
 
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
 
+    public void setImageController(ImageController imageController) {
+        this.imageController = imageController;
+        imagesHolder.setImageController(imageController);
     }
 
     private JToolBar createToolBar(){
@@ -101,10 +112,12 @@ public class MainWindow extends JFrame{
         JButton left = new JButton();
         left.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/left.png"))));
         left.setToolTipText("Copy left");
+        left.addActionListener(e -> imageController.filteredImageAsWorking());
 
         JButton select = new JButton();
         select.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/select.png"))));
         select.setToolTipText("Select");
+
 
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
@@ -151,10 +164,19 @@ public class MainWindow extends JFrame{
 
     }
 
-//
-//    public void a(){
-//        imagesHolder.a();
-//    }
+    @Override
+    public void setFilteredImage(BufferedImage image) {
+        imagesHolder.setFilteredImage(image);
+    }
 
+    @Override
+    public void setWorkingImage(BufferedImage image) {
+        imagesHolder.setWorkingImage(image);
+    }
+
+    @Override
+    public void setSourceImage(BufferedImage image) {
+        imagesHolder.setSourceImage(image);
+    }
 
 }

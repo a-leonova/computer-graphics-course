@@ -6,5 +6,6 @@ import java.util.HashSet;
 public interface Observer {
     void setFilteredImage(BufferedImage image);
     void setWorkingImage(BufferedImage image);
+    void setSourceImage(BufferedImage image);
 
 }

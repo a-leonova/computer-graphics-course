@@ -4,15 +4,21 @@ import com.nsu.fit.leonova.model.filters.*;
 import com.nsu.fit.leonova.observer.Observable;
 import com.nsu.fit.leonova.observer.Observer;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FilterManagerImpl implements Observable, FilterManager {
+public class ImageConsumerImpl implements Observable, ImageConsumer {
+
+    private BufferedImage sourceImage;
+    private BufferedImage workingImage;
+    private BufferedImage filteredImage;
+
     private HashMap<FiltersType, Filter> filters = new HashMap<>();
     private ArrayList<Observer> observers = new ArrayList<>();
 
-    public FilterManagerImpl() {
+    public ImageConsumerImpl() {
         filters.put(FiltersType.BLUR, new BlurFilter());
         filters.put(FiltersType.DESATURATION, new DesaturateFilter());
         filters.put(FiltersType.EMBOSS, new EmbossFilter());
@@ -37,22 +43,48 @@ public class FilterManagerImpl implements Observable, FilterManager {
     }
 
     @Override
-    public void useFilterWithImage(BufferedImage original, FiltersType filterType) {
-        Filter filter = filters.get(filterType);
-        BufferedImage filteredImage = filter.applyFilter(original);
-        notifyObserverForFilteredImage(filteredImage);
-    }
-
-    @Override
-    public void setWorkingImage(BufferedImage image) {
-        for(Observer observer : observers){
-            observer.setWorkingImage(image);
+    public void useFilterWithImage(FiltersType filterType) {
+        if(workingImage != null){
+            Filter filter = filters.get(filterType);
+            filteredImage = filter.applyFilter(workingImage);
+            setFilteredPicture();
         }
     }
 
-    private void notifyObserverForFilteredImage(BufferedImage image) {
+    @Override
+    public void setSourcePicture(BufferedImage sourcePicture) {
+        this.sourceImage = sourcePicture;
         for(Observer observer : observers){
-            observer.setFilteredImage(image);
+            observer.setSourceImage(sourcePicture);
+        }
+    }
+
+    @Override
+    public void filteredImageAsWorking() {
+        if(filteredImage != null){
+            workingImage = filteredImage;
+            setWorkingPicture();
+        }
+    }
+
+
+    @Override
+    public void cropPicture(Point leftTop, int width, int height) {
+        if(sourceImage != null){
+            workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
+            setWorkingPicture();
+        }
+    }
+
+    private void setWorkingPicture() {
+        for(Observer observer : observers){
+            observer.setWorkingImage(workingImage);
+        }
+    }
+
+    private void setFilteredPicture() {
+        for(Observer observer : observers){
+            observer.setFilteredImage(filteredImage);
         }
     }
 }

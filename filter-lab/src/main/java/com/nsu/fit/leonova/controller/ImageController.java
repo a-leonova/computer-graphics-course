@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 public interface ImageController {
     void cropImage(Point leftTop, int width, int height);
-    void setWorkingImage(BufferedImage filteredImage);
+    //void setWorkingImage(BufferedImage filteredImage);
+    void filteredImageAsWorking();
     void filterImage(FiltersType filterType);
 }
