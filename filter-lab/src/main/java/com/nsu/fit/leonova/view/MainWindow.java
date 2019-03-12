@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
+import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class MainWindow extends JFrame implements Observer {
         imagesHolder.setImageController(imageController);
     }
 
-    private JToolBar createToolBar(){
+    private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
 
         JButton newFileButton = new JButton();
@@ -49,10 +50,10 @@ public class MainWindow extends JFrame implements Observer {
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
         openFileButton.setToolTipText("Open image");
-        openFileButton.addActionListener(e->{
+        openFileButton.addActionListener(e -> {
             JFileChooser jFileChooser = new JFileChooser();
-            if(jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-                File file =  jFileChooser.getSelectedFile();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
                 fileManager.open(file);
             }
         });
@@ -63,47 +64,58 @@ public class MainWindow extends JFrame implements Observer {
 
         JButton desaturate = new JButton();
         desaturate.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))));
-        desaturate.setToolTipText("Desaturate");
+        desaturate.setToolTipText("Desaturation");
+        desaturate.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION));
 
         JButton invert = new JButton();
         invert.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/negative.png"))));
         invert.setToolTipText("Invert");
+        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT));
 
         JButton orderedDithering = new JButton();
         orderedDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))));
         orderedDithering.setToolTipText("Ordered dithering");
+        orderedDithering.addActionListener(e -> imageController.filterImage(FiltersType.ORDERED));
 
         JButton fsDithering = new JButton();
         fsDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))));
         fsDithering.setToolTipText("Floyd-Stainberg dithering");
+        fsDithering.addActionListener(e -> imageController.filterImage(FiltersType.FS_DITHERING));
 
         JButton zoom = new JButton();
         zoom.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))));
         zoom.setToolTipText("Zoom x2");
+        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM));
 
         JButton roberts = new JButton();
         roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
         roberts.setToolTipText("Find edges (Roberts)");
+        roberts.addActionListener(e -> imageController.filterImage(FiltersType.ROBERTS));
 
         JButton sobel = new JButton();
         sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
         sobel.setToolTipText("Find edges (Sobel)");
+        sobel.addActionListener(e -> imageController.filterImage(FiltersType.SOBEL));
 
         JButton blur = new JButton();
         blur.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))));
         blur.setToolTipText("Blur");
+        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR));
 
         JButton sharp = new JButton();
         sharp.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
         sharp.setToolTipText("Sharp");
+        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN));
 
         JButton emboss = new JButton();
         emboss.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/embossed.png"))));
         emboss.setToolTipText("Emboss");
+        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS));
 
         JButton waterColor = new JButton();
         waterColor.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/aqua.png"))));
         waterColor.setToolTipText("Watercolor");
+        waterColor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR));
 
         JButton right = new JButton();
         right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
