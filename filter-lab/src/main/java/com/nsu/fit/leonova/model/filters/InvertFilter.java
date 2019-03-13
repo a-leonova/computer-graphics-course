@@ -17,8 +17,8 @@ public class InvertFilter implements Filter {
                 int newGreen = 255 - green;
                 int newBlue = 255 - blue;
 
-                int grayColor = (newRed << 16 | newGreen << 8 | newBlue);
-                filteredImage.setRGB(i, j, grayColor);
+                int newRgb = (newRed << 16 | newGreen << 8 | newBlue);
+                filteredImage.setRGB(i, j, newRgb);
             }
         }
         return filteredImage;
