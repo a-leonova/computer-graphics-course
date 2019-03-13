@@ -60,14 +60,9 @@ public class EmbossFilter implements Filter {
             System.out.println("Red " + finalRed);
         }
 
-//        finalRed = finalRed < 0 ? 0 : finalRed > 255 ? 255 : finalRed;
-//        finalBlue = finalBlue < 0 ? 0 : finalBlue > 255 ? 255 : finalBlue;
-//        finalGreen = finalGreen < 0 ? 0 : finalGreen > 255 ? 255 : finalGreen;
-
         finalRed += 128;
         finalGreen += 128;
         finalBlue += 128;
-
 
         finalRed = finalRed < 0 ? 0 : finalRed > 255 ? 255 : finalRed;
         finalBlue = finalBlue < 0 ? 0 : finalBlue > 255 ? 255 : finalBlue;
