@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 public class SharpenFilter implements Filter {
 
     private final int MATRIX_SIZE = 5;
+    //unsharp masking.
     private int[][] gaussianMatrix = {
             {1, 4, 6, 4, 1},
             {4, 16, 24, 16, 24},
@@ -13,13 +14,13 @@ public class SharpenFilter implements Filter {
             {4, 16, 24, 16, 4},
             {1, 4, 6, 4, 1}
     };
+    //usual masking.
 //    private int[][] gaussianMatrix = {
 //        {-1, -1, -1},
 //        {-1, 9, -1},
 //        {-1, -1, -1}
 //};
-    private double normalizationCoeff = -1.0/256.0;
-
+    private double normalizationCoeff = -1.0 / 256.0;
 
     @Override
     public BufferedImage applyFilter(BufferedImage original) {
@@ -34,7 +35,6 @@ public class SharpenFilter implements Filter {
     }
 
     private int countNewSharpRgb(BufferedImage source, Point center, int[][] gaussianMatrix, double normalizationCoeff, int matrixSize) {
-
         float finalRed = 0;
         float finalGreen = 0;
         float finalBlue = 0;
@@ -64,9 +64,9 @@ public class SharpenFilter implements Filter {
         finalGreen *= normalizationCoeff;
         finalBlue *= normalizationCoeff;
 
-        finalRed = finalRed < 0 ? 0 : finalRed > 255 ? 255: finalRed;
-        finalBlue = finalBlue < 0 ? 0: finalBlue > 255 ? 255: finalBlue;
-        finalGreen = finalGreen < 0 ? 0: finalGreen > 255 ? 255 : finalGreen;
+        finalRed = finalRed < 0 ? 0 : finalRed > 255 ? 255 : finalRed;
+        finalBlue = finalBlue < 0 ? 0 : finalBlue > 255 ? 255 : finalBlue;
+        finalGreen = finalGreen < 0 ? 0 : finalGreen > 255 ? 255 : finalGreen;
 
         int newRgb = (Math.round(finalRed) << 16 | Math.round(finalGreen) << 8 | Math.round(finalBlue));
         return newRgb;
