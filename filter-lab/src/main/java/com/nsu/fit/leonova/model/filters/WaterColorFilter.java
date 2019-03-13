@@ -58,8 +58,7 @@ public class WaterColorFilter implements Filter {
         int newGreen = greenColors.get(greenColors.size() / 2 + 1);
         int newBlue = blueColors.get(blueColors.size() / 2 + 1);
 
-        int newRgb = (Math.round(newRed) << 16 | Math.round(newGreen) << 8 | Math.round(newBlue));
-        return newRgb;
+        return (newRed << 16 | newGreen << 8 | newBlue);
     }
 
 }
