@@ -117,6 +117,11 @@ public class MainWindow extends JFrame implements Observer {
         waterColor.setToolTipText("Watercolor");
         waterColor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR));
 
+        JButton gamma = new JButton();
+        gamma.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))));
+        gamma.setToolTipText("Gamma");
+        gamma.addActionListener(e -> imageController.filterImage(FiltersType.GAMMA));
+
         JButton right = new JButton();
         right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
         right.setToolTipText("Copy right");
@@ -168,6 +173,7 @@ public class MainWindow extends JFrame implements Observer {
         toolBar.add(sharp);
         toolBar.add(emboss);
         toolBar.add(waterColor);
+        toolBar.add(gamma);
         toolBar.add(rotation);
 
         toolBar.addSeparator();

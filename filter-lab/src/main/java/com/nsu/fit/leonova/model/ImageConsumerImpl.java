@@ -30,6 +30,7 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
         filters.put(FiltersType.SOBEL, new SobelFilter());
         filters.put(FiltersType.WATERCOLOR, new WaterColorFilter());
         filters.put(FiltersType.ZOOM, new ZoomFilter());
+        filters.put(FiltersType.GAMMA, new GammaFilter());
     }
 
     @Override

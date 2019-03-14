@@ -3,6 +3,7 @@ package com.nsu.fit.leonova.model.filters;
 import java.awt.image.BufferedImage;
 
 public class RobertsFilter implements Filter {
+    //TODO: rewrite with matrix using
 
     private DesaturateFilter desaturateFilter = new DesaturateFilter();
 
@@ -16,7 +17,7 @@ public class RobertsFilter implements Filter {
                 int diff2 = countG2(grayImage, i, j);
 
                 int gray = (int)Math.round(Math.sqrt(diff1 * diff1 + diff2 * diff2));
-                gray = gray > 15 ? 255 : 0;
+                gray = gray > 100 ? 255 : 0;
                 int newRgb = (gray << 16 | gray << 8 | gray);
                 filteredImage.setRGB(i, j, newRgb);
             }

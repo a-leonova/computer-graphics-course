@@ -5,6 +5,7 @@ public enum FiltersType {
     DESATURATION,
     EMBOSS,
     FS_DITHERING,
+    GAMMA,
     INVERT,
     ORDERED,
     ROBERTS,
