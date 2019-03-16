@@ -3,7 +3,6 @@ package com.nsu.fit.leonova.model.filters;
 import java.awt.image.BufferedImage;
 
 public class RobertsFilter implements Filter {
-    //TODO: rewrite with matrix using
 
     private DesaturateFilter desaturateFilter = new DesaturateFilter();
 

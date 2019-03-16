@@ -16,9 +16,9 @@ public class SharpenFilter implements Filter {
     };
     //usual masking.
 //    private int[][] gaussianMatrix = {
-//        {-1, -1, -1},
-//        {-1, 9, -1},
-//        {-1, -1, -1}
+//        {0, -1, 0},
+//        {-1, 5, -1},
+//        {0, -1, 0}
 //};
     private double normalizationCoeff = -1.0 / 256.0;
 

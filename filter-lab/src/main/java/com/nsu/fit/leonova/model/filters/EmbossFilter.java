@@ -50,16 +50,6 @@ public class EmbossFilter implements Filter {
             }
         }
 
-        if(finalBlue < 0 || finalBlue > 255){
-            System.out.println("Blue " + finalBlue);
-        }
-        if(finalGreen < 0 || finalGreen > 255){
-            System.out.println("Green " + finalGreen);
-        }
-        if(finalRed < 0 || finalRed > 255){
-            System.out.println("Red " + finalRed);
-        }
-
         finalRed += 128;
         finalGreen += 128;
         finalBlue += 128;
