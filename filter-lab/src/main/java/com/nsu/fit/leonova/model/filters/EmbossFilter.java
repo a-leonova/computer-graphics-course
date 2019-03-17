@@ -1,5 +1,8 @@
 package com.nsu.fit.leonova.model.filters;
 
+import com.nsu.fit.leonova.model.SafeFloatColor;
+import com.nsu.fit.leonova.model.SafeIntColor;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -25,9 +28,8 @@ public class EmbossFilter implements Filter {
     }
 
     private int countNewEmbossRgb(BufferedImage source, Point center, int[][] gaussianMatrix, int matrixSize) {
-        float finalRed = 0;
-        float finalGreen = 0;
-        float finalBlue = 0;
+        SafeFloatColor finalColor = new SafeFloatColor();
+
         int half = matrixSize / 2;
         for (int i = -half; i <= half; ++i) {
             for (int j = -half; j <= half; ++j) {
@@ -36,29 +38,21 @@ public class EmbossFilter implements Filter {
 
                 int y0 = center.y + j;
                 y0 = y0 < 0 ? 0 : y0 >= source.getHeight() ? source.getHeight() - 1 : y0;
-                int rgb = source.getRGB(x0, y0);
-                int red = (rgb >> 16) & 0x000000FF;
-                int green = (rgb >> 8) & 0x000000FF;
-                int blue = (rgb) & 0x000000FF;
+                SafeIntColor color = new SafeIntColor(source.getRGB(x0, y0));
 
                 int m = i + half;
                 int n = j + half;
-                finalRed += (red * gaussianMatrix[m][n]);
-                finalGreen += (green * gaussianMatrix[m][n]);
-                finalBlue += (blue * gaussianMatrix[m][n]);
 
+                finalColor.setColor(finalColor.getRed() + color.getRed() * gaussianMatrix[m][n],
+                        finalColor.getGreen() + color.getGreen() * gaussianMatrix[m][n],
+                        finalColor.getBlue() + color.getBlue() * gaussianMatrix[m][n]);
             }
         }
 
-        finalRed += 128;
-        finalGreen += 128;
-        finalBlue += 128;
+        finalColor.setColor(finalColor.getRed() + 128,
+                finalColor.getGreen() + 128,
+                finalColor.getBlue() + 128);
 
-        finalRed = finalRed < 0 ? 0 : finalRed > 255 ? 255 : finalRed;
-        finalBlue = finalBlue < 0 ? 0 : finalBlue > 255 ? 255 : finalBlue;
-        finalGreen = finalGreen < 0 ? 0 : finalGreen > 255 ? 255 : finalGreen;
-
-        int newRgb = (Math.round(finalRed) << 16 | Math.round(finalGreen) << 8 | Math.round(finalBlue));
-        return newRgb;
+        return finalColor.getIntColor();
     }
 }

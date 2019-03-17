@@ -1,19 +1,22 @@
 package com.nsu.fit.leonova.model.filters;
 
+import com.nsu.fit.leonova.model.SafeIntColor;
+import com.nsu.fit.leonova.model.SafeFloatColor;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class BlurFilter implements Filter {
 
     private final int MATRIX_SIZE = 5;
-    private int[][] gaussianMatrix = {
+    private final int[][] gaussianMatrix = {
             {1, 2, 3, 2, 1},
             {2, 4, 5, 4, 2},
             {3, 5, 6, 5, 3},
             {2, 4, 5, 4, 2},
             {1, 2, 3, 2, 1}
     };
-    private double normalizationCoeff = 1.0 / 74.0;
+    private final float normalizationCoeff = 1.0f / 74.0f;
 
 
     @Override
@@ -28,11 +31,10 @@ public class BlurFilter implements Filter {
         return filteredImage;
     }
 
-    private int countNewBlurRgb(BufferedImage source, Point center, int[][] gaussianMatrix, double normalizationCoeff, int matrixSize) {
+    private int countNewBlurRgb(BufferedImage source, Point center, int[][] gaussianMatrix, float normalizationCoeff, int matrixSize) {
 
-        float finalRed = 0;
-        float finalGreen = 0;
-        float finalBlue = 0;
+        SafeFloatColor finalColor = new SafeFloatColor();
+
         int half = matrixSize / 2;
         for (int i = -half; i <= half; ++i) {
             for (int j = -half; j <= half; ++j) {
@@ -41,24 +43,23 @@ public class BlurFilter implements Filter {
 
                 int y0 = center.y + j;
                 y0 = y0 < 0 ? 0 : y0 >= source.getHeight() ? source.getHeight() - 1 : y0;
-                int rgb = source.getRGB(x0, y0);
-                int red = (rgb >> 16) & 0x000000FF;
-                int green = (rgb >> 8) & 0x000000FF;
-                int blue = (rgb) & 0x000000FF;
+
+                SafeIntColor color = new SafeIntColor(source.getRGB(x0, y0));
 
                 int m = i + half;
                 int n = j + half;
-                finalRed += (red * gaussianMatrix[m][n]);
-                finalGreen += (green * gaussianMatrix[m][n]);
-                finalBlue += (blue * gaussianMatrix[m][n]);
+
+                finalColor.setColor(finalColor.getRed() + color.getRed() * gaussianMatrix[m][n],
+                         finalColor.getGreen() + color.getGreen() * gaussianMatrix[m][n],
+                         finalColor.getBlue() + color.getBlue() * gaussianMatrix[m][n]);
             }
         }
 
-        finalRed *= normalizationCoeff;
-        finalGreen *= normalizationCoeff;
-        finalBlue *= normalizationCoeff;
+        finalColor.setColor(finalColor.getRed() * normalizationCoeff,
+                finalColor.getGreen() * normalizationCoeff,
+                finalColor.getBlue() * normalizationCoeff);
 
-        int newRgb = (Math.round(finalRed) << 16 | Math.round(finalGreen) << 8 | Math.round(finalBlue));
-        return newRgb;
+
+        return finalColor.getIntColor();
     }
 }

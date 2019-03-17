@@ -1,5 +1,7 @@
 package com.nsu.fit.leonova.model.filters;
 
+import com.nsu.fit.leonova.model.SafeIntColor;
+
 import java.awt.image.BufferedImage;
 
 public class InvertFilter implements Filter {
@@ -8,17 +10,12 @@ public class InvertFilter implements Filter {
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for(int i = 0; i < original.getHeight(); ++i){
             for(int j = 0; j < original.getWidth(); ++j){
-                int rgb = original.getRGB(i, j);
-                int red = (rgb >> 16) & 0x000000FF;
-                int green = (rgb >>8 ) & 0x000000FF;
-                int blue = (rgb) & 0x000000FF;
-
-                int newRed = 255 - red;
-                int newGreen = 255 - green;
-                int newBlue = 255 - blue;
-
-                int newRgb = (newRed << 16 | newGreen << 8 | newBlue);
-                filteredImage.setRGB(i, j, newRgb);
+                SafeIntColor color = new SafeIntColor(original.getRGB(i, j));
+                SafeIntColor newColor = new SafeIntColor(
+                        255 - color.getRed(),
+                        255 - color.getGreen(),
+                        255 - color.getBlue());
+                filteredImage.setRGB(i, j, newColor.getSafeIntColor());
             }
         }
         return filteredImage;

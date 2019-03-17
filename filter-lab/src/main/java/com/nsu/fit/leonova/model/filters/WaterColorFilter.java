@@ -1,5 +1,7 @@
 package com.nsu.fit.leonova.model.filters;
 
+import com.nsu.fit.leonova.model.SafeIntColor;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -7,7 +9,6 @@ import java.util.ArrayList;
 public class WaterColorFilter implements Filter {
 
     private SharpenFilter sharpenFilter = new SharpenFilter();
-
 
     @Override
     public BufferedImage applyFilter(BufferedImage original) {
@@ -39,14 +40,11 @@ public class WaterColorFilter implements Filter {
                 int y0 = center.y + j;
                 y0 = y0 < 0 ? 0 : y0 >= source.getHeight() ? source.getHeight() - 1 : y0;
 
-                int rgb = source.getRGB(x0, y0);
-                int red = (rgb >> 16) & 0x000000FF;
-                int green = (rgb >> 8) & 0x000000FF;
-                int blue = (rgb) & 0x000000FF;
+                SafeIntColor color = new SafeIntColor(source.getRGB(x0, y0));
 
-                redColors.add(red);
-                greenColors.add(green);
-                blueColors.add(blue);
+                redColors.add(color.getRed());
+                greenColors.add(color.getGreen());
+                blueColors.add(color.getBlue());
             }
         }
 
@@ -54,11 +52,11 @@ public class WaterColorFilter implements Filter {
         greenColors.sort(Integer::compareTo);
         blueColors.sort(Integer::compareTo);
 
-        int newRed = redColors.get(redColors.size() / 2 + 1);
-        int newGreen = greenColors.get(greenColors.size() / 2 + 1);
-        int newBlue = blueColors.get(blueColors.size() / 2 + 1);
+        SafeIntColor color = new SafeIntColor(redColors.get(redColors.size() / 2 + 1),
+                greenColors.get(greenColors.size() / 2 + 1),
+                blueColors.get(blueColors.size() / 2 + 1));
 
-        return (newRed << 16 | newGreen << 8 | newBlue);
+        return color.getSafeIntColor();
     }
 
 }
