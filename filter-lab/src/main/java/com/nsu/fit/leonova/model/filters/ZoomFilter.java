@@ -1,8 +1,10 @@
 package com.nsu.fit.leonova.model.filters;
 
-import com.nsu.fit.leonova.model.SafeFloatColor;
-import com.nsu.fit.leonova.model.SafeIntColor;
+import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.model.Utils;
+import com.sun.jndi.toolkit.url.Uri;
 
+import javax.rmi.CORBA.Util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -42,45 +44,38 @@ public class ZoomFilter implements Filter {
         float xWeight = Math.abs(x0 - xBase);
         float yWeight = Math.abs(y0 - yBase);
 
-        Point pixel = getSafePixel(new Point(xBase, yBase), source);
-        SafeIntColor c00 = new SafeIntColor(source.getRGB(pixel.x, pixel.y));
+        Point pixel = Utils.getSafePoint(xBase, yBase, source);
+        SafeColor c00 = new SafeColor(source.getRGB(pixel.x, pixel.y));
 
-        pixel = getSafePixel(new Point(xBase + xSign, yBase), source);
-        SafeIntColor c10 = new SafeIntColor(source.getRGB(pixel.x, pixel.y));
+        pixel = Utils.getSafePoint(xBase + xSign, yBase, source);
+        SafeColor c10 = new SafeColor(source.getRGB(pixel.x, pixel.y));
 
-        pixel = getSafePixel(new Point(xBase, yBase + ySign), source);
-        SafeIntColor c01 = new SafeIntColor(source.getRGB(pixel.x, pixel.y));
+        pixel = Utils.getSafePoint(xBase, yBase + ySign, source);
+        SafeColor c01 = new SafeColor(source.getRGB(pixel.x, pixel.y));
 
-        pixel = getSafePixel(new Point(xBase + xSign, yBase + ySign), source);
-        SafeIntColor c11 = new SafeIntColor(source.getRGB(pixel.x, pixel.y));
+        pixel = Utils.getSafePoint(xBase + xSign, yBase + ySign, source);
+        SafeColor c11 = new SafeColor(source.getRGB(pixel.x, pixel.y));
 
-        SafeIntColor interpolate1 = interpolate(c00, c10, xWeight, 1 - xWeight);
-        SafeIntColor interpolate2 = interpolate(c01, c11, xWeight, 1 - xWeight);
+        SafeColor interpolate1 = interpolate(c00, c10, xWeight, 1 - xWeight);
+        SafeColor interpolate2 = interpolate(c01, c11, xWeight, 1 - xWeight);
 
-        SafeIntColor res = interpolate(interpolate1, interpolate2, yWeight, 1 - yWeight);
+        SafeColor res = interpolate(interpolate1, interpolate2, yWeight, 1 - yWeight);
 
-        return res.getSafeIntColor();
+        return res.getIntRgb();
     }
 
 
-    private SafeIntColor interpolate(SafeIntColor c1, SafeIntColor c2, float weight1, float weight2){
+    private SafeColor interpolate(SafeColor c1, SafeColor c2, float weight1, float weight2){
         float w = weight1 / (weight1 + weight2);
 
-        int dr = c2.getRed() - c1.getRed();
-        int dg = c2.getGreen() - c1.getGreen();
-        int db = c2.getBlue() - c1.getBlue();
+        double dr = c2.getRed() - c1.getRed();
+        double dg = c2.getGreen() - c1.getGreen();
+        double db = c2.getBlue() - c1.getBlue();
 
-        SafeFloatColor newColor = new SafeFloatColor(c1.getRed() + dr*w,
+        SafeColor newColor = new SafeColor(c1.getRed() + dr*w,
                 c1.getGreen() + dg*w,c1.getBlue() + db*w);
-        return new SafeIntColor(newColor.getIntColor());
+        return newColor;
     }
 
-    private Point getSafePixel(Point pixel, BufferedImage source){
-
-        int x0 = pixel.x < 0 ? 0 : pixel.x >= source.getWidth() ? source.getWidth() - 1 : pixel.x;
-        int y0 = pixel.y < 0 ? 0 : pixel.y >= source.getHeight() ? source.getHeight() - 1 : pixel.y;
-
-        return new Point(x0, y0);
-    }
 
 }

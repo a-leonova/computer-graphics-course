@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.model.filters;
 
-import com.nsu.fit.leonova.model.SafeIntColor;
+import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.model.Utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,22 +26,16 @@ public class WaterColorFilter implements Filter {
     }
 
     private int countNewMedianRgb(BufferedImage source, Point center, int neigbourWidth, int neighbourHeight) {
-
-        ArrayList<Integer> redColors = new ArrayList<>(neigbourWidth * neighbourHeight);
-        ArrayList<Integer> greenColors = new ArrayList<>(neigbourWidth * neighbourHeight);
-        ArrayList<Integer> blueColors = new ArrayList<>(neigbourWidth * neighbourHeight);
+        ArrayList<Double> redColors = new ArrayList<>(neigbourWidth * neighbourHeight);
+        ArrayList<Double> greenColors = new ArrayList<>(neigbourWidth * neighbourHeight);
+        ArrayList<Double> blueColors = new ArrayList<>(neigbourWidth * neighbourHeight);
 
         int halfWidth = neigbourWidth / 2;
         int halfHeight = neighbourHeight / 2;
         for (int i = -halfHeight; i <= halfHeight; ++i) {
             for (int j = -halfWidth; j <= halfWidth; ++j) {
-                int x0 = center.x + i;
-                x0 = x0 < 0 ? 0 : x0 >= source.getWidth() ? source.getWidth() - 1 : x0;
-
-                int y0 = center.y + j;
-                y0 = y0 < 0 ? 0 : y0 >= source.getHeight() ? source.getHeight() - 1 : y0;
-
-                SafeIntColor color = new SafeIntColor(source.getRGB(x0, y0));
+                Point safePoint = Utils.getSafePoint(center.x + i, center.y + j, source);
+                SafeColor color = new SafeColor(source.getRGB(safePoint.x, safePoint.y));
 
                 redColors.add(color.getRed());
                 greenColors.add(color.getGreen());
@@ -48,15 +43,15 @@ public class WaterColorFilter implements Filter {
             }
         }
 
-        redColors.sort(Integer::compareTo);
-        greenColors.sort(Integer::compareTo);
-        blueColors.sort(Integer::compareTo);
+        redColors.sort(Double::compareTo);
+        greenColors.sort(Double::compareTo);
+        blueColors.sort(Double::compareTo);
 
-        SafeIntColor color = new SafeIntColor(redColors.get(redColors.size() / 2 + 1),
+        SafeColor color = new SafeColor(redColors.get(redColors.size() / 2 + 1),
                 greenColors.get(greenColors.size() / 2 + 1),
                 blueColors.get(blueColors.size() / 2 + 1));
 
-        return color.getSafeIntColor();
+        return color.getIntRgb();
     }
 
 }

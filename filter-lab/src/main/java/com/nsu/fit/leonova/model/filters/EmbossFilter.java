@@ -1,7 +1,7 @@
 package com.nsu.fit.leonova.model.filters;
 
-import com.nsu.fit.leonova.model.SafeFloatColor;
-import com.nsu.fit.leonova.model.SafeIntColor;
+import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.model.Utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,31 +28,27 @@ public class EmbossFilter implements Filter {
     }
 
     private int countNewEmbossRgb(BufferedImage source, Point center, int[][] gaussianMatrix, int matrixSize) {
-        SafeFloatColor finalColor = new SafeFloatColor();
+        SafeColor finalColor = new SafeColor();
 
         int half = matrixSize / 2;
         for (int i = -half; i <= half; ++i) {
             for (int j = -half; j <= half; ++j) {
-                int x0 = center.x + i;
-                x0 = x0 < 0 ? 0 : x0 >= source.getWidth() ? source.getWidth() - 1 : x0;
-
-                int y0 = center.y + j;
-                y0 = y0 < 0 ? 0 : y0 >= source.getHeight() ? source.getHeight() - 1 : y0;
-                SafeIntColor color = new SafeIntColor(source.getRGB(x0, y0));
+                Point safePoint = Utils.getSafePoint(center.x + i, center.y + j, source);
+                SafeColor color = new SafeColor(source.getRGB(safePoint.x, safePoint.y));
 
                 int m = i + half;
                 int n = j + half;
 
-                finalColor.setColor(finalColor.getRed() + color.getRed() * gaussianMatrix[m][n],
+                finalColor.setRgb(finalColor.getRed() + color.getRed() * gaussianMatrix[m][n],
                         finalColor.getGreen() + color.getGreen() * gaussianMatrix[m][n],
                         finalColor.getBlue() + color.getBlue() * gaussianMatrix[m][n]);
             }
         }
 
-        finalColor.setColor(finalColor.getRed() + 128,
-                finalColor.getGreen() + 128,
-                finalColor.getBlue() + 128);
+        finalColor.setRgb(finalColor.getRed() + 0.5,
+                finalColor.getGreen() + 0.5,
+                finalColor.getBlue() + 0.5);
 
-        return finalColor.getIntColor();
+        return finalColor.getIntRgb();
     }
 }
