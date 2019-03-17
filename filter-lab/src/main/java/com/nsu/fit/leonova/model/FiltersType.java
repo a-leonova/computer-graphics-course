@@ -9,6 +9,7 @@ public enum FiltersType {
     INVERT,
     ORDERED,
     ROBERTS,
+    ROTATION,
     SHARPEN,
     SOBEL,
     WATERCOLOR,

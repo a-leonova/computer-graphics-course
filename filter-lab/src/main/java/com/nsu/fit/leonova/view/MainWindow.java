@@ -139,6 +139,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
         rotation.setToolTipText("Rotation");
+        rotation.addActionListener(e -> imageController.filterImage(FiltersType.ROTATION));
 
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));

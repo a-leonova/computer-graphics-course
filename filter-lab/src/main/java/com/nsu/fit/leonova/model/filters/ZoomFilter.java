@@ -2,9 +2,7 @@ package com.nsu.fit.leonova.model.filters;
 
 import com.nsu.fit.leonova.model.SafeColor;
 import com.nsu.fit.leonova.model.Utils;
-import com.sun.jndi.toolkit.url.Uri;
 
-import javax.rmi.CORBA.Util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
