@@ -17,7 +17,7 @@ public class FSDitheringParamsWindow extends JFrame {
     private JButton apply = new JButton("Apply");
 
     public  FSDitheringParamsWindow(){
-        super("Order dithering parameters");
+        super("Fs dithering parameters");
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new Label("Choose RGB"), BorderLayout.NORTH);

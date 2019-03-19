@@ -4,6 +4,7 @@ import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.view.parametersWindow.EdgeFilterParamsShowing;
 import com.nsu.fit.leonova.view.parametersWindow.FSDitheringParamsWindow;
 import com.nsu.fit.leonova.view.parametersWindow.OrderDitheringParamsWindow;
 
@@ -21,6 +22,7 @@ public class MainWindow extends JFrame implements Observer {
 
     private OrderDitheringParamsWindow orderDitheringParamsWindow = new OrderDitheringParamsWindow();
     private FSDitheringParamsWindow fsDitheringParamsWindow = new FSDitheringParamsWindow();
+    private EdgeFilterParamsShowing edgeFilterParamsShowing = new EdgeFilterParamsShowing();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -45,6 +47,7 @@ public class MainWindow extends JFrame implements Observer {
         imagesHolder.setImageController(imageController);
         orderDitheringParamsWindow.setController(imageController);
         fsDitheringParamsWindow.setController(imageController);
+        edgeFilterParamsShowing.setController(imageController);
     }
 
     private JToolBar createToolBar() {
@@ -98,13 +101,19 @@ public class MainWindow extends JFrame implements Observer {
         roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
         roberts.setToolTipText("Find edges (Roberts)");
         //TODO: window
-        roberts.addActionListener(e -> imageController.filterImage(FiltersType.ROBERTS, null));
+        roberts.addActionListener(e ->{
+            edgeFilterParamsShowing.setType(FiltersType.ROBERTS);
+            edgeFilterParamsShowing.setVisible(true);
+        });
 
         JButton sobel = new JButton();
         sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
         sobel.setToolTipText("Find edges (Sobel)");
         //TODO: window
-        sobel.addActionListener(e -> imageController.filterImage(FiltersType.SOBEL, null));
+        sobel.addActionListener(e -> {
+            edgeFilterParamsShowing.setType(FiltersType.SOBEL);
+            edgeFilterParamsShowing.setVisible(true);
+        });
 
         JButton blur = new JButton();
         blur.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))));
