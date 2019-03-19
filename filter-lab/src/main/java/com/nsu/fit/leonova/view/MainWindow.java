@@ -4,6 +4,8 @@ import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.view.parametersWindow.FSDitheringParamsWindow;
+import com.nsu.fit.leonova.view.parametersWindow.OrderDitheringParamsWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,9 @@ public class MainWindow extends JFrame implements Observer {
     private ImagesHolder imagesHolder = new ImagesHolder();
     private FileManager fileManager;
     private ImageController imageController;
+
+    private OrderDitheringParamsWindow orderDitheringParamsWindow = new OrderDitheringParamsWindow();
+    private FSDitheringParamsWindow fsDitheringParamsWindow = new FSDitheringParamsWindow();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -38,6 +43,8 @@ public class MainWindow extends JFrame implements Observer {
     public void setImageController(ImageController imageController) {
         this.imageController = imageController;
         imagesHolder.setImageController(imageController);
+        orderDitheringParamsWindow.setController(imageController);
+        fsDitheringParamsWindow.setController(imageController);
     }
 
     private JToolBar createToolBar() {
@@ -75,14 +82,12 @@ public class MainWindow extends JFrame implements Observer {
         JButton orderedDithering = new JButton();
         orderedDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))));
         orderedDithering.setToolTipText("Ordered dithering");
-        //TODO: window
-        orderedDithering.addActionListener(e -> imageController.filterImage(FiltersType.ORDERED, null));
+        orderedDithering.addActionListener(e -> orderDitheringParamsWindow.setVisible(true));
 
         JButton fsDithering = new JButton();
         fsDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))));
         fsDithering.setToolTipText("Floyd-Stainberg dithering");
-        //TODO: window
-        fsDithering.addActionListener(e -> imageController.filterImage(FiltersType.FS_DITHERING, null));
+        fsDithering.addActionListener(e -> fsDitheringParamsWindow.setVisible(true));
 
         JButton zoom = new JButton();
         zoom.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))));
