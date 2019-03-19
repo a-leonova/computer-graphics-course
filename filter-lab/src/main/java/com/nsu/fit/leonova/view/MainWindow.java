@@ -100,7 +100,6 @@ public class MainWindow extends JFrame implements Observer {
         JButton roberts = new JButton();
         roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
         roberts.setToolTipText("Find edges (Roberts)");
-        //TODO: window
         roberts.addActionListener(e ->{
             edgeFilterParamsShowing.setType(FiltersType.ROBERTS);
             edgeFilterParamsShowing.setVisible(true);
@@ -109,7 +108,6 @@ public class MainWindow extends JFrame implements Observer {
         JButton sobel = new JButton();
         sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
         sobel.setToolTipText("Find edges (Sobel)");
-        //TODO: window
         sobel.addActionListener(e -> {
             edgeFilterParamsShowing.setType(FiltersType.SOBEL);
             edgeFilterParamsShowing.setVisible(true);
