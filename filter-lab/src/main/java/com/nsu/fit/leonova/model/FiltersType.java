@@ -12,6 +12,7 @@ public enum FiltersType {
     ROTATION,
     SHARPEN,
     SOBEL,
+    VOLUME_RENDERING,
     WATERCOLOR,
     ZOOM
 }

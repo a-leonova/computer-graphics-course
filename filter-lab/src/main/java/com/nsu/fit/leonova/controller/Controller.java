@@ -18,13 +18,18 @@ public class Controller implements FileManager, ImageController {
     }
 
     @Override
-    public void open(File file) {
+    public void openImage(File file) {
         try{
             BufferedImage loadedImage = ImageIO.read(file);
             imageConsumer.setSourcePicture(loadedImage);
         } catch (IOException e){
           //TODO: send error and show window with error
         }
+    }
+
+    @Override
+    public void openConfigFile(File file) {
+        imageConsumer.openConfigFile(file);
     }
 
 
@@ -34,13 +39,23 @@ public class Controller implements FileManager, ImageController {
     }
 
     @Override
+    public void absorptionWasPressed() {
+        imageConsumer.absorptionWasPressed();
+    }
+
+    @Override
+    public void emissionWasPressed() {
+        imageConsumer.emissionWasPressed();
+    }
+
+    @Override
     public void filteredImageAsWorking() {
         imageConsumer.filteredImageAsWorking();
     }
 
 
     @Override
-    public void filterImage(FiltersType filterType) {
-        imageConsumer.useFilterWithImage(filterType);
+    public void filterImage(FiltersType filterType, double[] parameters) {
+        imageConsumer.useFilterWithImage(filterType, parameters);
     }
 }

@@ -54,7 +54,7 @@ public class MainWindow extends JFrame implements Observer {
             JFileChooser jFileChooser = new JFileChooser();
             if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File file = jFileChooser.getSelectedFile();
-                fileManager.open(file);
+                fileManager.openImage(file);
             }
         });
 
@@ -65,62 +65,67 @@ public class MainWindow extends JFrame implements Observer {
         JButton desaturate = new JButton();
         desaturate.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))));
         desaturate.setToolTipText("Desaturation");
-        desaturate.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION));
+        desaturate.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION, null));
 
         JButton invert = new JButton();
         invert.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/negative.png"))));
         invert.setToolTipText("Invert");
-        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT));
+        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT, null));
 
         JButton orderedDithering = new JButton();
         orderedDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))));
         orderedDithering.setToolTipText("Ordered dithering");
-        orderedDithering.addActionListener(e -> imageController.filterImage(FiltersType.ORDERED));
+        //TODO: window
+        orderedDithering.addActionListener(e -> imageController.filterImage(FiltersType.ORDERED, null));
 
         JButton fsDithering = new JButton();
         fsDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))));
         fsDithering.setToolTipText("Floyd-Stainberg dithering");
-        fsDithering.addActionListener(e -> imageController.filterImage(FiltersType.FS_DITHERING));
+        //TODO: window
+        fsDithering.addActionListener(e -> imageController.filterImage(FiltersType.FS_DITHERING, null));
 
         JButton zoom = new JButton();
         zoom.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))));
         zoom.setToolTipText("Zoom x2");
-        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM));
+        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM, null));
 
         JButton roberts = new JButton();
         roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
         roberts.setToolTipText("Find edges (Roberts)");
-        roberts.addActionListener(e -> imageController.filterImage(FiltersType.ROBERTS));
+        //TODO: window
+        roberts.addActionListener(e -> imageController.filterImage(FiltersType.ROBERTS, null));
 
         JButton sobel = new JButton();
         sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
         sobel.setToolTipText("Find edges (Sobel)");
-        sobel.addActionListener(e -> imageController.filterImage(FiltersType.SOBEL));
+        //TODO: window
+        sobel.addActionListener(e -> imageController.filterImage(FiltersType.SOBEL, null));
 
         JButton blur = new JButton();
         blur.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))));
         blur.setToolTipText("Blur");
-        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR));
+        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR, null));
 
         JButton sharp = new JButton();
         sharp.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
         sharp.setToolTipText("Sharp");
-        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN));
+        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN, null));
 
         JButton emboss = new JButton();
         emboss.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/embossed.png"))));
         emboss.setToolTipText("Emboss");
-        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS));
+        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS, null));
 
         JButton waterColor = new JButton();
         waterColor.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/aqua.png"))));
         waterColor.setToolTipText("Watercolor");
-        waterColor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR));
+        waterColor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
 
         JButton gamma = new JButton();
         gamma.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))));
         gamma.setToolTipText("Gamma");
-        gamma.addActionListener(e -> imageController.filterImage(FiltersType.GAMMA));
+        //TODO: window
+        gamma.addActionListener(e -> imageController.filterImage(FiltersType.GAMMA, null));
 
         JButton right = new JButton();
         right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
@@ -139,7 +144,36 @@ public class MainWindow extends JFrame implements Observer {
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
         rotation.setToolTipText("Rotation");
-        rotation.addActionListener(e -> imageController.filterImage(FiltersType.ROTATION));
+        //TODO: window
+        rotation.addActionListener(e -> imageController.filterImage(FiltersType.ROTATION, null));
+
+        JButton openConfig = new JButton();
+        openConfig.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))));
+        openConfig.setToolTipText("Open configuration");
+        openConfig.addActionListener(e -> {
+            JFileChooser jFileChooser = new JFileChooser();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                fileManager.openConfigFile(file);
+            }
+        });
+
+        JToggleButton absorption = new JToggleButton();
+        absorption.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/absorption.png"))));
+        absorption.setToolTipText("Absorption");
+        absorption.addActionListener(e -> imageController.absorptionWasPressed());
+
+        JToggleButton emission = new JToggleButton();
+        emission.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/emission.png"))));
+        emission.setToolTipText("Emission");
+        emission.addActionListener(e -> imageController.emissionWasPressed());
+
+        JButton applyVR = new JButton();
+        applyVR.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
+        applyVR.setToolTipText("Apply volume rendering");
+        //TODO: window
+        applyVR.addActionListener(e -> imageController.filterImage(FiltersType.VOLUME_RENDERING, null));
+
 
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
@@ -176,6 +210,12 @@ public class MainWindow extends JFrame implements Observer {
         toolBar.add(waterColor);
         toolBar.add(gamma);
         toolBar.add(rotation);
+
+        toolBar.addSeparator();
+        toolBar.add(openConfig);
+        toolBar.add(absorption);
+        toolBar.add(emission);
+        toolBar.add(applyVR);
 
         toolBar.addSeparator();
         toolBar.add(aboutButton);

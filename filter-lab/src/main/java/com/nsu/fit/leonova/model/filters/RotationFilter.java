@@ -7,11 +7,14 @@ import java.awt.image.BufferedImage;
 
 public class RotationFilter implements Filter {
 
-    private int angleInDegrees = 90;
-    private double angleInRad = Math.toRadians(angleInDegrees);
+    private int angleInDegrees;
+    private double angleInRad;
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
+        angleInDegrees = (int) parameters[0];
+        angleInRad = Math.toRadians(angleInDegrees);
+
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for(int y = 0; y < filteredImage.getHeight(); ++y){
             for (int x = 0; x < filteredImage.getWidth(); ++x){

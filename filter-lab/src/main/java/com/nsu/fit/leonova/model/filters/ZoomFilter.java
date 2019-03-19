@@ -13,7 +13,7 @@ public class ZoomFilter implements Filter {
     private final float PIV_Y = 0.5f;
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
 
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for(int y = 0; y < filteredImage.getHeight(); ++y){

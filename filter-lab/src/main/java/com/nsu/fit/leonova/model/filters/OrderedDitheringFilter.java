@@ -5,14 +5,15 @@ import com.nsu.fit.leonova.model.SafeColor;
 import java.awt.image.BufferedImage;
 
 public class OrderedDitheringFilter implements Filter {
-    private final int POWER_OF_MATRIX_SIZE = 4;
+    private int powerOfMatrixSize;
     private double[][] matrix;
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
-        matrix = generateMatrix(POWER_OF_MATRIX_SIZE);
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
+        powerOfMatrixSize = (int)parameters[0];
+        matrix = generateMatrix(powerOfMatrixSize);
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        int size = 1 << POWER_OF_MATRIX_SIZE;
+        int size = 1 << powerOfMatrixSize;
         for(int y = 0; y < filteredImage.getHeight(); ++y){
             for (int x = 0; x < filteredImage.getWidth(); ++x){
                 //filteredImage.setRGB(x, y, findSourcePixel(new Point(x, y), original));

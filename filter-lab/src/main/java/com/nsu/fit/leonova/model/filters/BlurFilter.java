@@ -20,7 +20,7 @@ public class BlurFilter implements Filter {
 
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for (int i = 0; i < original.getHeight(); ++i) {
             for (int j = 0; j < original.getWidth(); ++j) {

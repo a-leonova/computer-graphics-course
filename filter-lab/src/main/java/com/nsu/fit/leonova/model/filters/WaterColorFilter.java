@@ -12,7 +12,7 @@ public class WaterColorFilter implements Filter {
     private SharpenFilter sharpenFilter = new SharpenFilter();
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for (int i = 0; i < original.getHeight(); ++i) {
             for (int j = 0; j < original.getWidth(); ++j) {
@@ -20,7 +20,7 @@ public class WaterColorFilter implements Filter {
                 filteredImage.setRGB(i, j, newRgb);
             }
         }
-        filteredImage = sharpenFilter.applyFilter(filteredImage);
+        filteredImage = sharpenFilter.applyFilter(filteredImage, parameters);
         return filteredImage;
 
     }

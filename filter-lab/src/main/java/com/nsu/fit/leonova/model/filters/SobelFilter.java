@@ -21,17 +21,17 @@ public class SobelFilter implements Filter {
     private DesaturateFilter desaturateFilter = new DesaturateFilter();
 
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
-
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
+        int edgeTreshold = (int)parameters[0];
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        BufferedImage grayImage = desaturateFilter.applyFilter(original);
+        BufferedImage grayImage = desaturateFilter.applyFilter(original, parameters);
         for (int i = 0; i < original.getHeight(); ++i) {
             for (int j = 0; j < original.getWidth(); ++j) {
                 int diff1 = countGx(grayImage, new Point(i, j), horizontalMatrix, 3);
                 int diff2 = countGx(grayImage, new Point(i, j), verticalMatrix, 3);
 
                 int gray = (int)Math.round(Math.sqrt(diff1 * diff1 + diff2 * diff2));
-                gray = gray > 100 ? 255 : 0;
+                gray = gray > edgeTreshold ? 255 : 0;
                 int newRgb = (gray << 16 | gray << 8 | gray);
                 filteredImage.setRGB(i, j, newRgb);
             }

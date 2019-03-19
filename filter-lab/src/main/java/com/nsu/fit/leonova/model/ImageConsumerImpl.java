@@ -1,11 +1,13 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.model.filters.*;
+import com.nsu.fit.leonova.model.volumeRendering.VolumeRendering;
 import com.nsu.fit.leonova.observer.Observable;
 import com.nsu.fit.leonova.observer.Observer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +19,8 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
 
     private HashMap<FiltersType, Filter> filters = new HashMap<>();
     private ArrayList<Observer> observers = new ArrayList<>();
+
+    private VolumeRendering volumeRendering = new VolumeRendering();
 
     public ImageConsumerImpl() {
         filters.put(FiltersType.BLUR, new BlurFilter());
@@ -32,6 +36,7 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
         filters.put(FiltersType.ZOOM, new ZoomFilter());
         filters.put(FiltersType.GAMMA, new GammaFilter());
         filters.put(FiltersType.ROTATION, new RotationFilter());
+        filters.put(FiltersType.VOLUME_RENDERING, volumeRendering);
     }
 
     @Override
@@ -45,10 +50,10 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
     }
 
     @Override
-    public void useFilterWithImage(FiltersType filterType) {
+    public void useFilterWithImage(FiltersType filterType, double[] parameters) {
         if(workingImage != null){
             Filter filter = filters.get(filterType);
-            filteredImage = filter.applyFilter(workingImage);
+            filteredImage = filter.applyFilter(workingImage, parameters);
             setFilteredPicture();
         }
     }
@@ -76,6 +81,30 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
             workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
             setWorkingPicture();
         }
+    }
+
+    @Override
+    public void emissionWasPressed() {
+        volumeRendering.emissionWasPressed();
+    }
+
+    @Override
+    public void absorptionWasPressed() {
+        volumeRendering.absorptionWasPressed();
+    }
+
+    @Override
+    public void openConfigFile(File file) {
+        try{
+            ConfigFileLoader fileLoader = new ConfigFileLoader(file);
+            volumeRendering.setAbsorptions(fileLoader.getAbsorption());
+            volumeRendering.setEmissions(fileLoader.getEmission());
+            volumeRendering.setCharges(fileLoader.getCharges());
+        }
+        catch (IllegalArgumentException e){
+            //TODO: send Error message to view
+        }
+
     }
 
     private void setWorkingPicture() {

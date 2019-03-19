@@ -8,19 +8,13 @@ import java.awt.image.BufferedImage;
 
 public class FSDitheringFilter implements Filter {
 
-    private final int RED_VALUE = 3;
-    private final int GREEN_VALUE = 3;
-    private final int BLUE_VALUE = 2;
-
     private final int matrixSize = 2;
-
     private final int[][] shifts = {
             {1, 0},
             {-1, 1},
             {0, 1},
             {1, 1}
     };
-
     private final double[] diffusion = {
             7.0 / 16.0,
             3.0 / 16.0,
@@ -28,8 +22,16 @@ public class FSDitheringFilter implements Filter {
             1.0 / 16.0
     };
 
+    private int redValue;
+    private int greenValue;
+    private int blueValue;
+
     @Override
-    public BufferedImage applyFilter(BufferedImage original) {
+    public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
+        redValue = (int)parameters[0];
+        greenValue = (int)parameters[1];
+        blueValue = (int)parameters[2];
+
         SafeColor[][] errors = new SafeColor[original.getHeight()][original.getWidth()];
         for(int i = 0; i < original.getHeight(); ++i){
             for(int j = 0; j < original.getWidth(); ++j){
@@ -54,9 +56,9 @@ public class FSDitheringFilter implements Filter {
         double green = color.getGreen() + errors[point.x][point.y].getGreen();
         double blue = color.getBlue() + errors[point.x][point.y].getBlue();
 
-        double newRed = findClosest(red, RED_VALUE);
-        double newGreen = findClosest(green, GREEN_VALUE);
-        double newBlue = findClosest(blue, BLUE_VALUE);
+        double newRed = findClosest(red, redValue);
+        double newGreen = findClosest(green, greenValue);
+        double newBlue = findClosest(blue, blueValue);
 
         for (int i = 0; i < matrixSize * matrixSize; ++i) {
             int xNeighbour = point.x + shifts[i][0];
@@ -70,7 +72,6 @@ public class FSDitheringFilter implements Filter {
                     error.getGreen() + diffusion[i] * (green - newGreen),
                     error.getBlue() + diffusion[i] * (blue - newBlue)
             );
-            //System.out.println("OLOO");
         }
         return new SafeColor(newRed, newGreen, newBlue).getIntRgb();
     }
