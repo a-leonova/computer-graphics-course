@@ -90,6 +90,13 @@ public class MainWindow extends JFrame implements Observer {
         JButton saveButton = new JButton();
         saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
         saveButton.setToolTipText("Save image");
+        saveButton.addActionListener(e ->{
+            JFileChooser jFileChooser = new JFileChooser();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                fileManager.saveImage(file);
+            }
+        });
 
         JButton desaturate = new JButton();
         desaturate.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))));

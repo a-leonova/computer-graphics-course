@@ -5,10 +5,12 @@ import com.nsu.fit.leonova.model.volumeRendering.VolumeRendering;
 import com.nsu.fit.leonova.observer.Observable;
 import com.nsu.fit.leonova.observer.Observer;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -131,11 +133,20 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
                 int height = fileLoader.getEmissionHeight();
                 double[][] colors = createFloatColors(intColors, width, height);
                 observer.setManyGraphics(colors, height, width);
-                //74 75
             }
         }
         catch (IllegalArgumentException e){
             //TODO: send Error message to view
+        }
+    }
+
+    @Override
+    public void saveImage(File file) {
+        try {
+            ImageIO.write(filteredImage, "bmp", file);
+        } catch (IOException e) {
+            //TODO: send error message
+            e.printStackTrace();
         }
     }
 

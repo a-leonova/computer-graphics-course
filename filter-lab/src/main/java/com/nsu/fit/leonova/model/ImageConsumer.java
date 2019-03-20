@@ -17,4 +17,6 @@ public interface ImageConsumer {
     void emissionWasPressed();
     void absorptionWasPressed();
     void openConfigFile(File file);
+
+    void saveImage(File file);
 }

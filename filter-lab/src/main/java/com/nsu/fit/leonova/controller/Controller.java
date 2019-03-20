@@ -32,6 +32,11 @@ public class Controller implements FileManager, ImageController {
         imageConsumer.openConfigFile(file);
     }
 
+    @Override
+    public void saveImage(File file) {
+        imageConsumer.saveImage(file);
+    }
+
 
     @Override
     public void cropImage(Point leftTop, int width, int height) {
