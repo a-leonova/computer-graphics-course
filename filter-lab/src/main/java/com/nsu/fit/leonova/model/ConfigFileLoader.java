@@ -47,15 +47,16 @@ public class ConfigFileLoader {
                 emission[cur.getX()][2] = cur.getBlue();
                 for (int i = 1; i < cur.getX() - prevEm.getX(); i++) {
                     double redIncrement = (double) (cur.getRed() - prevEm.getRed()) / (cur.getX() - prevEm.getX());
-                    double greenIncrement = (double) (cur.getGreen() - prevEm.getRed()) / (cur.getX() - prevEm.getX());
+                    double greenIncrement = (double) (cur.getGreen() - prevEm.getGreen()) / (cur.getX() - prevEm.getX());
                     double blueIncrement = (double) (cur.getBlue() - prevEm.getBlue()) / (cur.getX() - prevEm.getX());
-                    emission[i + prevEm.getX()][0] = trim((int)(prevEm.getRed() + i * redIncrement));
-                    emission[i + prevEm.getX()][1] = trim((int)(prevEm.getGreen() + i * greenIncrement));
-                    emission[i + prevEm.getX()][2] = trim((int)(prevEm.getBlue() + i * blueIncrement));
+                    emission[i + prevEm.getX()][0] = (int)(prevEm.getRed() + i * redIncrement);
+                    emission[i + prevEm.getX()][1] = (int)(prevEm.getGreen() + i * greenIncrement);
+                    emission[i + prevEm.getX()][2] = (int)(prevEm.getBlue() + i * blueIncrement);
                 }
             }
             prevEm = cur;
         }
+        System.out.println("!!11");
     }
 
 //

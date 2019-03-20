@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class VolumeRenderingParamsWindow extends JFrame {
     private final Integer MIN_VALUE = 0;
-    private final Integer MAX_VALUE = 0;
+    private final Integer MAX_VALUE = 100;
     private final Integer DEFAULT_VALUE = 10;
 
 
