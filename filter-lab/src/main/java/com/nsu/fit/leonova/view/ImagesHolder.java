@@ -1,14 +1,12 @@
 package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.ImageController;
-import com.nsu.fit.leonova.globals.Globals;
+import com.nsu.fit.leonova.globals.GlobalsImage;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
 
 public class ImagesHolder extends JPanel {
 
@@ -19,10 +17,8 @@ public class ImagesHolder extends JPanel {
     private ImageManager filteredArea = new ImageManager();
 
     public ImagesHolder() throws IOException {
-        setLayout(new FlowLayout(FlowLayout.LEFT, Globals.BORDER, Globals.BORDER));
+        setLayout(new FlowLayout(FlowLayout.LEFT, GlobalsImage.BORDER, GlobalsImage.BORDER));
 
-        //BufferedImage image = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("ChristmasBaubles.bmp")));
-        //sourceImage.setImage(image);
         add(sourceImage);
         add(chosenArea);
         add(filteredArea);

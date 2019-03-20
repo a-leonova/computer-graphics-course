@@ -1,7 +1,7 @@
 package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.ImageController;
-import com.nsu.fit.leonova.globals.Globals;
+import com.nsu.fit.leonova.globals.GlobalsImage;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -49,10 +49,10 @@ public class SelectableImageManager extends ImageManager {
         super.setImage(image);
         //TODO: if small image
         if(image.getHeight() > image.getWidth()){
-            resizeCoefficient = image.getHeight() / (double)Globals.HEIGHT;
+            resizeCoefficient = image.getHeight() / (double) GlobalsImage.HEIGHT;
         }
         else{
-            resizeCoefficient = image.getWidth() / (double)Globals.WIDTH;
+            resizeCoefficient = image.getWidth() / (double) GlobalsImage.WIDTH;
         }
         relativeAreaSize = (int)Math.floor(ABSOLUTE_AREA_SIZE/resizeCoefficient);
         System.out.println("RELATIVE SIZE: " + relativeAreaSize);
@@ -75,8 +75,8 @@ public class SelectableImageManager extends ImageManager {
             //TODO - do not recount it everytime
             int x0 = relativeAreaSize / 2;
             int y0 = relativeAreaSize /2;
-            int x1 = insideImage.getWidth(null) - relativeAreaSize /2 - Globals.DASH_BORDER_WIDTH;
-            int y1 = insideImage.getHeight(null) - relativeAreaSize/2 - Globals.DASH_BORDER_WIDTH;
+            int x1 = insideImage.getWidth(null) - relativeAreaSize /2 - GlobalsImage.DASH_BORDER_WIDTH;
+            int y1 = insideImage.getHeight(null) - relativeAreaSize/2 - GlobalsImage.DASH_BORDER_WIDTH;
 
             int x = mEvt.getX();
             if(x < x0){
@@ -96,13 +96,13 @@ public class SelectableImageManager extends ImageManager {
 
             center = new Point(x,y);
             System.out.println("Center - " + center.x + " " + center.y);
-            System.out.println("LeftTop - " + (center.x - relativeAreaSize/2+ Globals.DASH_BORDER_WIDTH) + " " + (center.y - relativeAreaSize/2+ Globals.DASH_BORDER_WIDTH));
+            System.out.println("LeftTop - " + (center.x - relativeAreaSize/2+ GlobalsImage.DASH_BORDER_WIDTH) + " " + (center.y - relativeAreaSize/2+ GlobalsImage.DASH_BORDER_WIDTH));
             SelectableImageManager.this.repaint();
 
-            int realX = (int)Math.round((center.x - relativeAreaSize/2) * resizeCoefficient) + Globals.DASH_BORDER_WIDTH;
-            int realY = (int)Math.round((center.y - relativeAreaSize/2) * resizeCoefficient) + Globals.DASH_BORDER_WIDTH;
+            int realX = (int)Math.round((center.x - relativeAreaSize/2) * resizeCoefficient) + GlobalsImage.DASH_BORDER_WIDTH;
+            int realY = (int)Math.round((center.y - relativeAreaSize/2) * resizeCoefficient) + GlobalsImage.DASH_BORDER_WIDTH;
             System.out.println("Real: " + realX + " " + realY);
-            //imageController.cropImage(new Point(center.x - relativeAreaSize/2 + Globals.DASH_BORDER_WIDTH, center.y - relativeAreaSize/2 + Globals.DASH_BORDER_WIDTH), ABSOLUTE_AREA_SIZE, ABSOLUTE_AREA_SIZE);
+            //imageController.cropImage(new Point(center.x - relativeAreaSize/2 + GlobalsImage.DASH_BORDER_WIDTH, center.y - relativeAreaSize/2 + GlobalsImage.DASH_BORDER_WIDTH), ABSOLUTE_AREA_SIZE, ABSOLUTE_AREA_SIZE);
             imageController.cropImage(new Point(realX, realY), ABSOLUTE_AREA_SIZE, ABSOLUTE_AREA_SIZE);
         }
 

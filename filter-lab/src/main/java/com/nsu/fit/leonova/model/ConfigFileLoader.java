@@ -16,6 +16,7 @@ public class ConfigFileLoader {
     private final List<Emission> emissionPoints = new ArrayList<>();
     private final List<Charge> charges = new ArrayList<>();
 
+    //TODO: magic constants!!!
     private double[] absorption = new double[101];
     private int[][] emission = new int[101][3];
 
@@ -57,13 +58,21 @@ public class ConfigFileLoader {
         }
     }
 
+//
+//    public List<Absorption> getAbsorptionPoints() {
+//        return absorptionPoints;
+//    }
+//
+//    public List<Emission> getEmissionPoints() {
+//        return emissionPoints;
+//    }
 
-    public List<Absorption> getAbsorptionPoints() {
-        return absorptionPoints;
+    public int getEmissionWidth(){
+        return 101;
     }
 
-    public List<Emission> getEmissionPoints() {
-        return emissionPoints;
+    public int getEmissionHeight(){
+        return 3;
     }
 
     public List<Charge> getCharges() {

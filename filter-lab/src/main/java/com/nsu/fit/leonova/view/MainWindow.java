@@ -15,6 +15,7 @@ import java.util.Objects;
 
 public class MainWindow extends JFrame implements Observer {
     private ImagesHolder imagesHolder = new ImagesHolder();
+    private GraphicsHolder graphicsHolder = new GraphicsHolder();
     private FileManager fileManager;
     private ImageController imageController;
 
@@ -32,8 +33,11 @@ public class MainWindow extends JFrame implements Observer {
         add(toolBar);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
         getContentPane().add(imagesHolder, BorderLayout.CENTER);
+        //getContentPane().add(graphicsHolder, BorderLayout.CENTER);
+        getContentPane().add(graphicsHolder, BorderLayout.SOUTH);
+        //getContentPane().add(new JLabel("!!!!!!!!!!!1"), BorderLayout.SOUTH);
 
-        setSize(1000, 700);
+        setSize(1000, 800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -155,7 +159,6 @@ public class MainWindow extends JFrame implements Observer {
         select.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/select.png"))));
         select.setToolTipText("Select");
 
-
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
         rotation.setToolTipText("Rotation");
@@ -249,6 +252,16 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setSourceImage(BufferedImage image) {
         imagesHolder.setSourceImage(image);
+    }
+
+    @Override
+    public void setOneGraphic(double[] graphic) {
+        graphicsHolder.drawOneGraphic(graphic);
+    }
+
+    @Override
+    public void setManyGraphics(double[][] graphics, int width, int height) {
+        graphicsHolder.drawManyGraphic(graphics, width, height);
     }
 
 }

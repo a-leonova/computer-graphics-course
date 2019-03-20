@@ -100,11 +100,29 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
             volumeRendering.setAbsorptions(fileLoader.getAbsorption());
             volumeRendering.setEmissions(fileLoader.getEmission());
             volumeRendering.setCharges(fileLoader.getCharges());
+            for(Observer observer : observers){
+                observer.setOneGraphic(fileLoader.getAbsorption());
+                int[][] intColors = fileLoader.getEmission();
+                int width = fileLoader.getEmissionWidth();
+                int height = fileLoader.getEmissionHeight();
+                double[][] colors = createFloatColors(intColors, width, height);
+                observer.setManyGraphics(colors, height, width);
+                //74 75
+            }
         }
         catch (IllegalArgumentException e){
             //TODO: send Error message to view
         }
+    }
 
+    private double[][] createFloatColors(int[][] intColor, int width, int height){
+        double[][] floatColor = new double[height][width];
+        for(int i = 0; i < height; ++i){
+            for (int j = 0; j < width; ++j){
+                floatColor[i][j] = intColor[j][i] / 255.;
+            }
+        }
+        return floatColor;
     }
 
     private void setWorkingPicture() {
