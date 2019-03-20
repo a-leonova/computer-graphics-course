@@ -25,6 +25,7 @@ public class MainWindow extends JFrame implements Observer {
     private GammaParamsWindow gammaParamsWindow = new GammaParamsWindow();
     private RotationParamsWindow rotationParamsWindow = new RotationParamsWindow();
     private VolumeRenderingParamsWindow volumeRenderingParamsWindow = new VolumeRenderingParamsWindow();
+    private AboutWindow aboutWindow = new AboutWindow();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -195,6 +196,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton aboutButton = new JButton();
         aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
         aboutButton.setToolTipText("About");
+        aboutButton.addActionListener(e -> aboutWindow.show());
 
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);
