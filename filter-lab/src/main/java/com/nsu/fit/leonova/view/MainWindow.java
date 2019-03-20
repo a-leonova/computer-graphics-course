@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainWindow extends JFrame implements Observer {
+
+    private JToggleButton select;
+
     private ImagesHolder imagesHolder = new ImagesHolder();
     private GraphicsHolder graphicsHolder = new GraphicsHolder();
     private FileManager fileManager;
@@ -65,6 +68,11 @@ public class MainWindow extends JFrame implements Observer {
         JButton newFileButton = new JButton();
         newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
         newFileButton.setToolTipText("New");
+        newFileButton.addActionListener(e -> {
+            imagesHolder.removeAllImages();
+            select.setSelected(false);
+            imagesHolder.setSelected(false);
+        });
 
         JButton openFileButton = new JButton();
         openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
@@ -75,6 +83,8 @@ public class MainWindow extends JFrame implements Observer {
                 File file = jFileChooser.getSelectedFile();
                 fileManager.openImage(file);
             }
+            select.setSelected(false);
+            imagesHolder.setSelected(false);
         });
 
         JButton saveButton = new JButton();
@@ -157,10 +167,10 @@ public class MainWindow extends JFrame implements Observer {
         left.setToolTipText("Copy left");
         left.addActionListener(e -> imageController.filteredImageAsWorking());
 
-        JToggleButton select = new JToggleButton();
+        select = new JToggleButton();
         select.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/select.png"))));
         select.setToolTipText("Select");
-        select.addActionListener(e -> imagesHolder.setSelected());
+        select.addActionListener(e -> imagesHolder.setSelected(select.isSelected()));
 
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
@@ -256,6 +266,11 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setSourceImage(BufferedImage image) {
         imagesHolder.setSourceImage(image);
+    }
+
+    @Override
+    public void removeAllImages() {
+        imagesHolder.removeAllImages();
     }
 
     @Override

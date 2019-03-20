@@ -33,6 +33,15 @@ public class ImageManager extends JPanel {
         repaint();
     }
 
+    public void clearAll(){
+        Graphics2D graphics2D = bufferedImage.createGraphics();
+        //TODO: get rid of magic constants!!!
+        graphics2D.clearRect(0,0,360,360);
+        drawDashedRect(0,0, GlobalsImage.WIDTH, GlobalsImage.HEIGHT, 5, Color.BLUE,bufferedImage.createGraphics());
+        graphics2D.dispose();
+        repaint();
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);

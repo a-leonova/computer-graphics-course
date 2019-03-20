@@ -30,8 +30,8 @@ public class SelectableImageManager extends ImageManager {
         this.imageController = imageController;
     }
 
-    public void changeSelect() {
-        select = !select;
+    public void changeSelect(boolean select) {
+        this.select = select;
         if(!select){
             removeSelectedArea();
         }

@@ -61,6 +61,7 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
 
     @Override
     public void setSourcePicture(BufferedImage sourcePicture) {
+        removeAllImages();
         this.sourceImage = sourcePicture;
         for(Observer observer : observers){
             observer.setSourceImage(sourcePicture);
@@ -83,6 +84,13 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
         }
     }
 
+    @Override
+    public void removeAllImages() {
+        sourceImage = workingImage = filteredImage = null;
+        for(Observer observer : observers){
+            observer.removeAllImages();
+        }
+    }
 
     @Override
     public void cropPicture(Point leftTop, int width, int height) {

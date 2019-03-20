@@ -7,9 +7,11 @@ import java.io.File;
 public interface ImageConsumer {
     void useFilterWithImage(FiltersType filter, double[] parameters);
     void setSourcePicture(BufferedImage sourcePicture);
-    //void setWorkingPicture(BufferedImage workingPicture);
     void filteredImageAsWorking();
     void workingImageAsFiltered();
+
+    void removeAllImages();
+
     //void setFilteredPicture();
     void cropPicture(Point leftTop, int width, int height);
     void emissionWasPressed();

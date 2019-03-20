@@ -12,4 +12,6 @@ public interface ImageController {
     void filteredImageAsWorking();
     void workingImageAsFiltered();
     void filterImage(FiltersType filterType, double[] parameters);
+
+    void removeAllImages();
 }

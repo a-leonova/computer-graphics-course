@@ -28,8 +28,8 @@ public class ImagesHolder extends JPanel {
         sourceImage.setImageController(imageController);
     }
 
-    public void setSelected() {
-        sourceImage.changeSelect();
+    public void setSelected(boolean selected) {
+        sourceImage.changeSelect(selected);
     }
 
     public void setWorkingImage(BufferedImage workingImage){
@@ -38,6 +38,12 @@ public class ImagesHolder extends JPanel {
 
     public void setSourceImage(BufferedImage sourceImage){
         this.sourceImage.setImage(sourceImage);
+    }
+
+    public void removeAllImages(){
+        sourceImage.clearAll();
+        chosenArea.clearAll();
+        filteredArea.clearAll();
     }
 
     public void setFilteredImage(BufferedImage filteredImage){

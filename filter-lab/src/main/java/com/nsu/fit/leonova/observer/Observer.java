@@ -8,7 +8,11 @@ public interface Observer {
     void setWorkingImage(BufferedImage image);
     void setSourceImage(BufferedImage image);
 
+    void removeAllImages();
+
     void setOneGraphic(double[] graphic);
     void setManyGraphics(double[][] graphics, int width, int height);
+
+
 
 }

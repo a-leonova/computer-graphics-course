@@ -63,4 +63,9 @@ public class Controller implements FileManager, ImageController {
     public void filterImage(FiltersType filterType, double[] parameters) {
         imageConsumer.useFilterWithImage(filterType, parameters);
     }
+
+    @Override
+    public void removeAllImages() {
+        imageConsumer.removeAllImages();
+    }
 }
