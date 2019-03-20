@@ -4,10 +4,7 @@ import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
-import com.nsu.fit.leonova.view.parametersWindow.EdgeFilterParamsWindow;
-import com.nsu.fit.leonova.view.parametersWindow.FSDitheringParamsWindow;
-import com.nsu.fit.leonova.view.parametersWindow.GammaParamsWindow;
-import com.nsu.fit.leonova.view.parametersWindow.OrderDitheringParamsWindow;
+import com.nsu.fit.leonova.view.parametersWindow.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +22,7 @@ public class MainWindow extends JFrame implements Observer {
     private FSDitheringParamsWindow fsDitheringParamsWindow = new FSDitheringParamsWindow();
     private EdgeFilterParamsWindow edgeFilterParamsWindow = new EdgeFilterParamsWindow();
     private GammaParamsWindow gammaParamsWindow = new GammaParamsWindow();
+    private RotationParamsWindow rotationParamsWindow = new RotationParamsWindow();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -51,6 +49,7 @@ public class MainWindow extends JFrame implements Observer {
         fsDitheringParamsWindow.setController(imageController);
         edgeFilterParamsWindow.setController(imageController);
         gammaParamsWindow.setController(imageController);
+        rotationParamsWindow.setController(imageController);
     }
 
     private JToolBar createToolBar() {
@@ -158,8 +157,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
         rotation.setToolTipText("Rotation");
-        //TODO: window
-        rotation.addActionListener(e -> imageController.filterImage(FiltersType.ROTATION, null));
+        rotation.addActionListener(e -> rotationParamsWindow.setVisible(true));
 
         JButton openConfig = new JButton();
         openConfig.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))));
