@@ -75,6 +75,14 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
         }
     }
 
+    @Override
+    public void workingImageAsFiltered() {
+        if(workingImage != null){
+            filteredImage = workingImage;
+            setFilteredPicture();
+        }
+    }
+
 
     @Override
     public void cropPicture(Point leftTop, int width, int height) {

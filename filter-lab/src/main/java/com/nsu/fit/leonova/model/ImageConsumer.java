@@ -9,6 +9,7 @@ public interface ImageConsumer {
     void setSourcePicture(BufferedImage sourcePicture);
     //void setWorkingPicture(BufferedImage workingPicture);
     void filteredImageAsWorking();
+    void workingImageAsFiltered();
     //void setFilteredPicture();
     void cropPicture(Point leftTop, int width, int height);
     void emissionWasPressed();

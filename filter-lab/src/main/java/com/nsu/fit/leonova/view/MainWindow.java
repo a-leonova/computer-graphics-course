@@ -150,6 +150,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton right = new JButton();
         right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
         right.setToolTipText("Copy right");
+        right.addActionListener(e -> imageController.workingImageAsFiltered());
 
         JButton left = new JButton();
         left.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/left.png"))));

@@ -10,5 +10,6 @@ public interface ImageController {
     void absorptionWasPressed();
     void emissionWasPressed();
     void filteredImageAsWorking();
+    void workingImageAsFiltered();
     void filterImage(FiltersType filterType, double[] parameters);
 }

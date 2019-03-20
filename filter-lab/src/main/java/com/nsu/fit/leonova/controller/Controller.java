@@ -53,6 +53,11 @@ public class Controller implements FileManager, ImageController {
         imageConsumer.filteredImageAsWorking();
     }
 
+    @Override
+    public void workingImageAsFiltered() {
+        imageConsumer.workingImageAsFiltered();
+    }
+
 
     @Override
     public void filterImage(FiltersType filterType, double[] parameters) {
