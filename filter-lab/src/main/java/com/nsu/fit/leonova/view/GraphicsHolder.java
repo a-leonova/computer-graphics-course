@@ -21,7 +21,7 @@ public class GraphicsHolder extends JPanel {
     }
 
     public void drawOneGraphic(double[] graphic){
-        absorption.drawOneGraphic(graphic, Color.RED);
+        absorption.drawOneGraphic(graphic, Color.WHITE);
     }
 
 }

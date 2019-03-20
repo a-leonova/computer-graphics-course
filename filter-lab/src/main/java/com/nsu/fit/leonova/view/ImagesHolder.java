@@ -11,7 +11,6 @@ import java.io.IOException;
 public class ImagesHolder extends JPanel {
 
     private ImageController imageController;
-    private boolean selected = true;
     private SelectableImageManager sourceImage = new SelectableImageManager();
     private ImageManager chosenArea = new ImageManager();
     private ImageManager filteredArea = new ImageManager();
@@ -29,11 +28,8 @@ public class ImagesHolder extends JPanel {
         sourceImage.setImageController(imageController);
     }
 
-    public void setSelected(boolean selected) {
-        if(!selected){
-            sourceImage.removeSelectedArea();
-        }
-        this.selected = selected;
+    public void setSelected() {
+        sourceImage.changeSelect();
     }
 
     public void setWorkingImage(BufferedImage workingImage){

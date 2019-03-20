@@ -1,6 +1,5 @@
 package com.nsu.fit.leonova.view;
 
-import com.nsu.fit.leonova.globals.GlobalsGraphics;
 import com.nsu.fit.leonova.globals.GlobalsImage;
 
 import javax.swing.*;

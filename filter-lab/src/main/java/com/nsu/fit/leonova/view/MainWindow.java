@@ -155,9 +155,10 @@ public class MainWindow extends JFrame implements Observer {
         left.setToolTipText("Copy left");
         left.addActionListener(e -> imageController.filteredImageAsWorking());
 
-        JButton select = new JButton();
+        JToggleButton select = new JToggleButton();
         select.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/select.png"))));
         select.setToolTipText("Select");
+        select.addActionListener(e -> imagesHolder.setSelected());
 
         JButton rotation = new JButton();
         rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
