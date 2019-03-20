@@ -23,6 +23,7 @@ public class MainWindow extends JFrame implements Observer {
     private EdgeFilterParamsWindow edgeFilterParamsWindow = new EdgeFilterParamsWindow();
     private GammaParamsWindow gammaParamsWindow = new GammaParamsWindow();
     private RotationParamsWindow rotationParamsWindow = new RotationParamsWindow();
+    private VolumeRenderingParamsWindow volumeRenderingParamsWindow = new VolumeRenderingParamsWindow();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -50,6 +51,7 @@ public class MainWindow extends JFrame implements Observer {
         edgeFilterParamsWindow.setController(imageController);
         gammaParamsWindow.setController(imageController);
         rotationParamsWindow.setController(imageController);
+        volumeRenderingParamsWindow.setController(imageController);
     }
 
     private JToolBar createToolBar() {
@@ -183,8 +185,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton applyVR = new JButton();
         applyVR.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
         applyVR.setToolTipText("Apply volume rendering");
-        //TODO: window
-        applyVR.addActionListener(e -> imageController.filterImage(FiltersType.VOLUME_RENDERING, null));
+        applyVR.addActionListener(e -> volumeRenderingParamsWindow.setVisible(true));
 
 
         JButton aboutButton = new JButton();
