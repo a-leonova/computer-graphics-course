@@ -7,11 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class VolumeRenderingParamsWindow extends JFrame {
+    private final Integer MIN_VALUE = 0;
+    private final Integer MAX_VALUE = 0;
+    private final Integer DEFAULT_VALUE = 10;
+
 
     private ImageController controller;
-    private JTextField maxXTF = new JTextField("10");
-    private JTextField maxYTF = new JTextField("10");
-    private JTextField maxZTF = new JTextField("10");
+    private JTextField maxXTF = new JTextField(DEFAULT_VALUE.toString());
+    private JTextField maxYTF = new JTextField(DEFAULT_VALUE.toString());
+    private JTextField maxZTF = new JTextField(DEFAULT_VALUE.toString());
     private JButton apply = new JButton("Apply");
 
     public VolumeRenderingParamsWindow(){
@@ -46,9 +50,9 @@ public class VolumeRenderingParamsWindow extends JFrame {
                 int maxX= Integer.parseInt(maxXTF.getText());
                 int maxY = Integer.parseInt(maxYTF.getText());
                 int maxZ = Integer.parseInt(maxZTF.getText());
-                if(maxX < 0 || maxY < 0 || maxZ < 0 ||
-                        maxX > 100 || maxY > 100 || maxZ > 100){
-                    new ErrorShowingWindow("RGB must be in range [0; 100]").show();
+                if(maxX < MIN_VALUE || maxY < MIN_VALUE || maxZ < MIN_VALUE ||
+                        maxX > MAX_VALUE || maxY > MAX_VALUE || maxZ > MAX_VALUE){
+                    new ErrorShowingWindow("Values must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {maxX, maxY, maxZ};

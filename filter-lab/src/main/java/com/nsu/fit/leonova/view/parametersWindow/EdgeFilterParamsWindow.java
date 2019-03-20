@@ -10,6 +10,10 @@ import java.awt.event.KeyEvent;
 
 public class EdgeFilterParamsWindow extends JFrame {
 
+    private final int MIN_VALUE = 1;
+    private final int MAX_VALUE = 255;
+    private final int DEFAULT_VALUE = 100;
+
     private ImageController controller;
     private FiltersType type;
     private JTextField edgeTresholdTF;
@@ -21,9 +25,9 @@ public class EdgeFilterParamsWindow extends JFrame {
         mainPanel.setLayout(new BorderLayout());
 
         mainPanel.add(new JLabel("Edge treshold"), BorderLayout.NORTH);
-        edgeTresholdTF = new JTextField("100");
+        edgeTresholdTF = new JTextField(String.valueOf(DEFAULT_VALUE));
 
-        JSlider edgeSlider = new JSlider(1, 255, Integer.parseInt(edgeTresholdTF.getText()));
+        JSlider edgeSlider = new JSlider(MIN_VALUE, MAX_VALUE, Integer.parseInt(edgeTresholdTF.getText()));
         edgeSlider.addChangeListener(e -> edgeTresholdTF.setText(String.valueOf(edgeSlider.getValue())));
         edgeTresholdTF.addKeyListener(new KeyAdapter(){
             @Override
@@ -49,7 +53,7 @@ public class EdgeFilterParamsWindow extends JFrame {
             try{
                 int value = Integer.parseInt(edgeTresholdTF.getText());
                 if(value < 1 || value > 255){
-                    new ErrorShowingWindow("Value must be in range [1; 255]").show();
+                    new ErrorShowingWindow("Value must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {value};

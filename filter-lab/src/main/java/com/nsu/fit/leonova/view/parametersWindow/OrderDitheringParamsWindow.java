@@ -10,6 +10,10 @@ import java.awt.event.KeyEvent;
 
 public class OrderDitheringParamsWindow extends JFrame {
 
+    private final Integer MIN_VALUE = 1;
+    private final Integer MAX_VALUE = 10;
+    private final Integer DEFAULT_VALUE = 4;
+
     private ImageController controller;
     private JTextField power;
     private JButton apply;
@@ -19,9 +23,9 @@ public class OrderDitheringParamsWindow extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(new Label("Matrix size is 2^(k). Choose k."), BorderLayout.NORTH);
-        power = new JTextField("4");
+        power = new JTextField(DEFAULT_VALUE.toString());
 
-        JSlider powerSlider = new JSlider(1, 10, Integer.parseInt(power.getText()));
+        JSlider powerSlider = new JSlider(MIN_VALUE, MAX_VALUE, Integer.parseInt(power.getText()));
         powerSlider.addChangeListener(e -> power.setText(String.valueOf(powerSlider.getValue())));
         power.addKeyListener(new KeyAdapter(){
             @Override
@@ -46,8 +50,8 @@ public class OrderDitheringParamsWindow extends JFrame {
         apply.addActionListener(e -> {
             try{
                 int value = Integer.parseInt(power.getText());
-                if(value < 1 || value > 10){
-                    new ErrorShowingWindow("Value must be in range [1; 10]").show();
+                if(value < MIN_VALUE || value > MAX_VALUE){
+                    new ErrorShowingWindow("Values must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {value};

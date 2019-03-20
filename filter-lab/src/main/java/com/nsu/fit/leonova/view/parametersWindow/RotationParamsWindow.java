@@ -9,9 +9,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class RotationParamsWindow extends JFrame {
+    private final Integer MIN_VALUE = -180;
+    private final Integer MAX_VALUE = 180;
+    private final Integer DEFAULT_VALUE = 90;
 
     private ImageController controller;
-    private JTextField rotationTF = new JTextField("90", 4);
+    private JTextField rotationTF = new JTextField(DEFAULT_VALUE.toString(), 4);
     private JButton apply = new JButton("Apply");
 
     public RotationParamsWindow(){
@@ -22,7 +25,7 @@ public class RotationParamsWindow extends JFrame {
         mainPanel.add(new JLabel("Set angle"), BorderLayout.NORTH);
 
         rotationTF.setMinimumSize(new Dimension(50,50));
-        JSlider rotationSlider = new JSlider(-180, 180, Integer.parseInt(rotationTF.getText()));
+        JSlider rotationSlider = new JSlider(MIN_VALUE, MAX_VALUE, Integer.parseInt(rotationTF.getText()));
         rotationSlider.addChangeListener(e -> rotationTF.setText(String.valueOf(rotationSlider.getValue())));
         rotationTF.addKeyListener(new KeyAdapter(){
             @Override
@@ -48,8 +51,8 @@ public class RotationParamsWindow extends JFrame {
         apply.addActionListener(e -> {
             try{
                 int value = Integer.parseInt(rotationTF.getText());
-                if(value < -180 || value > 180){
-                    new ErrorShowingWindow("Value must be in range [-180; 180]").show();
+                if(value < MIN_VALUE || value > MAX_VALUE){
+                    new ErrorShowingWindow("Values must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {value};

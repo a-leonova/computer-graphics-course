@@ -10,17 +10,21 @@ import java.awt.event.KeyEvent;
 
 public class FSDitheringParamsWindow extends JFrame {
 
+    private final Integer MIN_VALUE = 0;
+    private final Integer MAX_VALUE = 16;
+    private final Integer DEFAULT_VALUE = 1;
+
     private ImageController controller;
-    private JTextField redTF = new JTextField("1");
-    private JTextField greenTF = new JTextField("1");
-    private JTextField blueTF = new JTextField("1");
+    private JTextField redTF = new JTextField(DEFAULT_VALUE.toString());
+    private JTextField greenTF = new JTextField(DEFAULT_VALUE.toString());
+    private JTextField blueTF = new JTextField(DEFAULT_VALUE.toString());
     private JButton apply = new JButton("Apply");
 
     public  FSDitheringParamsWindow(){
         super("Fs dithering parameters");
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(new Label("Choose RGB"), BorderLayout.NORTH);
+        panel.add(new Label("Choose number of bits for each color"), BorderLayout.NORTH);
 
         JPanel panelForCenter = new JPanel();
         panelForCenter.setLayout(new GridLayout(3,2));
@@ -47,9 +51,9 @@ public class FSDitheringParamsWindow extends JFrame {
                 int redValue = Integer.parseInt(redTF.getText());
                 int greenValue = Integer.parseInt(greenTF.getText());
                 int blueValue = Integer.parseInt(blueTF.getText());
-                if(redValue < 0 || greenValue < 0 || blueValue < 0 ||
-                        redValue > 255 || greenValue > 255 || blueValue > 255){
-                    new ErrorShowingWindow("RGB must be in range [0;255]").show();
+                if(redValue < MIN_VALUE || greenValue < MIN_VALUE || blueValue < MIN_VALUE ||
+                        redValue > MAX_VALUE || greenValue > MAX_VALUE || blueValue > MAX_VALUE){
+                    new ErrorShowingWindow("Values must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {redValue, greenValue, blueValue};

@@ -7,9 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GammaParamsWindow extends JFrame {
+
+    private final Double MIN_VALUE = 0.0;
+    private final Double MAX_VALUE = 10.0;
+    private final Double DEFAULT_VALUE = 1.0;
+    private final Double STEP = 0.1;
+
     private ImageController controller;
     SpinnerModel gammaSpinnerModel =
-            new SpinnerNumberModel(1.0, 0.0, 10, 0.1);
+            new SpinnerNumberModel(DEFAULT_VALUE, MIN_VALUE, MAX_VALUE, STEP);
     JSpinner gammaSpinner = new JSpinner(gammaSpinnerModel);
     private JButton apply = new JButton("Apply");
 
