@@ -7,6 +7,7 @@ import com.nsu.fit.leonova.observer.Observer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +79,15 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
     @Override
     public void cropPicture(Point leftTop, int width, int height) {
         if(sourceImage != null){
-            workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
-            setWorkingPicture();
+            try{
+                leftTop.x = leftTop.x < 0 ? 0 : leftTop.x;
+                leftTop.y = leftTop.y < 0 ? 0 : leftTop.y;
+                workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
+                setWorkingPicture();
+            }
+            catch (RasterFormatException e){
+                System.out.println(leftTop.x + " " + leftTop.y + " " + width + " " + height);
+            }
         }
     }
 

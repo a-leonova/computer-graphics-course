@@ -21,7 +21,12 @@ public class ImageManager extends JPanel {
         Graphics2D graphics2D = bufferedImage.createGraphics();
         //TODO: get rid of magic constants!!!
         graphics2D.clearRect(0,0,360,360);
-        insideImage = resizeImage(image);
+        if(image.getHeight() > GlobalsImage.HEIGHT || image.getWidth() > GlobalsImage.WIDTH){
+            insideImage = resizeImage(image);
+        }
+        else {
+            insideImage = image;
+        }
         graphics2D.drawImage(insideImage,0, 0, insideImage.getWidth(null), insideImage.getHeight(null), null);
         drawDashedRect(0,0, GlobalsImage.WIDTH, GlobalsImage.HEIGHT, 5, Color.BLUE,bufferedImage.createGraphics());
         graphics2D.dispose();
@@ -32,24 +37,6 @@ public class ImageManager extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(bufferedImage, 0, 0, this);
-    }
-
-    public int getInsideImageWidth(){
-        if(insideImage != null){
-            return insideImage.getWidth(null);
-        }
-        else{
-            return 0;
-        }
-    }
-
-    public int getInsideImageHeight() {
-        if(insideImage != null){
-            return insideImage.getHeight(null);
-        }
-        else {
-            return 0;
-        }
     }
 
     protected void drawDashedRect(int x0, int y0, int width, int height, int freq, Color color, Graphics2D g2){
