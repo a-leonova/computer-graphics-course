@@ -8,14 +8,14 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class EdgeFilterParamsShowing extends JFrame {
+public class EdgeFilterParamsWindow extends JFrame {
 
     private ImageController controller;
     private FiltersType type;
     private JTextField edgeTresholdTF;
     private JButton apply = new JButton("Apply");
 
-    public EdgeFilterParamsShowing(){
+    public EdgeFilterParamsWindow(){
         super("Edge treshold");
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());

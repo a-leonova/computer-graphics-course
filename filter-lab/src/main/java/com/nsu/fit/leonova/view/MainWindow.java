@@ -4,8 +4,9 @@ import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
-import com.nsu.fit.leonova.view.parametersWindow.EdgeFilterParamsShowing;
+import com.nsu.fit.leonova.view.parametersWindow.EdgeFilterParamsWindow;
 import com.nsu.fit.leonova.view.parametersWindow.FSDitheringParamsWindow;
+import com.nsu.fit.leonova.view.parametersWindow.GammaParamsWindow;
 import com.nsu.fit.leonova.view.parametersWindow.OrderDitheringParamsWindow;
 
 import javax.swing.*;
@@ -22,7 +23,8 @@ public class MainWindow extends JFrame implements Observer {
 
     private OrderDitheringParamsWindow orderDitheringParamsWindow = new OrderDitheringParamsWindow();
     private FSDitheringParamsWindow fsDitheringParamsWindow = new FSDitheringParamsWindow();
-    private EdgeFilterParamsShowing edgeFilterParamsShowing = new EdgeFilterParamsShowing();
+    private EdgeFilterParamsWindow edgeFilterParamsWindow = new EdgeFilterParamsWindow();
+    private GammaParamsWindow gammaParamsWindow = new GammaParamsWindow();
 
     public MainWindow() throws IOException {
         super("Minimal photoshop");
@@ -47,7 +49,8 @@ public class MainWindow extends JFrame implements Observer {
         imagesHolder.setImageController(imageController);
         orderDitheringParamsWindow.setController(imageController);
         fsDitheringParamsWindow.setController(imageController);
-        edgeFilterParamsShowing.setController(imageController);
+        edgeFilterParamsWindow.setController(imageController);
+        gammaParamsWindow.setController(imageController);
     }
 
     private JToolBar createToolBar() {
@@ -101,16 +104,16 @@ public class MainWindow extends JFrame implements Observer {
         roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
         roberts.setToolTipText("Find edges (Roberts)");
         roberts.addActionListener(e ->{
-            edgeFilterParamsShowing.setType(FiltersType.ROBERTS);
-            edgeFilterParamsShowing.setVisible(true);
+            edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
+            edgeFilterParamsWindow.setVisible(true);
         });
 
         JButton sobel = new JButton();
         sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
         sobel.setToolTipText("Find edges (Sobel)");
         sobel.addActionListener(e -> {
-            edgeFilterParamsShowing.setType(FiltersType.SOBEL);
-            edgeFilterParamsShowing.setVisible(true);
+            edgeFilterParamsWindow.setType(FiltersType.SOBEL);
+            edgeFilterParamsWindow.setVisible(true);
         });
 
         JButton blur = new JButton();
@@ -136,8 +139,7 @@ public class MainWindow extends JFrame implements Observer {
         JButton gamma = new JButton();
         gamma.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))));
         gamma.setToolTipText("Gamma");
-        //TODO: window
-        gamma.addActionListener(e -> imageController.filterImage(FiltersType.GAMMA, null));
+        gamma.addActionListener(e -> gammaParamsWindow.setVisible(true));
 
         JButton right = new JButton();
         right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
