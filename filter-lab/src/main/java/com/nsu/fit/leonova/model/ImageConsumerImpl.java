@@ -54,10 +54,14 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
 
     @Override
     public void useFilterWithImage(FiltersType filterType, double[] parameters) {
-        if(workingImage != null){
-            Filter filter = filters.get(filterType);
-            filteredImage = filter.applyFilter(workingImage, parameters);
-            setFilteredPicture();
+        try{
+            if(workingImage != null){
+                Filter filter = filters.get(filterType);
+                filteredImage = filter.applyFilter(workingImage, parameters);
+                setFilteredPicture();
+            }
+        } catch (IllegalArgumentException e){
+            //TODO: error window
         }
     }
 

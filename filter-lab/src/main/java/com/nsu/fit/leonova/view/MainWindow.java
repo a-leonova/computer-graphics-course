@@ -31,16 +31,23 @@ public class MainWindow extends JFrame implements Observer {
     private VolumeRenderingParamsWindow volumeRenderingParamsWindow = new VolumeRenderingParamsWindow();
     private AboutWindow aboutWindow = new AboutWindow();
 
+    private JToggleButton emission = new JToggleButton();
+    private JToggleButton absorption = new JToggleButton();
+
+    private JCheckBoxMenuItem emissionMenu = new JCheckBoxMenuItem("Emission");
+    private JCheckBoxMenuItem absorptionMenu = new JCheckBoxMenuItem("Absorption");
+
     public MainWindow() throws IOException {
         super("Minimal photoshop");
 
         JToolBar toolBar = createToolBar();
+        JMenuBar menuBar = createMenu();
+
         add(toolBar);
+        setJMenuBar(menuBar);
         getContentPane().add(toolBar, BorderLayout.PAGE_START);
         getContentPane().add(imagesHolder, BorderLayout.CENTER);
-        //getContentPane().add(graphicsHolder, BorderLayout.CENTER);
         getContentPane().add(graphicsHolder, BorderLayout.SOUTH);
-        //getContentPane().add(new JLabel("!!!!!!!!!!!1"), BorderLayout.SOUTH);
 
         setSize(1000, 800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -158,15 +165,19 @@ public class MainWindow extends JFrame implements Observer {
                     }
         });
 
-        JToggleButton absorption = new JToggleButton();
         absorption.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/absorption.png"))));
         absorption.setToolTipText("Absorption");
-        absorption.addActionListener(e -> imageController.absorptionWasPressed());
+        absorption.addActionListener(e ->{
+            imageController.absorptionWasPressed();
+            absorptionMenu.setSelected(absorption.isSelected());
+        });
 
-        JToggleButton emission = new JToggleButton();
         emission.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/emission.png"))));
         emission.setToolTipText("Emission");
-        emission.addActionListener(e -> imageController.emissionWasPressed());
+        emission.addActionListener(e ->{
+            imageController.emissionWasPressed();
+            emissionMenu.setSelected(emission.isSelected());
+        });
 
         JButton applyVR = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))),
                 "Apply volume rendering",
@@ -217,6 +228,138 @@ public class MainWindow extends JFrame implements Observer {
 
     }
 
+
+    private JMenuBar createMenu(){
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem newFile = new JMenuItem("New file");
+        newFile.addActionListener(e -> {
+            imagesHolder.removeAllImages();
+            select.setSelected(false);
+            imagesHolder.setSelected(false);
+        });
+        JMenuItem open = new JMenuItem("Open");
+        open.addActionListener(e -> {
+            JFileChooser jFileChooser = new JFileChooser();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                fileManager.openImage(file);
+            }
+            select.setSelected(false);
+            imagesHolder.setSelected(false);
+        });
+        JMenuItem save = new JMenuItem("Save");
+        save.addActionListener(e -> {
+            JFileChooser jFileChooser = new JFileChooser();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                fileManager.saveImage(file);
+            }
+        });
+        fileMenu.add(newFile);
+        fileMenu.add(open);
+        fileMenu.add(save);
+
+        JMenu filtersMenu = new JMenu("Filters");
+        JMenu dithering = new JMenu("Dithering");
+        JMenu edges = new JMenu("Finding edges");
+        JMenu volumeRendering = new JMenu("Volume rendering");
+
+
+        JMenuItem zoom = new JMenuItem("Zoom");
+        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM, null));
+        JMenuItem blur = new JMenuItem("Blur");
+        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR, null));
+        JMenuItem sharp = new JMenuItem("Sharp");
+        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN, null));
+        JMenuItem gray = new JMenuItem("Gray scaled");
+        gray.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION, null));
+        JMenuItem invert = new JMenuItem("Invert");
+        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT, null));
+        JMenuItem emboss = new JMenuItem("Emboss");
+        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS, null));
+        JMenuItem gamma = new JMenuItem("Gamma");
+        gamma.addActionListener(e -> gammaParamsWindow.setVisible(true));
+        JMenuItem roberts = new JMenuItem("Roberts filter");
+        roberts.addActionListener(e -> {
+            edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
+            edgeFilterParamsWindow.setVisible(true);
+        });
+        JMenuItem sobel = new JMenuItem("Sobel");
+        sobel.addActionListener(e -> {
+            edgeFilterParamsWindow.setType(FiltersType.SOBEL);
+            edgeFilterParamsWindow.setVisible(true);
+        });
+        JMenuItem rotation = new JMenuItem("Rotation");
+        rotation.addActionListener(e -> rotationParamsWindow.setVisible(true));
+        JMenuItem watercolor = new JMenuItem("Watercolor");
+        watercolor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
+        JMenuItem ordered = new JMenuItem("Ordered Dithering");
+        ordered.addActionListener(e -> orderDitheringParamsWindow.setVisible(true));
+        JMenuItem fsDithering = new JMenuItem("FSDithering");
+        fsDithering.addActionListener(e -> fsDitheringParamsWindow.setVisible(true));
+        JMenuItem applyVR = new JMenuItem("Apply volume rendering");
+        applyVR.addActionListener(e -> volumeRenderingParamsWindow.setVisible(true));
+        JMenuItem openConfig = new JMenuItem("Open Config");
+        openConfig.addActionListener( e ->{
+            JFileChooser jFileChooser = new JFileChooser();
+            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = jFileChooser.getSelectedFile();
+                fileManager.openConfigFile(file);
+            }
+        });
+
+        absorptionMenu.addActionListener(e ->{
+            imageController.absorptionWasPressed();
+            absorption.setSelected(absorptionMenu.isSelected());
+        });
+        emissionMenu.addActionListener(e ->{
+            imageController.emissionWasPressed();
+            emission.setSelected(emissionMenu.isSelected());
+        });
+
+        JMenuItem copyRight = new JMenuItem("Copy center to right");
+        copyRight.addActionListener(e -> imageController.workingImageAsFiltered());
+        JMenuItem copyLeft = new JMenuItem("Copy right to center");
+        copyLeft.addActionListener(e -> imageController.filteredImageAsWorking());
+
+        dithering.add(ordered);
+        dithering.add(fsDithering);
+
+        volumeRendering.add(applyVR);
+        volumeRendering.add(openConfig);
+        volumeRendering.add(absorptionMenu);
+        volumeRendering.add(emissionMenu);
+
+        edges.add(roberts);
+        edges.add(sobel);
+
+        filtersMenu.add(copyLeft);
+        filtersMenu.add(copyRight);
+        filtersMenu.add(gray);
+        filtersMenu.add(invert);
+        filtersMenu.add(zoom);
+        filtersMenu.add(blur);
+        filtersMenu.add(sharp);
+        filtersMenu.add(emboss);
+        filtersMenu.add(gamma);
+        filtersMenu.add(rotation);
+        filtersMenu.add(watercolor);
+        filtersMenu.add(dithering);
+        filtersMenu.add(edges);
+        filtersMenu.add(volumeRendering);
+
+        JMenu about = new JMenu("About");
+        about.addActionListener(e -> aboutWindow.show());
+
+        menuBar.add(fileMenu);
+        menuBar.add(filtersMenu);
+        menuBar.add(about);
+
+        return menuBar;
+    }
+
     @Override
     public void setFilteredImage(BufferedImage image) {
         imagesHolder.setFilteredImage(image);
@@ -247,12 +390,11 @@ public class MainWindow extends JFrame implements Observer {
         graphicsHolder.drawManyGraphic(graphics, width, height);
     }
 
-    private JButton createButton(ImageIcon icon, String tip, ActionListener actionListener){
+    private JButton createButton(ImageIcon icon, String tip, ActionListener actionListener) {
         JButton button = new JButton();
         button.setIcon(icon);
         button.setToolTipText(tip);
         button.addActionListener(actionListener);
         return button;
     }
-
 }

@@ -49,6 +49,10 @@ public class VolumeRendering implements Filter {
 
     @Override
     public BufferedImage applyFilter(BufferedImage original, double[] parameters) {
+        if(absorptions == null || emissions == null){
+            throw new IllegalArgumentException("Config file wasn't downloaded!");
+        }
+
         maxX = (int)parameters[0];
         maxY = (int)parameters[1];
         maxZ = (int)parameters[2];
