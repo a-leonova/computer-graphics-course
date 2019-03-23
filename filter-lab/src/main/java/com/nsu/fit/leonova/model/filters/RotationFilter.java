@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.model.filters;
 
+import com.nsu.fit.leonova.globals.GlobalsImage;
 import com.nsu.fit.leonova.model.Utils;
 
 import java.awt.*;
@@ -40,7 +41,7 @@ public class RotationFilter implements Filter {
             return source.getRGB(x0, y0);
         }
         else {
-            return Color.BLACK.getRGB();
+            return GlobalsImage.BACKGROUND_COLOR.getRGB();
         }
     }
 

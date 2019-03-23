@@ -19,6 +19,7 @@ public class ImageManager extends JPanel {
 
     public void setImage(BufferedImage image) {
         Graphics2D graphics2D = bufferedImage.createGraphics();
+        graphics2D.setBackground(GlobalsImage.BACKGROUND_COLOR);
         //TODO: get rid of magic constants!!!
         graphics2D.clearRect(0,0,360,360);
         if(image.getHeight() > GlobalsImage.HEIGHT || image.getWidth() > GlobalsImage.WIDTH){
@@ -35,6 +36,7 @@ public class ImageManager extends JPanel {
 
     public void clearAll(){
         Graphics2D graphics2D = bufferedImage.createGraphics();
+        graphics2D.setBackground(GlobalsImage.BACKGROUND_COLOR);
         //TODO: get rid of magic constants!!!
         graphics2D.clearRect(0,0,360,360);
         drawDashedRect(0,0, GlobalsImage.WIDTH, GlobalsImage.HEIGHT, 5, Color.BLUE,bufferedImage.createGraphics());
