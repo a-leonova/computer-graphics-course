@@ -8,6 +8,7 @@ import com.nsu.fit.leonova.view.parametersWindow.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -65,134 +66,96 @@ public class MainWindow extends JFrame implements Observer {
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
 
-        JButton newFileButton = new JButton();
-        newFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))));
-        newFileButton.setToolTipText("New");
-        newFileButton.addActionListener(e -> {
-            imagesHolder.removeAllImages();
-            select.setSelected(false);
-            imagesHolder.setSelected(false);
+        JButton newFileButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))),
+                "New", e -> {
+                    imagesHolder.removeAllImages();
+                    select.setSelected(false);
+                    imagesHolder.setSelected(false);
         });
 
-        JButton openFileButton = new JButton();
-        openFileButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))));
-        openFileButton.setToolTipText("Open image");
-        openFileButton.addActionListener(e -> {
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.openImage(file);
-            }
-            select.setSelected(false);
-            imagesHolder.setSelected(false);
+        JButton openFileButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))),
+                "Open image", e -> {
+                    JFileChooser jFileChooser = new JFileChooser();
+                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        File file = jFileChooser.getSelectedFile();
+                        fileManager.openImage(file);
+                    }
+                    select.setSelected(false);
+                    imagesHolder.setSelected(false);
         });
 
-        JButton saveButton = new JButton();
-        saveButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))));
-        saveButton.setToolTipText("Save image");
-        saveButton.addActionListener(e ->{
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.saveImage(file);
-            }
-        });
+        JButton saveButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))),
+                "Save image", e ->{
+                    JFileChooser jFileChooser = new JFileChooser();
+                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        File file = jFileChooser.getSelectedFile();
+                        fileManager.saveImage(file);
+                    }
+                });
 
-        JButton desaturate = new JButton();
-        desaturate.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))));
-        desaturate.setToolTipText("Desaturation");
-        desaturate.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION, null));
+        JButton desaturate = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))),
+                "Desaturation", e -> imageController.filterImage(FiltersType.DESATURATION, null));
 
-        JButton invert = new JButton();
-        invert.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/negative.png"))));
-        invert.setToolTipText("Invert");
-        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT, null));
+        JButton invert = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/negative.png"))),
+                "Invert", e -> imageController.filterImage(FiltersType.INVERT, null));
 
-        JButton orderedDithering = new JButton();
-        orderedDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))));
-        orderedDithering.setToolTipText("Ordered dithering");
-        orderedDithering.addActionListener(e -> orderDitheringParamsWindow.setVisible(true));
+        JButton orderedDithering = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))),
+                "Ordered dithering", e -> orderDitheringParamsWindow.setVisible(true));
 
-        JButton fsDithering = new JButton();
-        fsDithering.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))));
-        fsDithering.setToolTipText("Floyd-Stainberg dithering");
-        fsDithering.addActionListener(e -> fsDitheringParamsWindow.setVisible(true));
+        JButton fsDithering = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))),
+                "Floyd-Stainberg dithering", e -> fsDitheringParamsWindow.setVisible(true));
 
-        JButton zoom = new JButton();
-        zoom.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))));
-        zoom.setToolTipText("Zoom x2");
-        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM, null));
+        JButton zoom = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))),
+                "Zoom x2", e -> imageController.filterImage(FiltersType.ZOOM, null));
 
-        JButton roberts = new JButton();
-        roberts.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))));
-        roberts.setToolTipText("Find edges (Roberts)");
-        roberts.addActionListener(e ->{
-            edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
-            edgeFilterParamsWindow.setVisible(true);
-        });
+        JButton roberts = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))),
+                "Find edges (Roberts)", e ->{
+                    edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
+                    edgeFilterParamsWindow.setVisible(true);
+                });
 
-        JButton sobel = new JButton();
-        sobel.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))));
-        sobel.setToolTipText("Find edges (Sobel)");
-        sobel.addActionListener(e -> {
-            edgeFilterParamsWindow.setType(FiltersType.SOBEL);
-            edgeFilterParamsWindow.setVisible(true);
-        });
+        JButton sobel = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))),
+                "Find edges (Sobel)", e -> {
+                    edgeFilterParamsWindow.setType(FiltersType.SOBEL);
+                    edgeFilterParamsWindow.setVisible(true);
+                });
 
-        JButton blur = new JButton();
-        blur.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))));
-        blur.setToolTipText("Blur");
-        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR, null));
+        JButton blur = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))),
+                "Blur", e -> imageController.filterImage(FiltersType.BLUR, null));
 
-        JButton sharp = new JButton();
-        sharp.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))));
-        sharp.setToolTipText("Sharp");
-        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN, null));
+        JButton sharp = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))),
+                "Sharp", e -> imageController.filterImage(FiltersType.SHARPEN, null));
 
-        JButton emboss = new JButton();
-        emboss.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/embossed.png"))));
-        emboss.setToolTipText("Emboss");
-        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS, null));
+        JButton emboss = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/embossed.png"))),
+                "Emboss", e -> imageController.filterImage(FiltersType.EMBOSS, null));
 
-        JButton waterColor = new JButton();
-        waterColor.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/aqua.png"))));
-        waterColor.setToolTipText("Watercolor");
-        waterColor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
+        JButton waterColor = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/aqua.png"))),
+                "Watercolor", e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
 
-        JButton gamma = new JButton();
-        gamma.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))));
-        gamma.setToolTipText("Gamma");
-        gamma.addActionListener(e -> gammaParamsWindow.setVisible(true));
+        JButton gamma = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))),
+                "Gamma", e -> gammaParamsWindow.setVisible(true));
 
-        JButton right = new JButton();
-        right.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))));
-        right.setToolTipText("Copy right");
-        right.addActionListener(e -> imageController.workingImageAsFiltered());
+        JButton right = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))),
+                "Copy right", e -> imageController.workingImageAsFiltered());
 
-        JButton left = new JButton();
-        left.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/left.png"))));
-        left.setToolTipText("Copy left");
-        left.addActionListener(e -> imageController.filteredImageAsWorking());
+        JButton left = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/left.png"))),
+                "Copy left", e -> imageController.filteredImageAsWorking());
 
         select = new JToggleButton();
         select.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/select.png"))));
         select.setToolTipText("Select");
         select.addActionListener(e -> imagesHolder.setSelected(select.isSelected()));
 
-        JButton rotation = new JButton();
-        rotation.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))));
-        rotation.setToolTipText("Rotation");
-        rotation.addActionListener(e -> rotationParamsWindow.setVisible(true));
+        JButton rotation = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))),
+                "Rotation", e -> rotationParamsWindow.setVisible(true));
 
-        JButton openConfig = new JButton();
-        openConfig.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))));
-        openConfig.setToolTipText("Open configuration");
-        openConfig.addActionListener(e -> {
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.openConfigFile(file);
-            }
+        JButton openConfig = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))),
+                "Open configuration", e -> {
+                    JFileChooser jFileChooser = new JFileChooser();
+                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        File file = jFileChooser.getSelectedFile();
+                        fileManager.openConfigFile(file);
+                    }
         });
 
         JToggleButton absorption = new JToggleButton();
@@ -205,16 +168,10 @@ public class MainWindow extends JFrame implements Observer {
         emission.setToolTipText("Emission");
         emission.addActionListener(e -> imageController.emissionWasPressed());
 
-        JButton applyVR = new JButton();
-        applyVR.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))));
-        applyVR.setToolTipText("Apply volume rendering");
-        applyVR.addActionListener(e -> volumeRenderingParamsWindow.setVisible(true));
-
-
-        JButton aboutButton = new JButton();
-        aboutButton.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))));
-        aboutButton.setToolTipText("About");
-        aboutButton.addActionListener(e -> aboutWindow.show());
+        JButton applyVR = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))),
+                "Apply volume rendering",
+                e -> volumeRenderingParamsWindow.setVisible(true));
+        JButton aboutButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))), "About", e ->aboutWindow.show());
 
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);
@@ -288,6 +245,14 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setManyGraphics(double[][] graphics, int width, int height) {
         graphicsHolder.drawManyGraphic(graphics, width, height);
+    }
+
+    private JButton createButton(ImageIcon icon, String tip, ActionListener actionListener){
+        JButton button = new JButton();
+        button.setIcon(icon);
+        button.setToolTipText(tip);
+        button.addActionListener(actionListener);
+        return button;
     }
 
 }

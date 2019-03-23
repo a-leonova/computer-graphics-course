@@ -42,7 +42,6 @@ public class FSDitheringFilter implements Filter {
         BufferedImage filteredImage = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         for (int y = 0; y < filteredImage.getHeight(); ++y) {
             for (int x = 0; x < filteredImage.getWidth(); ++x) {
-                //filteredImage.setRGB(x, y, findSourcePixel(new Point(x, y), original));
                 int color = getDitheringColor(original, new Point(x, y), errors);
                 filteredImage.setRGB(x, y, color);
             }

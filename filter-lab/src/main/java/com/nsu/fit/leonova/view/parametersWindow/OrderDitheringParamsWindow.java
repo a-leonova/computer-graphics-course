@@ -55,7 +55,7 @@ public class OrderDitheringParamsWindow extends JFrame {
                     return;
                 }
                 double[] params = {value};
-                controller.filterImage(FiltersType.ORDERED, params);
+                this.controller.filterImage(FiltersType.ORDERED, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an integer").show();

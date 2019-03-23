@@ -56,7 +56,7 @@ public class VolumeRenderingParamsWindow extends JFrame {
                     return;
                 }
                 double[] params = {maxX, maxY, maxZ};
-                controller.filterImage(FiltersType.VOLUME_RENDERING, params);
+                this.controller.filterImage(FiltersType.VOLUME_RENDERING, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an integer").show();

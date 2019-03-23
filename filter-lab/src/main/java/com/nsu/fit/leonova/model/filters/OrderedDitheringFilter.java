@@ -16,7 +16,6 @@ public class OrderedDitheringFilter implements Filter {
         int size = 1 << powerOfMatrixSize;
         for(int y = 0; y < filteredImage.getHeight(); ++y){
             for (int x = 0; x < filteredImage.getWidth(); ++x){
-                //filteredImage.setRGB(x, y, findSourcePixel(new Point(x, y), original));
                 SafeColor color = new SafeColor(original.getRGB(x, y));
                 int r = color.getRed() > matrix[x % size][y % size] ? 255 : 0;
                 int g = color.getGreen() > matrix[x % size][y % size] ? 255 : 0;

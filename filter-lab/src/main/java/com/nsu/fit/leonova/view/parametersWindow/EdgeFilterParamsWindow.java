@@ -16,29 +16,29 @@ public class EdgeFilterParamsWindow extends JFrame {
 
     private ImageController controller;
     private FiltersType type;
-    private JTextField edgeTresholdTF;
+    private JTextField edgeThresholdTF;
     private JButton apply = new JButton("Apply");
 
     public EdgeFilterParamsWindow(){
-        super("Edge treshold");
+        super("Edge threshold");
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        mainPanel.add(new JLabel("Edge treshold"), BorderLayout.NORTH);
-        edgeTresholdTF = new JTextField(String.valueOf(DEFAULT_VALUE));
+        mainPanel.add(new JLabel("Edge threshold"), BorderLayout.NORTH);
+        edgeThresholdTF = new JTextField(String.valueOf(DEFAULT_VALUE));
 
-        JSlider edgeSlider = new JSlider(MIN_VALUE, MAX_VALUE, Integer.parseInt(edgeTresholdTF.getText()));
-        edgeSlider.addChangeListener(e -> edgeTresholdTF.setText(String.valueOf(edgeSlider.getValue())));
-        edgeTresholdTF.addKeyListener(new KeyAdapter(){
+        JSlider edgeSlider = new JSlider(MIN_VALUE, MAX_VALUE, Integer.parseInt(edgeThresholdTF.getText()));
+        edgeSlider.addChangeListener(e -> edgeThresholdTF.setText(String.valueOf(edgeSlider.getValue())));
+        edgeThresholdTF.addKeyListener(new KeyAdapter(){
             @Override
             public void keyReleased(KeyEvent ke) {
-                String typed = edgeTresholdTF.getText();
+                String typed = edgeThresholdTF.getText();
                 edgeSlider.setValue(0);
                 int value = Integer.parseInt(typed);
                 edgeSlider.setValue(value);
             }
         });
-        mainPanel.add(edgeTresholdTF, BorderLayout.WEST);
+        mainPanel.add(edgeThresholdTF, BorderLayout.WEST);
         mainPanel.add(edgeSlider, BorderLayout.CENTER);
         mainPanel.add(apply, BorderLayout.SOUTH);
 
@@ -47,17 +47,16 @@ public class EdgeFilterParamsWindow extends JFrame {
     }
 
     public void setController(ImageController controller) {
-        //TODO: ask!!
         this.controller = controller;
         apply.addActionListener(e -> {
             try{
-                int value = Integer.parseInt(edgeTresholdTF.getText());
+                int value = Integer.parseInt(edgeThresholdTF.getText());
                 if(value < 1 || value > 255){
                     new ErrorShowingWindow("Value must be in range [" + MIN_VALUE + "; "  + MAX_VALUE + "]").show();
                     return;
                 }
                 double[] params = {value};
-                controller.filterImage(type, params);
+                this.controller.filterImage(type, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an integer").show();

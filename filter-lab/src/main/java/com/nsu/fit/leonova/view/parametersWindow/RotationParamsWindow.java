@@ -40,9 +40,7 @@ public class RotationParamsWindow extends JFrame {
         mainPanel.add(rotationTF, BorderLayout.WEST);
         mainPanel.add(rotationSlider, BorderLayout.CENTER);
         mainPanel.add(apply, BorderLayout.SOUTH);
-        //mainPanel.setMinimumSize(new Dimension(300, 50));
         add(mainPanel);
-      //  pack();
         setMinimumSize(new Dimension(350,100));
     }
 
@@ -56,7 +54,7 @@ public class RotationParamsWindow extends JFrame {
                     return;
                 }
                 double[] params = {value};
-                controller.filterImage(FiltersType.ROTATION, params);
+                this.controller.filterImage(FiltersType.ROTATION, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an integer").show();

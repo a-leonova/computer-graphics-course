@@ -14,9 +14,9 @@ public class GammaParamsWindow extends JFrame {
     private final Double STEP = 0.1;
 
     private ImageController controller;
-    SpinnerModel gammaSpinnerModel =
+    private SpinnerModel gammaSpinnerModel =
             new SpinnerNumberModel(DEFAULT_VALUE, MIN_VALUE, MAX_VALUE, STEP);
-    JSpinner gammaSpinner = new JSpinner(gammaSpinnerModel);
+    private JSpinner gammaSpinner = new JSpinner(gammaSpinnerModel);
     private JButton apply = new JButton("Apply");
 
     public GammaParamsWindow(){
@@ -33,13 +33,12 @@ public class GammaParamsWindow extends JFrame {
     }
 
     public void setController(ImageController controller) {
-        //TODO: ask!!
         this.controller = controller;
         apply.addActionListener(e -> {
             try{
                 double value = (Double)gammaSpinner.getValue();
                 double[] params = {value};
-                controller.filterImage(FiltersType.GAMMA, params);
+                this.controller.filterImage(FiltersType.GAMMA, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an double!").show();

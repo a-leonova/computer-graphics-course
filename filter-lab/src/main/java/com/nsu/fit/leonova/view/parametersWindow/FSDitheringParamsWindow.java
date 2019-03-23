@@ -57,7 +57,7 @@ public class FSDitheringParamsWindow extends JFrame {
                     return;
                 }
                 double[] params = {redValue, greenValue, blueValue};
-                controller.filterImage(FiltersType.FS_DITHERING, params);
+                this.controller.filterImage(FiltersType.FS_DITHERING, params);
                 setVisible(false);
             } catch (NumberFormatException e1){
                 new ErrorShowingWindow("Not an integer").show();

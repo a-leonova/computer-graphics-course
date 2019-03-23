@@ -12,13 +12,23 @@ import java.util.Scanner;
 
 public class ConfigFileLoader {
 
+    private final double MIN_ABSORPTION_VALUE = 0;
+    private final double MAX_ABSORPTION_VALUE = 1;
+
+    private final int SIZE_X = 101;
+    private final int MIN_X = 0;
+    private final int MAX_X = 100;
+
+    private final int COUNT_RGB = 3;
+    private final int MAX_RGB = 255;
+    private final int MIN_RGB = 0;
+
     private final List<Absorption> absorptionPoints = new ArrayList<>();
     private final List<Emission> emissionPoints = new ArrayList<>();
     private final List<Charge> charges = new ArrayList<>();
 
-    //TODO: magic constants!!!
-    private double[] absorption = new double[101];
-    private int[][] emission = new int[101][3];
+    private double[] absorption = new double[SIZE_X];
+    private int[][] emission = new int[SIZE_X][COUNT_RGB];
 
     public ConfigFileLoader(File file) {
         try (Scanner scanner = new Scanner(file)) {
@@ -56,24 +66,14 @@ public class ConfigFileLoader {
             }
             prevEm = cur;
         }
-        System.out.println("!!11");
     }
 
-//
-//    public List<Absorption> getAbsorptionPoints() {
-//        return absorptionPoints;
-//    }
-//
-//    public List<Emission> getEmissionPoints() {
-//        return emissionPoints;
-//    }
-
     public int getEmissionWidth(){
-        return 101;
+        return SIZE_X;
     }
 
     public int getEmissionHeight(){
-        return 3;
+        return COUNT_RGB;
     }
 
     public List<Charge> getCharges() {
@@ -102,7 +102,7 @@ public class ConfigFileLoader {
             absorptionPoints.add(readNextAbsorption(scanner));
         }
         absorption = readNextAbsorption(scanner);
-        if (absorption.getX() != 100) {
+        if (absorption.getX() != MAX_X) {
             throw new IllegalArgumentException("No data for end. Add it!");
         }
         absorptionPoints.add(absorption);
@@ -122,7 +122,7 @@ public class ConfigFileLoader {
             emissionPoints.add(readNextEmission(scanner));
         }
         emission = readNextEmission(scanner);
-        if (emission.getX() != 100) {
+        if (emission.getX() != MAX_X) {
             throw new IllegalArgumentException("No data for end. Add it!");
         }
         emissionPoints.add(emission);
@@ -142,7 +142,7 @@ public class ConfigFileLoader {
         String[] numbers = readNextNumbers(scanner, 2);
         int x = Integer.parseInt(numbers[0]);
         double value = Double.parseDouble(numbers[1]);
-        if (x < 0 || x > 100 || value < 0 || value > 1) {
+        if (x < MIN_X || x > MAX_X || value < MIN_ABSORPTION_VALUE || value > MAX_ABSORPTION_VALUE) {
             throw new IllegalArgumentException("Absorption in range [0; 1] and X - [0; 100]");
         }
         return new Absorption(x, value);
@@ -154,10 +154,10 @@ public class ConfigFileLoader {
         int red = Integer.parseInt(numbers[1]);
         int green = Integer.parseInt(numbers[2]);
         int blue = Integer.parseInt(numbers[3]);
-        if (x < 0 || x > 100
-                || red < 0 || red > 255
-                || green < 0 || green > 255
-                || blue < 0 || blue > 255) {
+        if (x < MIN_X || x > MAX_X
+                || red < MIN_RGB || red > MAX_RGB
+                || green < MIN_RGB || green > MAX_RGB
+                || blue < MIN_RGB || blue > MAX_RGB) {
             throw new IllegalArgumentException("Emission X - [0; 100] and red, green blue in range [0; 255]");
         }
         return new Emission(x, red, green, blue);
@@ -189,10 +189,10 @@ public class ConfigFileLoader {
     }
 
     private int trim(int c) {
-        if (c < 0) {
-            return 0;
-        } else if (c > 255) {
-            return 255;
+        if (c < MIN_RGB) {
+            return MIN_RGB;
+        } else if (c > MAX_RGB) {
+            return MAX_RGB;
         } else {
             return c;
         }

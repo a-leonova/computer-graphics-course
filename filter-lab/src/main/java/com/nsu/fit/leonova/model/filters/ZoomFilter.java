@@ -20,11 +20,9 @@ public class ZoomFilter implements Filter {
             for (int x = 0; x < filteredImage.getWidth(); ++x){
                 float xf = ((float)x/original.getWidth() - PIV_X) / SCALE + PIV_X;
                 float yf = ((float)y/original.getHeight() - PIV_Y) / SCALE + PIV_Y;
-
                 filteredImage.setRGB(x, y, getColorOfFloatPixel(xf, yf, original));
             }
         }
-
         return filteredImage;
     }
 
@@ -37,7 +35,6 @@ public class ZoomFilter implements Filter {
 
         int xSign = (int)Math.signum(x0 - xBase);
         int ySign = (int)Math.signum(y0 - yBase);
-
 
         float xWeight = Math.abs(x0 - xBase);
         float yWeight = Math.abs(y0 - yBase);
