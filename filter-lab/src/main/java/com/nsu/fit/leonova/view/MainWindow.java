@@ -76,69 +76,69 @@ public class MainWindow extends JFrame implements Observer {
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
 
-        JButton newFileButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-new-file-16.png"))),
+        JButton newFileButton = createButton("icons/icons8-new-file-16.png",
                 "New", e -> {
                     imagesHolder.removeAllImages();
                     select.setSelected(false);
                     imagesHolder.setSelected(false);
         });
 
-        JButton openFileButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))),
+        JButton openFileButton = createButton("icons/icons8-open-folder-16.png",
                 "Open image", e -> {
                     new ImageOpeningHandler(fileManager).openImage();
                     select.setSelected(false);
                     imagesHolder.setSelected(false);
         });
 
-        JButton saveButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))),
+        JButton saveButton = createButton("icons/icons8-save-16.png",
                 "Save image", e -> new SaveImageHandler(fileManager).saveFile());
 
-        JButton desaturate = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))),
+        JButton desaturate = createButton("icons/greyGradation.png",
                 "Desaturation", e -> imageController.filterImage(FiltersType.DESATURATION, null));
 
-        JButton invert = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/negative.png"))),
+        JButton invert = createButton("icons/negative.png",
                 "Invert", e -> imageController.filterImage(FiltersType.INVERT, null));
 
-        JButton orderedDithering = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/orderedDithering.png"))),
+        JButton orderedDithering = createButton("icons/orderedDithering.png",
                 "Ordered dithering", e -> orderDitheringParamsWindow.setVisible(true));
 
-        JButton fsDithering = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/floydSteinberg.png"))),
+        JButton fsDithering = createButton("icons/floydSteinberg.png",
                 "Floyd-Stainberg dithering", e -> fsDitheringParamsWindow.setVisible(true));
 
-        JButton zoom = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/x2.png"))),
+        JButton zoom = createButton("icons/x2.png",
                 "Zoom x2", e -> imageController.filterImage(FiltersType.ZOOM, null));
 
-        JButton roberts = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/roberts.png"))),
+        JButton roberts = createButton("icons/roberts.png",
                 "Find edges (Roberts)", e ->{
                     edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
                     edgeFilterParamsWindow.setVisible(true);
                 });
 
-        JButton sobel = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/sobel.png"))),
+        JButton sobel = createButton("icons/sobel.png",
                 "Find edges (Sobel)", e -> {
                     edgeFilterParamsWindow.setType(FiltersType.SOBEL);
                     edgeFilterParamsWindow.setVisible(true);
                 });
 
-        JButton blur = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/blur.png"))),
+        JButton blur = createButton("icons/blur.png",
                 "Blur", e -> imageController.filterImage(FiltersType.BLUR, null));
 
-        JButton sharp = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-triangle-16.png"))),
+        JButton sharp = createButton("icons/icons8-triangle-16.png",
                 "Sharp", e -> imageController.filterImage(FiltersType.SHARPEN, null));
 
-        JButton emboss = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/embossed.png"))),
+        JButton emboss = createButton("icons/embossed.png",
                 "Emboss", e -> imageController.filterImage(FiltersType.EMBOSS, null));
 
-        JButton waterColor = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/aqua.png"))),
+        JButton waterColor = createButton("icons/aqua.png",
                 "Watercolor", e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
 
-        JButton gamma = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gamma.png"))),
+        JButton gamma = createButton("icons/gamma.png",
                 "Gamma", e -> gammaParamsWindow.setVisible(true));
 
-        JButton right = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/right.png"))),
+        JButton right = createButton("icons/right.png",
                 "Copy right", e -> imageController.workingImageAsFiltered());
 
-        JButton left = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/left.png"))),
+        JButton left = createButton("icons/left.png",
                 "Copy left", e -> imageController.filteredImageAsWorking());
 
         select = new JToggleButton();
@@ -146,10 +146,10 @@ public class MainWindow extends JFrame implements Observer {
         select.setToolTipText("Select");
         select.addActionListener(e -> imagesHolder.setSelected(select.isSelected()));
 
-        JButton rotation = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/rotation.png"))),
+        JButton rotation = createButton("icons/rotation.png",
                 "Rotation", e -> rotationParamsWindow.setVisible(true));
 
-        JButton openConfig = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))),
+        JButton openConfig = createButton("icons/configFile.png",
                 "Open configuration", e -> new ConfigOpeningHandler(fileManager).openConfig());
 
         absorption.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/absorption.png"))));
@@ -166,10 +166,10 @@ public class MainWindow extends JFrame implements Observer {
             emissionMenu.setSelected(emission.isSelected());
         });
 
-        JButton applyVR = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-play-16.png"))),
+        JButton applyVR = createButton("icons/icons8-play-16.png",
                 "Apply volume rendering",
                 e -> volumeRenderingParamsWindow.setVisible(true));
-        JButton aboutButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-question-mark-in-a-chat-bubble-16.png"))), "About", e ->aboutWindow.show());
+        JButton aboutButton = createButton("icons/icons8-question-mark-in-a-chat-bubble-16.png", "About", e ->aboutWindow.show());
 
         toolBar.add(newFileButton);
         toolBar.add(openFileButton);
@@ -219,20 +219,17 @@ public class MainWindow extends JFrame implements Observer {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        JMenuItem newFile = new JMenuItem("New file");
-        newFile.addActionListener(e -> {
+        JMenuItem newFile = createMenuItem("New file", e -> {
             imagesHolder.removeAllImages();
             select.setSelected(false);
             imagesHolder.setSelected(false);
         });
-        JMenuItem open = new JMenuItem("Open");
-        open.addActionListener(e -> {
-            new ImageOpeningHandler(fileManager).openImage();
-            select.setSelected(false);
-            imagesHolder.setSelected(false);
+        JMenuItem open = createMenuItem("Open", e -> {
+                new ImageOpeningHandler(fileManager).openImage();
+        select.setSelected(false);
+        imagesHolder.setSelected(false);
         });
-        JMenuItem save = new JMenuItem("Save");
-        save.addActionListener(e -> new SaveImageHandler(fileManager).saveFile());
+        JMenuItem save = createMenuItem("Save", e -> new SaveImageHandler(fileManager).saveFile());
         fileMenu.add(newFile);
         fileMenu.add(open);
         fileMenu.add(save);
@@ -243,42 +240,27 @@ public class MainWindow extends JFrame implements Observer {
         JMenu volumeRendering = new JMenu("Volume rendering");
 
 
-        JMenuItem zoom = new JMenuItem("Zoom");
-        zoom.addActionListener(e -> imageController.filterImage(FiltersType.ZOOM, null));
-        JMenuItem blur = new JMenuItem("Blur");
-        blur.addActionListener(e -> imageController.filterImage(FiltersType.BLUR, null));
-        JMenuItem sharp = new JMenuItem("Sharp");
-        sharp.addActionListener(e -> imageController.filterImage(FiltersType.SHARPEN, null));
-        JMenuItem gray = new JMenuItem("Gray scaled");
-        gray.addActionListener(e -> imageController.filterImage(FiltersType.DESATURATION, null));
-        JMenuItem invert = new JMenuItem("Invert");
-        invert.addActionListener(e -> imageController.filterImage(FiltersType.INVERT, null));
-        JMenuItem emboss = new JMenuItem("Emboss");
-        emboss.addActionListener(e -> imageController.filterImage(FiltersType.EMBOSS, null));
-        JMenuItem gamma = new JMenuItem("Gamma");
-        gamma.addActionListener(e -> gammaParamsWindow.setVisible(true));
-        JMenuItem roberts = new JMenuItem("Roberts filter");
-        roberts.addActionListener(e -> {
+        JMenuItem zoom = createMenuItem("Zoom", e ->  imageController.filterImage(FiltersType.ZOOM, null));
+        JMenuItem blur = createMenuItem("Blur", e -> imageController.filterImage(FiltersType.BLUR, null));
+        JMenuItem sharp = createMenuItem("Sharp", e -> imageController.filterImage(FiltersType.SHARPEN, null));
+        JMenuItem gray = createMenuItem("Gray scaled", e -> imageController.filterImage(FiltersType.DESATURATION, null));
+        JMenuItem invert = createMenuItem("Invert", e -> imageController.filterImage(FiltersType.INVERT, null));
+        JMenuItem emboss = createMenuItem("Emboss", e -> imageController.filterImage(FiltersType.EMBOSS, null));
+        JMenuItem gamma = createMenuItem("Gamma", e -> gammaParamsWindow.setVisible(true));
+        JMenuItem roberts = createMenuItem("Robert's filter", e -> {
             edgeFilterParamsWindow.setType(FiltersType.ROBERTS);
             edgeFilterParamsWindow.setVisible(true);
         });
-        JMenuItem sobel = new JMenuItem("Sobel");
-        sobel.addActionListener(e -> {
+        JMenuItem sobel = createMenuItem("Sobel", e -> {
             edgeFilterParamsWindow.setType(FiltersType.SOBEL);
             edgeFilterParamsWindow.setVisible(true);
         });
-        JMenuItem rotation = new JMenuItem("Rotation");
-        rotation.addActionListener(e -> rotationParamsWindow.setVisible(true));
-        JMenuItem watercolor = new JMenuItem("Watercolor");
-        watercolor.addActionListener(e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
-        JMenuItem ordered = new JMenuItem("Ordered Dithering");
-        ordered.addActionListener(e -> orderDitheringParamsWindow.setVisible(true));
-        JMenuItem fsDithering = new JMenuItem("FSDithering");
-        fsDithering.addActionListener(e -> fsDitheringParamsWindow.setVisible(true));
-        JMenuItem applyVR = new JMenuItem("Apply volume rendering");
-        applyVR.addActionListener(e -> volumeRenderingParamsWindow.setVisible(true));
-        JMenuItem openConfig = new JMenuItem("Open Config");
-        openConfig.addActionListener( e -> new ConfigOpeningHandler(fileManager).openConfig());
+        JMenuItem rotation = createMenuItem("Rotation", e -> rotationParamsWindow.setVisible(true));
+        JMenuItem watercolor = createMenuItem("Watercolor", e -> imageController.filterImage(FiltersType.WATERCOLOR, null));
+        JMenuItem ordered = createMenuItem("Ordered Dithering", e -> orderDitheringParamsWindow.setVisible(true));
+        JMenuItem fsDithering = createMenuItem("FSDithering", e -> fsDitheringParamsWindow.setVisible(true));
+        JMenuItem applyVR = createMenuItem("Apply volume rendering", e -> volumeRenderingParamsWindow.setVisible(true));
+        JMenuItem openConfig = createMenuItem("Open Config", e -> new ConfigOpeningHandler(fileManager).openConfig());
 
         absorptionMenu.addActionListener(e ->{
             imageController.absorptionWasPressed();
@@ -289,10 +271,8 @@ public class MainWindow extends JFrame implements Observer {
             emission.setSelected(emissionMenu.isSelected());
         });
 
-        JMenuItem copyRight = new JMenuItem("Copy center to right");
-        copyRight.addActionListener(e -> imageController.workingImageAsFiltered());
-        JMenuItem copyLeft = new JMenuItem("Copy right to center");
-        copyLeft.addActionListener(e -> imageController.filteredImageAsWorking());
+        JMenuItem copyRight = createMenuItem("Copy center to right", e -> imageController.workingImageAsFiltered());
+        JMenuItem copyLeft = createMenuItem("Copy right to center", e -> imageController.filteredImageAsWorking());
 
         dithering.add(ordered);
         dithering.add(fsDithering);
@@ -365,11 +345,17 @@ public class MainWindow extends JFrame implements Observer {
         new ErrorShowingWindow(message).show();
     }
 
-    private JButton createButton(ImageIcon icon, String tip, ActionListener actionListener) {
+    private JButton createButton(String relativePath, String tip, ActionListener actionListener) {
         JButton button = new JButton();
-        button.setIcon(icon);
+        button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
         button.setToolTipText(tip);
         button.addActionListener(actionListener);
         return button;
+    }
+
+    private JMenuItem createMenuItem(String name, ActionListener listener){
+        JMenuItem item = new JMenuItem(name);
+        item.addActionListener(listener);
+        return item;
     }
 }
