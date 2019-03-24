@@ -91,11 +91,11 @@ public class ConfigFileLoader {
     private void readAbsorptions(Scanner scanner) {
         int numOfAbs = Integer.parseInt(readNextNumbers(scanner, 1)[0]);
         if (numOfAbs < 2) {
-            throw new IllegalArgumentException("Number of absorption points < 2 (at least at start and end");
+            throw new IllegalArgumentException("Number of absorption points < 2 (at least must be start and end");
         }
         Absorption absorption = readNextAbsorption(scanner);
         if (absorption.getX() != 0) {
-            throw new IllegalArgumentException("No data for start. Add it!");
+            throw new IllegalArgumentException("No data for adsorption start. Add it!");
         }
         absorptionPoints.add(absorption);
         for (int i = 0; i < numOfAbs - 2; i++) {
@@ -103,7 +103,7 @@ public class ConfigFileLoader {
         }
         absorption = readNextAbsorption(scanner);
         if (absorption.getX() != MAX_X) {
-            throw new IllegalArgumentException("No data for end. Add it!");
+            throw new IllegalArgumentException("No data for adsorption end. Add it!");
         }
         absorptionPoints.add(absorption);
     }
@@ -111,11 +111,11 @@ public class ConfigFileLoader {
     private void readEmissions(Scanner scanner) {
         int numOfEmissions = Integer.parseInt(readNextNumbers(scanner, 1)[0]);
         if (numOfEmissions < 2) {
-            throw new IllegalArgumentException("Number of absorption points < 2 (at least at start and end");
+            throw new IllegalArgumentException("Number of emission points < 2 (at least must be start and end");
         }
         Emission emission = readNextEmission(scanner);
         if (emission.getX() != 0) {
-            throw new IllegalArgumentException("No data for start. Add it!");
+            throw new IllegalArgumentException("No data for emission start. Add it!");
         }
         emissionPoints.add(emission);
         for (int i = 0; i < numOfEmissions - 2; i++) {
@@ -123,7 +123,7 @@ public class ConfigFileLoader {
         }
         emission = readNextEmission(scanner);
         if (emission.getX() != MAX_X) {
-            throw new IllegalArgumentException("No data for end. Add it!");
+            throw new IllegalArgumentException("No data for emission end. Add it!");
         }
         emissionPoints.add(emission);
     }

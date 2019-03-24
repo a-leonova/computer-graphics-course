@@ -15,6 +15,8 @@ public class ImageOpeningHandler {
 
     public void openImage(){
         JFileChooser jFileChooser = new JFileChooser();
+        File workingDirectory = new File(System.getProperty("user.dir"));
+        jFileChooser.setCurrentDirectory(workingDirectory);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("IMAGES FILES", "bmp", "png");
         jFileChooser.setFileFilter(filter);
         if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
