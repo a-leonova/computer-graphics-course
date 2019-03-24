@@ -8,4 +8,5 @@ public class GlobalsImage {
     public static final int HEIGHT = 350;
     public static final int DASH_BORDER_WIDTH = 1;
     public static final Color BACKGROUND_COLOR = Color.WHITE;
+    public static final int SelectAreaSize = 1;
 }

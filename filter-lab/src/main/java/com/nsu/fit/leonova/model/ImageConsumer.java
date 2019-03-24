@@ -6,7 +6,7 @@ import java.io.File;
 
 public interface ImageConsumer {
     void useFilterWithImage(FiltersType filter, double[] parameters);
-    void setSourcePicture(BufferedImage sourcePicture);
+    void openSourcePicture(File file);
     void filteredImageAsWorking();
     void workingImageAsFiltered();
 

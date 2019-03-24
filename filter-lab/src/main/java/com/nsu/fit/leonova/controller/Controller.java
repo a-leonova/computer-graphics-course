@@ -19,12 +19,7 @@ public class Controller implements FileManager, ImageController {
 
     @Override
     public void openImage(File file) {
-        try{
-            BufferedImage loadedImage = ImageIO.read(file);
-            imageConsumer.setSourcePicture(loadedImage);
-        } catch (IOException e){
-          //TODO: send error and show window with error
-        }
+        imageConsumer.openSourcePicture(file);
     }
 
     @Override

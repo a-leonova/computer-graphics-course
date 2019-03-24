@@ -4,6 +4,9 @@ import com.nsu.fit.leonova.controller.FileManager;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.FiltersType;
 import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.view.handlers.ConfigOpeningHandler;
+import com.nsu.fit.leonova.view.handlers.ImageOpeningHandler;
+import com.nsu.fit.leonova.view.handlers.SaveImageHandler;
 import com.nsu.fit.leonova.view.parametersWindow.*;
 
 import javax.swing.*;
@@ -82,23 +85,13 @@ public class MainWindow extends JFrame implements Observer {
 
         JButton openFileButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-open-folder-16.png"))),
                 "Open image", e -> {
-                    JFileChooser jFileChooser = new JFileChooser();
-                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        File file = jFileChooser.getSelectedFile();
-                        fileManager.openImage(file);
-                    }
+                    new ImageOpeningHandler(fileManager).openImage();
                     select.setSelected(false);
                     imagesHolder.setSelected(false);
         });
 
         JButton saveButton = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/icons8-save-16.png"))),
-                "Save image", e ->{
-                    JFileChooser jFileChooser = new JFileChooser();
-                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        File file = jFileChooser.getSelectedFile();
-                        fileManager.saveImage(file);
-                    }
-                });
+                "Save image", e -> new SaveImageHandler(fileManager).saveFile());
 
         JButton desaturate = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/greyGradation.png"))),
                 "Desaturation", e -> imageController.filterImage(FiltersType.DESATURATION, null));
@@ -157,13 +150,7 @@ public class MainWindow extends JFrame implements Observer {
                 "Rotation", e -> rotationParamsWindow.setVisible(true));
 
         JButton openConfig = createButton(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/configFile.png"))),
-                "Open configuration", e -> {
-                    JFileChooser jFileChooser = new JFileChooser();
-                    if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        File file = jFileChooser.getSelectedFile();
-                        fileManager.openConfigFile(file);
-                    }
-        });
+                "Open configuration", e -> new ConfigOpeningHandler(fileManager).openConfig());
 
         absorption.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/absorption.png"))));
         absorption.setToolTipText("Absorption");
@@ -228,7 +215,6 @@ public class MainWindow extends JFrame implements Observer {
 
     }
 
-
     private JMenuBar createMenu(){
         JMenuBar menuBar = new JMenuBar();
 
@@ -241,22 +227,12 @@ public class MainWindow extends JFrame implements Observer {
         });
         JMenuItem open = new JMenuItem("Open");
         open.addActionListener(e -> {
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.openImage(file);
-            }
+            new ImageOpeningHandler(fileManager).openImage();
             select.setSelected(false);
             imagesHolder.setSelected(false);
         });
         JMenuItem save = new JMenuItem("Save");
-        save.addActionListener(e -> {
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.saveImage(file);
-            }
-        });
+        save.addActionListener(e -> new SaveImageHandler(fileManager).saveFile());
         fileMenu.add(newFile);
         fileMenu.add(open);
         fileMenu.add(save);
@@ -302,13 +278,7 @@ public class MainWindow extends JFrame implements Observer {
         JMenuItem applyVR = new JMenuItem("Apply volume rendering");
         applyVR.addActionListener(e -> volumeRenderingParamsWindow.setVisible(true));
         JMenuItem openConfig = new JMenuItem("Open Config");
-        openConfig.addActionListener( e ->{
-            JFileChooser jFileChooser = new JFileChooser();
-            if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = jFileChooser.getSelectedFile();
-                fileManager.openConfigFile(file);
-            }
-        });
+        openConfig.addActionListener( e -> new ConfigOpeningHandler(fileManager).openConfig());
 
         absorptionMenu.addActionListener(e ->{
             imageController.absorptionWasPressed();
@@ -388,6 +358,11 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setManyGraphics(double[][] graphics, int width, int height) {
         graphicsHolder.drawManyGraphic(graphics, width, height);
+    }
+
+    @Override
+    public void errorOccurred(String message) {
+        new ErrorShowingWindow(message).show();
     }
 
     private JButton createButton(ImageIcon icon, String tip, ActionListener actionListener) {

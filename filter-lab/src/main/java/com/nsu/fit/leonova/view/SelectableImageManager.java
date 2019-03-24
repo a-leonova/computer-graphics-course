@@ -19,6 +19,9 @@ public class SelectableImageManager extends ImageManager {
     private int relativeAreaSize;
     private boolean select = false;
 
+    private Point leftTop;
+    private Point rightBottom;
+
     public SelectableImageManager() {
         super();
         MyMouseAdapter mouseAdapter = new MyMouseAdapter();
@@ -41,19 +44,17 @@ public class SelectableImageManager extends ImageManager {
     public void paint(Graphics g) {
         super.paint(g);
         if (select && center != null) {
-            //g.setColor(Color.CYAN);
             int x = center.x - relativeAreaSize / 2;
             int y = center.y - relativeAreaSize / 2;
             int width = relativeAreaSize;
             int height = relativeAreaSize;
-            drawDashedRect(x, y, width, height, 2, Color.RED, (Graphics2D) g);
+            drawDashedRect(x, y, width, height, 2, 1,Color.RED, (Graphics2D) g);
         }
     }
 
     @Override
     public void setImage(BufferedImage image) {
         super.setImage(image);
-        //TODO: if small image
         if(image.getHeight() > image.getWidth()){
             resizeCoefficient = image.getHeight() / (double) GlobalsImage.HEIGHT;
         }
@@ -68,6 +69,10 @@ public class SelectableImageManager extends ImageManager {
             ABSOLUTE_AREA_SIZE = 350;
             relativeAreaSize = (int)Math.floor(ABSOLUTE_AREA_SIZE/resizeCoefficient);
         }
+        leftTop = new Point(Math.round(relativeAreaSize / 2.f) + GlobalsImage.DASH_BORDER_WIDTH - GlobalsImage.SelectAreaSize,
+                Math.round(relativeAreaSize / 2.f) + GlobalsImage.DASH_BORDER_WIDTH - GlobalsImage.SelectAreaSize);
+        rightBottom = new Point(insideImage.getWidth(null) - Math.round(relativeAreaSize / 2.f) + GlobalsImage.DASH_BORDER_WIDTH,
+                insideImage.getHeight(null) - Math.round(relativeAreaSize / 2.f) + GlobalsImage.DASH_BORDER_WIDTH);
         repaint();
     }
 
@@ -76,40 +81,46 @@ public class SelectableImageManager extends ImageManager {
         repaint();
     }
 
-
     private class MyMouseAdapter extends MouseAdapter {
         @Override
         public void mouseDragged(MouseEvent mEvt) {
             if(!select){
                 return;
             }
-            //TODO - do not recount it everytime
-            int x0 = relativeAreaSize / 2;
-            int y0 = relativeAreaSize /2;
-            int x1 = insideImage.getWidth(null) - relativeAreaSize /2 - GlobalsImage.DASH_BORDER_WIDTH;
-            int y1 = insideImage.getHeight(null) - relativeAreaSize/2 - GlobalsImage.DASH_BORDER_WIDTH;
 
             int x = mEvt.getX();
-            if(x < x0){
-                x = x0;
+            if(x <= leftTop.x){
+                center.x = leftTop.x;
+                x = 0;
             }
-            else if (x > x1){
-                x = x1;
+            else if (x >= rightBottom.x){
+                center.x = rightBottom.x;
+                x = insideImage.getWidth(null) - 1 - relativeAreaSize;
+                x = x < 0 ? 0 : x;
+            }
+            else {
+                center.x = x;
+                x = x - GlobalsImage.DASH_BORDER_WIDTH - Math.round(relativeAreaSize / 2.f);
             }
 
             int y = mEvt.getY();
-            if(y < y0){
-                y = y0;
+            if(y <= leftTop.y){
+                center.y = leftTop.y;
+                y = 0;
             }
-            else if(y >= y1){
-                y = y1;
+            else if(y >= rightBottom.y){
+                center.y = rightBottom.y;
+                y = insideImage.getHeight(null) - 1 - relativeAreaSize;
+                y = y < 0 ? 0 : y;
             }
-
-            center = new Point(x,y);
+            else {
+                center.y = y;
+                y = y - GlobalsImage.DASH_BORDER_WIDTH - Math.round(relativeAreaSize / 2.f);
+            }
             SelectableImageManager.this.repaint();
 
-            int realX = (int)Math.round((center.x - relativeAreaSize/2) * resizeCoefficient);
-            int realY = (int)Math.round((center.y - relativeAreaSize/2) * resizeCoefficient);
+            int realX = (int)Math.floor(x * resizeCoefficient);
+            int realY = (int)Math.floor(y * resizeCoefficient);
             imageController.cropImage(new Point(realX, realY), ABSOLUTE_AREA_SIZE, ABSOLUTE_AREA_SIZE);
         }
 

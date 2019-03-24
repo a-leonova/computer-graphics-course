@@ -61,16 +61,25 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
                 setFilteredPicture();
             }
         } catch (IllegalArgumentException e){
-            //TODO: error window
+            for(Observer observer : observers){
+                observer.errorOccurred(e.getMessage());
+            }
         }
     }
 
     @Override
-    public void setSourcePicture(BufferedImage sourcePicture) {
-        removeAllImages();
-        this.sourceImage = sourcePicture;
-        for(Observer observer : observers){
-            observer.setSourceImage(sourcePicture);
+    public void openSourcePicture(File file) {
+        try {
+            BufferedImage loadedImage = ImageIO.read(file);
+            removeAllImages();
+            this.sourceImage = loadedImage;
+            for(Observer observer : observers){
+                observer.setSourceImage(loadedImage);
+            }
+        } catch (IOException e) {
+            for(Observer observer : observers){
+                observer.errorOccurred(e.getMessage());
+            }
         }
     }
 
@@ -102,13 +111,15 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
     public void cropPicture(Point leftTop, int width, int height) {
         if(sourceImage != null){
             try{
-                leftTop.x = leftTop.x < 0 ? 0 : leftTop.x;
-                leftTop.y = leftTop.y < 0 ? 0 : leftTop.y;
+//                leftTop.x = leftTop.x < 0 ? 0 : leftTop.x;
+//                leftTop.y = leftTop.y < 0 ? 0 : leftTop.y;
+//                leftTop.x = leftTop.x + width > sourceImage.getWidth() ? sourceImage.getWidth() - width : leftTop.x;
+//                leftTop.y = leftTop.y + height > sourceImage.getHeight() ? sourceImage.getHeight() - height : leftTop.y;
                 workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
                 setWorkingPicture();
             }
             catch (RasterFormatException e){
-                System.out.println(leftTop.x + " " + leftTop.y + " " + width + " " + height);
+                System.out.println((leftTop.x + width) + " " + (leftTop.y + height) + " " + sourceImage.getWidth() + " " + sourceImage.getHeight());
             }
         }
     }
@@ -140,7 +151,9 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
             }
         }
         catch (IllegalArgumentException e){
-            //TODO: send Error message to view
+            for(Observer observer : observers){
+                observer.errorOccurred(e.getMessage());
+            }
         }
     }
 
@@ -149,8 +162,9 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
         try {
             ImageIO.write(filteredImage, "bmp", file);
         } catch (IOException e) {
-            //TODO: send error message
-            e.printStackTrace();
+            for(Observer observer : observers){
+                observer.errorOccurred(e.getMessage());
+            }
         }
     }
 

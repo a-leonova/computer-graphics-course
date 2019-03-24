@@ -13,6 +13,7 @@ public interface Observer {
     void setOneGraphic(double[] graphic);
     void setManyGraphics(double[][] graphics, int width, int height);
 
+    void errorOccurred(String message);
 
 
 }
