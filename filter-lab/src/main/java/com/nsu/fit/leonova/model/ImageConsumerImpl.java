@@ -60,6 +60,11 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
                 filteredImage = filter.applyFilter(workingImage, parameters);
                 setFilteredPicture();
             }
+            else{
+                for(Observer observer : observers){
+                    observer.errorOccurred("Select area for working!");
+                }
+            }
         } catch (IllegalArgumentException e){
             for(Observer observer : observers){
                 observer.errorOccurred(e.getMessage());
@@ -111,10 +116,6 @@ public class ImageConsumerImpl implements Observable, ImageConsumer {
     public void cropPicture(Point leftTop, int width, int height) {
         if(sourceImage != null){
             try{
-//                leftTop.x = leftTop.x < 0 ? 0 : leftTop.x;
-//                leftTop.y = leftTop.y < 0 ? 0 : leftTop.y;
-//                leftTop.x = leftTop.x + width > sourceImage.getWidth() ? sourceImage.getWidth() - width : leftTop.x;
-//                leftTop.y = leftTop.y + height > sourceImage.getHeight() ? sourceImage.getHeight() - height : leftTop.y;
                 workingImage = sourceImage.getSubimage(leftTop.x, leftTop.y, width, height);
                 setWorkingPicture();
             }

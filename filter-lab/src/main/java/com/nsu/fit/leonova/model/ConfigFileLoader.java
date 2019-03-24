@@ -187,14 +187,4 @@ public class ConfigFileLoader {
         }
         return numbers;
     }
-
-    private int trim(int c) {
-        if (c < MIN_RGB) {
-            return MIN_RGB;
-        } else if (c > MAX_RGB) {
-            return MAX_RGB;
-        } else {
-            return c;
-        }
-    }
 }
