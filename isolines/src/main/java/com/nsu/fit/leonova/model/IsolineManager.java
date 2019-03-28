@@ -1,4 +1,4 @@
-package model;
+package com.nsu.fit.leonova.model;
 
 public interface IsolineManager {
     void createGraphic();

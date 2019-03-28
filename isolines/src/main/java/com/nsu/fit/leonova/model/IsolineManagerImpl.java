@@ -1,15 +1,18 @@
-package model;
+package com.nsu.fit.leonova.model;
 
-import observers.Observable;
-import observers.Observer;
+import com.nsu.fit.leonova.observers.Observable;
+import com.nsu.fit.leonova.observers.Observer;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class IsolineManagerImpl implements Observable, IsolineManager {
     private BufferedImage image;
     private ArrayList<Observer> observers = new ArrayList<>();
-    private int[] colorsRGB;
+    private SafeColor[] colorsRGB;
+ //   private double[] keyValue;
+    private double step;
 
     private double minX;
     private double maxX;
@@ -61,8 +64,9 @@ public class IsolineManagerImpl implements Observable, IsolineManager {
         return maxY;
     }
 
-    public void setColorsRGB(int[] colorsRGB) {
+    public void setColorsRGB(SafeColor[] colorsRGB) {
         this.colorsRGB = colorsRGB;
+        step = (maxZ - minZ)/(colorsRGB.length - 1);
     }
 
     public void createGraphic(){
@@ -70,7 +74,7 @@ public class IsolineManagerImpl implements Observable, IsolineManager {
             for (int x = 0; x < image.getWidth(); ++x){
                 double y0 = y / (double)image.getHeight() * xWidth + minY;
                 double x0 = x / (double)image.getWidth() * yHeight + minX;
-                int color = findColor(countFunction(x0, y0));
+                int color = findColor(countFunction(x0, y0), minZ, maxZ);
                 image.setRGB(x, y, color);
             }
         }
@@ -82,13 +86,11 @@ public class IsolineManagerImpl implements Observable, IsolineManager {
     @Override
     public void createLegend() {
         BufferedImage legend = new BufferedImage(10, 500, BufferedImage.TYPE_3BYTE_BGR);
-
         for(int y = 0; y < legend.getHeight(); ++y){
+            double y0 = y / ((double)legend.getHeight());
+            int rgb = findColor(1 - y0, 0, 1);
             for (int x = 0; x < legend.getWidth(); ++x){
-                double y0 = (500 - y) / ((double)legend.getHeight()) * (colorsRGB.length - 1);
-                //double x0 = x / (double)image.getWidth() * yHeight + minX;
-                int color = colorsRGB[(int)Math.round(y0)];
-                legend.setRGB(x, y, color);
+                legend.setRGB(x, y, rgb);
             }
         }
         for(Observer observer : observers){
@@ -111,10 +113,25 @@ public class IsolineManagerImpl implements Observable, IsolineManager {
         return new double[]{minZ, maxZ};
     }
 
-    private int findColor(double z){
+    private int findColor2(double z, double minZ, double maxZ){
         double relative = (z - minZ) / (maxZ - minZ);
-        int i = (int)Math.round(relative * (colorsRGB.length - 1));
-        return colorsRGB[i];
+        int i = Math.min((int)Math.floor(relative * (colorsRGB.length)), colorsRGB.length - 1);
+        return colorsRGB[i].getIntRgb();
+    }
+
+    private int findColor(double z, double minZ, double maxZ){
+        double relative = (z - minZ) / (maxZ - minZ);
+        double i = relative * (colorsRGB.length - 1);
+
+        int left = (int)Math.floor(i);
+        int right = (int)Math.ceil(i);
+        if(left == right){
+            return colorsRGB[left].getIntRgb();
+        }
+        SafeColor colorLeft = colorsRGB[left];
+        SafeColor colorRight = colorsRGB[right];
+        SafeColor res = colorLeft.multiple(right - i).plus(colorRight.multiple(i - left));
+        return res.getIntRgb();
     }
 
     private double countFunction(double x, double y){

@@ -1,6 +1,6 @@
-package controller;
+package com.nsu.fit.leonova.controller;
 
-import model.IsolineManager;
+import com.nsu.fit.leonova.model.IsolineManager;
 
 public class Controller implements LogicController {
     private IsolineManager isolineManager;

@@ -1,6 +1,9 @@
-import controller.Controller;
-import model.IsolineManagerImpl;
-import view.MainWindow;
+package com.nsu.fit.leonova;
+
+import com.nsu.fit.leonova.controller.Controller;
+import com.nsu.fit.leonova.model.IsolineManagerImpl;
+import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.view.MainWindow;
 
 import java.awt.*;
 
@@ -15,7 +18,14 @@ public class Main {
         mainWindow.setLogicController(controller);
 
         isolineManager.setGraphicArea(-50, 50, -50, 50);
-        isolineManager.setColorsRGB(new int[]{Color.YELLOW.getRGB(), Color.WHITE.getRGB(), Color.MAGENTA.getRGB(), Color.CYAN.getRGB(), Color.RED.getRGB(), Color.GREEN.getRGB(), Color.GRAY.getRGB(), Color.BLACK.getRGB()});
+        isolineManager.setColorsRGB(new SafeColor[]{
+                new SafeColor(255,0,0),
+                new SafeColor(255, 127, 0),
+                new SafeColor(255, 255, 0),
+                new SafeColor(0, 255, 0),
+                new SafeColor(0, 0, 255),
+                new SafeColor(139, 0, 255)
+        });
         controller.createGraphic();
         controller.createLegend();
         mainWindow.setVisible(true);

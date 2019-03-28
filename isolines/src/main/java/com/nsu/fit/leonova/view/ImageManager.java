@@ -1,6 +1,4 @@
-package view;
-
-import com.sun.deploy.security.ValidationState;
+package com.nsu.fit.leonova.view;
 
 import javax.swing.*;
 import java.awt.*;

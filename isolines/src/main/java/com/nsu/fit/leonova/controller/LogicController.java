@@ -1,4 +1,4 @@
-package controller;
+package com.nsu.fit.leonova.controller;
 
 public interface LogicController {
     void createGraphic();

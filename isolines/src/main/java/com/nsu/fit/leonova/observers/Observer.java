@@ -1,4 +1,4 @@
-package observers;
+package com.nsu.fit.leonova.observers;
 
 import java.awt.image.BufferedImage;
 
