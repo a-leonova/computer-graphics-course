@@ -17,6 +17,7 @@ public class Main {
         isolineManager.setGraphicArea(-50, 50, -50, 50);
         isolineManager.setColorsRGB(new int[]{Color.YELLOW.getRGB(), Color.WHITE.getRGB(), Color.MAGENTA.getRGB(), Color.CYAN.getRGB(), Color.RED.getRGB(), Color.GREEN.getRGB(), Color.GRAY.getRGB(), Color.BLACK.getRGB()});
         controller.createGraphic();
+        controller.createLegend();
         mainWindow.setVisible(true);
     }
 }

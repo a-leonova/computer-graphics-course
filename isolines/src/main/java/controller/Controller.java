@@ -13,4 +13,9 @@ public class Controller implements LogicController {
     public void createGraphic() {
         isolineManager.createGraphic();
     }
+
+    @Override
+    public void createLegend() {
+        isolineManager.createLegend();
+    }
 }
