@@ -17,7 +17,7 @@ public class Main {
         isolineManager.addObserver(mainWindow);
         mainWindow.setLogicController(controller);
 
-        isolineManager.setGraphicArea(-50, 50, -50, 50);
+        isolineManager.setGraphicArea(0, 10, 0, 10);
         isolineManager.setColorsRGB(new SafeColor[]{
                 new SafeColor(255,0,0),
                 new SafeColor(255, 127, 0),
