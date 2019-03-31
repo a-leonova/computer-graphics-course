@@ -1,29 +1,29 @@
 package com.nsu.fit.leonova.controller;
 
-import com.nsu.fit.leonova.model.IsolineManager;
+import com.nsu.fit.leonova.model.Model;
 
 public class Controller implements LogicController {
-    private IsolineManager isolineManager;
+    private Model model;
     private boolean gradient = false;
 
-    public void setIsolineManager(IsolineManager isolineManager) {
-        this.isolineManager = isolineManager;
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     @Override
     public void createGraphic() {
-        isolineManager.createGraphic(gradient);
+        model.createGraphic(gradient);
     }
 
     @Override
     public void createLegend() {
-        isolineManager.createLegend(gradient);
+        model.createLegend(gradient);
     }
 
     @Override
     public void gradientWasPressed() {
         gradient = !gradient;
-        isolineManager.createGraphic(gradient);
-        isolineManager.createLegend(gradient);
+        model.createGraphic(gradient);
+        model.createLegend(gradient);
     }
 }

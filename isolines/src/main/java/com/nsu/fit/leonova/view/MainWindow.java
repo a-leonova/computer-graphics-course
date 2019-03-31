@@ -27,7 +27,7 @@ public class MainWindow extends JFrame implements Observer {
         add(toolBar, BorderLayout.PAGE_START);
         add(imageManager, BorderLayout.CENTER);
         add(legend, BorderLayout.EAST);
-        setMinimumSize(new Dimension(600, 600));
+        setMinimumSize(new Dimension(width + 40, height));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
