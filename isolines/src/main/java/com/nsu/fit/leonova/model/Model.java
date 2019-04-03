@@ -16,12 +16,16 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     private IsolineDrawer isolineDrawer = new IsolineDrawer();
     private GraphicDrawer graphicDrawer = new GraphicDrawer();
 
+    private int colorsCnt;
+
+    private BufferedImage sourceImage;
+
     @Override
     public void createGraphic(boolean gradient) {
-        BufferedImage image = new BufferedImage(Globals.WIDTH, Globals.HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
-        graphicDrawer.createGraphic(image, gradient);
+        sourceImage = new BufferedImage(Globals.WIDTH, Globals.HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+        graphicDrawer.createGraphic(sourceImage, gradient);
         for(Observer observer : observers){
-            observer.setImage(image);
+            observer.setImage(sourceImage);
         }
     }
 
@@ -36,11 +40,19 @@ public class Model implements GraphicManager, IsolineManager, Observable {
 
     @Override
     public void setColorsRGB(SafeColor[] colorsRGB) {
+        colorsCnt = colorsRGB.length;
         graphicDrawer.setColorsRGB(colorsRGB);
     }
 
     @Override
-    public void drawIsoline() {
+    public void drawIsolines() {
+        double step = (graphicDrawer.getMaxZ() - graphicDrawer.getMinZ()) / colorsCnt;
+        for(int i = 0; i < colorsCnt; ++i){
+            isolineDrawer.drawIsoline(sourceImage, graphicDrawer.getMinZ() + step * i);
+        }
+        for(Observer observer : observers){
+            observer.setImage(sourceImage);
+        }
 
     }
 

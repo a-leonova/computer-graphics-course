@@ -18,7 +18,7 @@ public class ImageManager extends JPanel {
 
     public void setImage(BufferedImage newImage){
         Graphics2D graphics2D = image.createGraphics();
-        graphics2D.clearRect(0, 0, image.getWidth(), image.getHeight());
+//        graphics2D.clearRect(0, 0, image.getWidth(), image.getHeight());
         image = newImage;
         graphics2D.drawImage(image,0, 0, image.getWidth(), image.getHeight(), null);
         graphics2D.dispose();

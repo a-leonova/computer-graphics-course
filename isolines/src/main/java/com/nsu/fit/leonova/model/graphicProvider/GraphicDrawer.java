@@ -6,6 +6,16 @@ import java.awt.image.BufferedImage;
 
 public class GraphicDrawer extends GraphicProvider {
     private SafeColor[] colorsRGB;
+    double minZ;
+    double maxZ;
+
+    public double getMinZ() {
+        return minZ;
+    }
+
+    public double getMaxZ() {
+        return maxZ;
+    }
 
     public void setColorsRGB(SafeColor[] colorsRGB) {
         this.colorsRGB = colorsRGB;
@@ -13,8 +23,8 @@ public class GraphicDrawer extends GraphicProvider {
 
     public void createGraphic(BufferedImage image, Boolean gradient){
         double[] minMax = findMinMax(image.getWidth(), image.getHeight());
-        double minZ = minMax[0];
-        double maxZ = minMax[1];
+        minZ = minMax[0];
+        maxZ = minMax[1];
 
         for(int y = 0; y < image.getHeight(); ++y){
             for (int x = 0; x < image.getWidth(); ++x){

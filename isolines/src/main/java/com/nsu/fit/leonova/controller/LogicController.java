@@ -4,4 +4,5 @@ public interface LogicController {
     void createGraphic();
     void createLegend();
     void gradientWasPressed();
+    void drawIsolines();
 }

@@ -71,6 +71,8 @@ public class MainWindow extends JFrame implements Observer {
             gradient.setSelected(gradientMenuItem.isSelected());
             logicController.gradientWasPressed();
         });
+        JMenuItem isolines = createMenuItem("Show all isolines", e -> logicController.drawIsolines());
+        graphic.add(isolines);
 
         menu.add(file);
         menu.add(graphic);

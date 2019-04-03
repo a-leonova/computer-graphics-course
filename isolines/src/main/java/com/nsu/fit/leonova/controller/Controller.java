@@ -26,4 +26,9 @@ public class Controller implements LogicController {
         model.createGraphic(gradient);
         model.createLegend(gradient);
     }
+
+    @Override
+    public void drawIsolines() {
+        model.drawIsolines();
+    }
 }
