@@ -6,7 +6,10 @@ import com.nsu.fit.leonova.model.graphicProvider.IsolineDrawer;
 import com.nsu.fit.leonova.observers.Observable;
 import com.nsu.fit.leonova.observers.Observer;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
 public class Model implements GraphicManager, IsolineManager, Observable {
@@ -45,13 +48,25 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
-    public void drawIsolines() {
+    public void drawAllLevelIsolines() {
+        BufferedImage sourceImageWithAllLevelIsolines = deepCopy(sourceImage);
         double step = (graphicDrawer.getMaxZ() - graphicDrawer.getMinZ()) / colorsCnt;
         for(int i = 0; i < colorsCnt; ++i){
-            isolineDrawer.drawIsoline(sourceImage, graphicDrawer.getMinZ() + step * i);
+            isolineDrawer.drawIsoline(sourceImageWithAllLevelIsolines, graphicDrawer.getMinZ() + step * i);
         }
         for(Observer observer : observers){
-            observer.setImage(sourceImage);
+            observer.setImage(sourceImageWithAllLevelIsolines);
+        }
+    }
+
+    @Override
+    public void drawOneIsolines(Point pressedPixel) {
+        BufferedImage sourceImageWithOneIsoline = deepCopy(sourceImage);
+
+        isolineDrawer.drawOneIsoline(sourceImageWithOneIsoline, pressedPixel);
+
+        for(Observer observer : observers){
+            observer.setImage(sourceImageWithOneIsoline);
         }
 
     }
@@ -80,5 +95,12 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     @Override
     public void removeObserver(Observer observer) {
         observers.remove(observer);
+    }
+
+    private BufferedImage deepCopy(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 }

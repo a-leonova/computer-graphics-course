@@ -2,6 +2,8 @@ package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Model;
 
+import java.awt.*;
+
 public class Controller implements LogicController {
     private Model model;
     private boolean gradient = false;
@@ -28,7 +30,12 @@ public class Controller implements LogicController {
     }
 
     @Override
-    public void drawIsolines() {
-        model.drawIsolines();
+    public void drawAllLevelIsolines() {
+        model.drawAllLevelIsolines();
+    }
+
+    @Override
+    public void drawOneIsolines(Point pressedPixel) {
+        model.drawOneIsolines(pressedPixel);
     }
 }

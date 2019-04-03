@@ -29,6 +29,22 @@ public class IsolineDrawer extends GraphicProvider {
         }
     }
 
+    public void drawOneIsoline(BufferedImage image, java.awt.Point pressedPixel){
+        dx = image.getWidth() / (double)k;
+        dy = image.getHeight()/ (double)m;
+
+        double x0 = pressedPixel.getX() / (double)image.getWidth() * definitionAreaWidth + minX;
+        double y0 = pressedPixel.getY() / (double)image.getHeight() * definitionAreaHeight + minY;
+        double z = Function.countValue(x0, y0);
+
+        for(int y = 0; y + dy < image.getHeight(); y += dy){
+            for(int x = 0; x + dx < image.getWidth(); x += dx){
+                drawLine(image, x, y, dx, dy, z);
+            }
+        }
+
+    }
+
     private void drawLine(BufferedImage image, double x, double y, double dx, double dy, double z){
         double y0 = y / (double)image.getHeight() * definitionAreaHeight + minY;
         double x0 = x / (double)image.getWidth() * definitionAreaWidth + minX;

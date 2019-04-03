@@ -33,6 +33,7 @@ public class MainWindow extends JFrame implements Observer {
 
     public void setLogicController(LogicController logicController) {
         this.logicController = logicController;
+        imageManager.setLogicController(logicController);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class MainWindow extends JFrame implements Observer {
             gradient.setSelected(gradientMenuItem.isSelected());
             logicController.gradientWasPressed();
         });
-        JMenuItem isolines = createMenuItem("Show all isolines", e -> logicController.drawIsolines());
+        JMenuItem isolines = createMenuItem("Show all isolines", e -> logicController.drawAllLevelIsolines());
         graphic.add(isolines);
 
         menu.add(file);
