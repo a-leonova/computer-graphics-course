@@ -11,11 +11,12 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Model implements GraphicManager, IsolineManager, Observable {
 
-    private int k = 100;
-    private int m = 100;
+    private int k = 10;
+    private int m = 10;
 
     private GraphicValues graphicValues;
     private ArrayList<Observer> observers = new ArrayList<>();
@@ -26,7 +27,9 @@ public class Model implements GraphicManager, IsolineManager, Observable {
 
     private BufferedImage sourceGraphic;
     private boolean drawNet = false;
+    private boolean pivotPoints = false;
     private HashSet<Double> isolinesToDraw = new HashSet<>();
+    private List<Point> points;
 
 
     @Override
@@ -105,6 +108,12 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
+    public void pivotPoints() {
+        pivotPoints = !pivotPoints;
+        createImage();
+    }
+
+    @Override
     public void addObserver(Observer observer) {
         observers.add(observer);
     }
@@ -116,8 +125,9 @@ public class Model implements GraphicManager, IsolineManager, Observable {
 
     private void createImage(){
         BufferedImage image = deepCopy(sourceGraphic);
+        points = new ArrayList<>();
         for(Double isolineValue: isolinesToDraw){
-            isolineDrawer.drawIsoline(image, isolineValue);
+            points.addAll(isolineDrawer.drawIsoline(image, isolineValue));
         }
         if(drawNet){
             int stepX = image.getWidth() / k;
@@ -128,6 +138,15 @@ public class Model implements GraphicManager, IsolineManager, Observable {
             }
             for(int i = 0; i < image.getHeight(); i += stepY){
                 g2.drawLine(0, i, image.getWidth() - 1, i);
+            }
+        }
+        if(pivotPoints){
+            for(Point point : points){
+                Graphics2D g2 = image.createGraphics();
+                //g2.drawRect(point.x, point.y, 4, 4);
+                g2.setPaint(Color.BLACK);
+                g2.fillRect(point.x, point.y, 3, 3);
+
             }
         }
         for(Observer observer : observers){

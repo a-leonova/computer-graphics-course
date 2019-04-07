@@ -46,6 +46,11 @@ public class Controller implements LogicController, ImageController {
     }
 
     @Override
+    public void pivotPoints() {
+        model.pivotPoints();
+    }
+
+    @Override
     public void imageWasClicked(Point pressedPixel) {
         model.clickedIsoline(pressedPixel);
     }

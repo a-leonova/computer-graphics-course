@@ -6,4 +6,5 @@ public interface GraphicManager {
     void setColorsRGB(SafeColor[] colorsRGB);
     void setDefinitionArea(double minX, double minY, double maxX, double maxY);
     void drawNet();
+    void pivotPoints();
 }

@@ -10,5 +10,6 @@ public interface LogicController {
     void drawAllLevelIsolines();
     void eraseIsolines();
     void drawNet();
+    void pivotPoints();
 
 }

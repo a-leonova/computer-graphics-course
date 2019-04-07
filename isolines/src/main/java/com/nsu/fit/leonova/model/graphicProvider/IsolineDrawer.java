@@ -3,6 +3,7 @@ package com.nsu.fit.leonova.model.graphicProvider;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class IsolineDrawer {
     private double dx;
@@ -27,17 +28,19 @@ public class IsolineDrawer {
         this.m = m;
     }
 
-    public void drawIsoline(BufferedImage image, double z) {
+    public List<Point> drawIsoline(BufferedImage image, double z) {
         dx = image.getWidth() / (double)k;
         dy = image.getHeight()/ (double)m;
+        ArrayList<Point> points = new ArrayList<>();
         for(int y = 0; y + dy < image.getHeight(); y += dy){
             for(int x = 0; x + dx < image.getWidth(); x += dx){
-                drawLine(image, new DoublePoint(x, y), dx, dy, z);
+                points.addAll(drawLine(image, new DoublePoint(x, y), dx, dy, z));
             }
         }
+        return points;
     }
 
-    private void drawLine(BufferedImage image, DoublePoint point, double dx, double dy, double z){
+    private ArrayList<Point> drawLine(BufferedImage image, DoublePoint point, double dx, double dy, double z){
         DoublePoint leftTop = graphicValues.pixelToGraphicCoord(point, image.getWidth(), image.getHeight());
         DoublePoint pixelRightBottom = new DoublePoint(point.getX() + dx, point.getY() + dy);
         DoublePoint rightBottom = graphicValues.pixelToGraphicCoord(pixelRightBottom, image.getWidth(), image.getHeight());
@@ -65,8 +68,9 @@ public class IsolineDrawer {
             doublePoints.add(new DoublePoint(point.getX() + dx, p1));
         }
 
+        ArrayList<Point> pivots = new ArrayList<>();
         if(doublePoints.size() < 2){
-            return;
+            return pivots;
         }
         if(doublePoints.size() == 2){
             Graphics2D graphics2D = image.createGraphics();
@@ -77,20 +81,20 @@ public class IsolineDrawer {
 
             graphics2D.drawLine(resX0, resY0, resX1, resY1);
             graphics2D.drawLine(0, 0, 10, 10);
-            return;
-        }
 
+            for(DoublePoint doublePoint : doublePoints){
+                pivots.add(new Point((int)Math.floor(doublePoint.getX()), (int)Math.floor(doublePoint.getY())));
+            }
+        }
         if(doublePoints.size() == 3){
-            drawLine(image, point, dx, dy, z - 0.00001);
-            return;
+            return drawLine(image, point, dx, dy, z - 0.00001);
         }
         if(doublePoints.size() == 4){
-            drawLine(image, point, dx/2, dy/2, z);
-            drawLine(image,  new DoublePoint(point.getX() + dx/2, point.getY()) , dx/2, dy/2, z);
-            drawLine(image, new DoublePoint(point.getX(), point.getY() + dy/2), dx/2, dy/2, z);
-            drawLine(image, new DoublePoint(point.getX() + dx/2, point.getY() + dy/2), dx/2, dy/2, z);
-            return;
+            pivots.addAll(drawLine(image, point, dx/2, dy/2, z));
+            pivots.addAll(drawLine(image,  new DoublePoint(point.getX() + dx/2, point.getY()) , dx/2, dy/2, z));
+            pivots.addAll(drawLine(image, new DoublePoint(point.getX(), point.getY() + dy/2), dx/2, dy/2, z));
+            pivots.addAll(drawLine(image, new DoublePoint(point.getX() + dx/2, point.getY() + dy/2), dx/2, dy/2, z));
         }
-
+        return pivots;
     }
 }

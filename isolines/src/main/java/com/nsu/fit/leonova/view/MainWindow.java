@@ -65,10 +65,12 @@ public class MainWindow extends JFrame implements Observer {
         });
         JButton eraser = createButton("icons/eraser.png", "Erase isolines", e->logicController.eraseIsolines());
         JButton allIsolines = createButton("icons/allIsolines.png", "Draw all isolines", e -> logicController.drawAllLevelIsolines());
+        JButton pivotPoints = createButton("icons/points.png", "Pivot points", e -> logicController.pivotPoints());
         toolBar.add(gradient);
         toolBar.add(eraser);
         toolBar.add(net);
         toolBar.add(allIsolines);
+        toolBar.add(pivotPoints);
         return toolBar;
     }
 
