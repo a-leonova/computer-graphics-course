@@ -15,8 +15,8 @@ import java.util.List;
 
 public class Model implements GraphicManager, IsolineManager, Observable {
 
-    private int k = 10;
-    private int m = 10;
+    private int k = 60;
+    private int m = 60;
 
     private GraphicValues graphicValues;
     private ArrayList<Observer> observers = new ArrayList<>();
@@ -111,6 +111,14 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     public void pivotPoints() {
         pivotPoints = !pivotPoints;
         createImage();
+    }
+
+    @Override
+    public void pixelToCoordinate(Point pixel) {
+        DoublePoint graphicCoordinate = graphicValues.pixelToGraphicCoord(new DoublePoint(pixel), sourceGraphic.getWidth(), sourceGraphic.getHeight());
+        for(Observer observer : observers){
+            observer.setCoordinates(graphicCoordinate);
+        }
     }
 
     @Override

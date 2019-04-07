@@ -32,8 +32,8 @@ public class IsolineDrawer {
         dx = image.getWidth() / (double)k;
         dy = image.getHeight()/ (double)m;
         ArrayList<Point> points = new ArrayList<>();
-        for(int y = 0; y + dy < image.getHeight(); y += dy){
-            for(int x = 0; x + dx < image.getWidth(); x += dx){
+        for(int y = 0; y < image.getHeight(); y += dy){
+            for(int x = 0; x < image.getWidth(); x += dx){
                 points.addAll(drawLine(image, new DoublePoint(x, y), dx, dy, z));
             }
         }

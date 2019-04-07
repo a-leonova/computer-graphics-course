@@ -5,4 +5,5 @@ import java.awt.*;
 public interface ImageController {
     void imageWasClicked(Point pressedPixel);
     void imageWasDragged(Point draggedPixel);
+    void imageWasMoved(Point pixel);
 }

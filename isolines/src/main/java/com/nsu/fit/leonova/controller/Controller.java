@@ -59,4 +59,9 @@ public class Controller implements LogicController, ImageController {
     public void imageWasDragged(Point draggedPixel) {
         model.draggedIsoline(draggedPixel);
     }
+
+    @Override
+    public void imageWasMoved(Point pixel) {
+        model.pixelToCoordinate(pixel);
+    }
 }

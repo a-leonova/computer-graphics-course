@@ -1,18 +1,23 @@
 package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.ImageController;
+import com.nsu.fit.leonova.model.graphicProvider.DoublePoint;
 import com.nsu.fit.leonova.observers.Observer;
 import com.nsu.fit.leonova.controller.LogicController;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class MainWindow extends JFrame implements Observer {
 
-    private ImageManager imageManager;
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
+
+    private GraphicHolder imageManager;
     private ImageManager legend = new ImageManager(10, 500);
     private LogicController logicController;
 
@@ -22,15 +27,26 @@ public class MainWindow extends JFrame implements Observer {
     private JToggleButton netButton;
     private JCheckBoxMenuItem netMenuItem = new JCheckBoxMenuItem("Draw net");
 
+    private JLabel statusLabel = new JLabel("status");
+
     public MainWindow(int width, int height){
         super("Isolines");
-        imageManager = new ImageManager(width, height);
+        imageManager = new GraphicHolder(width, height);
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenu();
         setJMenuBar(menuBar);
         add(toolBar, BorderLayout.PAGE_START);
         add(imageManager, BorderLayout.CENTER);
         add(legend, BorderLayout.EAST);
+
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setPreferredSize(new Dimension(getWidth(), 16));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusPanel.add(statusLabel);
+
         setMinimumSize(new Dimension(width + 40, height));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -51,6 +67,11 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setLegend(BufferedImage legendImg) {
         legend.setImage(legendImg);
+    }
+
+    @Override
+    public void setCoordinates(DoublePoint coordinates) {
+        statusLabel.setText("X: " + DECIMAL_FORMAT.format(coordinates.getX()) + " Y: " + DECIMAL_FORMAT.format(coordinates.getY()));
     }
 
     private JToolBar createToolBar(){
