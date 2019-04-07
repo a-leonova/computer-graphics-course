@@ -16,6 +16,7 @@ public class Main {
         controller.setModel(model);
         model.addObserver(mainWindow);
         mainWindow.setLogicController(controller);
+        mainWindow.setImageController(controller);
 
         model.setDefinitionArea(0, 0, 10, 10);
         model.setColorsRGB(new SafeColor[]{

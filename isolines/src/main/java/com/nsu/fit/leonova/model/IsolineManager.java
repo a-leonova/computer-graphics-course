@@ -5,7 +5,8 @@ import java.awt.image.BufferedImage;
 
 public interface IsolineManager {
     void drawAllLevelIsolines();
-    void drawOneIsolines(Point pressedPixel);
+    void clickedIsoline(Point pressedPixel);
+    void draggedIsoline(Point pressedPixel);
     void setDefinitionArea(double minX, double minY, double maxX, double maxY);
     void setWidthInSquares(int width);
     void setHeightInSquares(int height);

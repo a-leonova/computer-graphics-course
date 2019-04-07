@@ -42,7 +42,6 @@ public class IsolineDrawer extends GraphicProvider {
                 drawLine(image, x, y, dx, dy, z);
             }
         }
-
     }
 
     private void drawLine(BufferedImage image, double x, double y, double dx, double dy, double z){

@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 public class GraphicDrawer extends GraphicProvider {
     private SafeColor[] colorsRGB;
-    double minZ;
-    double maxZ;
+    private double minZ;
+    private double maxZ;
 
     public double getMinZ() {
         return minZ;

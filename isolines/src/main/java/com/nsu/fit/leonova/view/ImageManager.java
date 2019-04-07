@@ -1,6 +1,6 @@
 package com.nsu.fit.leonova.view;
 
-import com.nsu.fit.leonova.controller.LogicController;
+import com.nsu.fit.leonova.controller.ImageController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class ImageManager extends JPanel {
     private BufferedImage image;
-    private LogicController logicController;
+    private ImageController imageController;
 
     public ImageManager(int width, int height){
         image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
@@ -19,8 +19,8 @@ public class ImageManager extends JPanel {
         addMouseMotionListener(mouseAdapter);
     }
 
-    public void setLogicController(LogicController logicController) {
-        this.logicController = logicController;
+    public void setImageController(ImageController imageController) {
+        this.imageController = imageController;
     }
 
     @Override
@@ -41,12 +41,12 @@ public class ImageManager extends JPanel {
     private class MyMouseAdapter extends MouseAdapter {
         @Override
         public void mouseDragged(MouseEvent mEvt) {
-            logicController.drawOneIsolines(new Point(mEvt.getX(), mEvt.getY()));
+            imageController.imageWasDragged(new Point(mEvt.getX(), mEvt.getY()));
         }
 
         @Override
-        public void mousePressed(MouseEvent mEvt) {
-            logicController.drawOneIsolines(new Point(mEvt.getX(), mEvt.getY()));
+        public void mouseClicked(MouseEvent mEvt) {
+            imageController.imageWasClicked(new Point(mEvt.getX(), mEvt.getY()));
         }
 
     }

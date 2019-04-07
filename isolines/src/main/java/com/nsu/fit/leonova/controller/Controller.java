@@ -4,7 +4,7 @@ import com.nsu.fit.leonova.model.Model;
 
 import java.awt.*;
 
-public class Controller implements LogicController {
+public class Controller implements LogicController, ImageController {
     private Model model;
     private boolean gradient = false;
 
@@ -35,7 +35,22 @@ public class Controller implements LogicController {
     }
 
     @Override
-    public void drawOneIsolines(Point pressedPixel) {
-        model.drawOneIsolines(pressedPixel);
+    public void eraseIsolines() {
+        model.createGraphic(gradient);
+    }
+
+    @Override
+    public void drawNet() {
+
+    }
+
+    @Override
+    public void imageWasClicked(Point pressedPixel) {
+        model.clickedIsoline(pressedPixel);
+    }
+
+    @Override
+    public void imageWasDragged(Point draggedPixel) {
+        model.draggedIsoline(draggedPixel);
     }
 }

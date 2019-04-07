@@ -49,26 +49,31 @@ public class Model implements GraphicManager, IsolineManager, Observable {
 
     @Override
     public void drawAllLevelIsolines() {
-        BufferedImage sourceImageWithAllLevelIsolines = deepCopy(sourceImage);
         double step = (graphicDrawer.getMaxZ() - graphicDrawer.getMinZ()) / colorsCnt;
         for(int i = 0; i < colorsCnt; ++i){
-            isolineDrawer.drawIsoline(sourceImageWithAllLevelIsolines, graphicDrawer.getMinZ() + step * i);
+            isolineDrawer.drawIsoline(sourceImage, graphicDrawer.getMinZ() + step * i);
         }
         for(Observer observer : observers){
-            observer.setImage(sourceImageWithAllLevelIsolines);
+            observer.setImage(sourceImage);
         }
     }
 
     @Override
-    public void drawOneIsolines(Point pressedPixel) {
+    public void clickedIsoline(Point pressedPixel) {
+        drawOneIsoline(pressedPixel, sourceImage);
+    }
+
+    @Override
+    public void draggedIsoline(Point pressedPixel) {
         BufferedImage sourceImageWithOneIsoline = deepCopy(sourceImage);
+        drawOneIsoline(pressedPixel, sourceImageWithOneIsoline);
+    }
 
-        isolineDrawer.drawOneIsoline(sourceImageWithOneIsoline, pressedPixel);
-
+    private void drawOneIsoline(Point pressedPixel, BufferedImage drawImage) {
+        isolineDrawer.drawOneIsoline(drawImage, pressedPixel);
         for(Observer observer : observers){
-            observer.setImage(sourceImageWithOneIsoline);
+            observer.setImage(drawImage);
         }
-
     }
 
     @Override
@@ -80,6 +85,7 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     public void setHeightInSquares(int height) {
         isolineDrawer.setHeightInSquares(height);
     }
+
 
     @Override
     public void setDefinitionArea(double minX, double minY, double maxX, double maxY) {

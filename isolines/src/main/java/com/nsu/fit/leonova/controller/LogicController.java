@@ -8,5 +8,7 @@ public interface LogicController {
     void createLegend();
     void gradientWasPressed();
     void drawAllLevelIsolines();
-    void drawOneIsolines(Point pressedPixel);
+    void eraseIsolines();
+    void drawNet();
+
 }

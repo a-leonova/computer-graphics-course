@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.view;
 
+import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.observers.Observer;
 import com.nsu.fit.leonova.controller.LogicController;
 
@@ -33,7 +34,10 @@ public class MainWindow extends JFrame implements Observer {
 
     public void setLogicController(LogicController logicController) {
         this.logicController = logicController;
-        imageManager.setLogicController(logicController);
+    }
+
+    public void setImageController(ImageController imageController){
+        imageManager.setImageController(imageController);
     }
 
     @Override
@@ -55,7 +59,13 @@ public class MainWindow extends JFrame implements Observer {
             logicController.gradientWasPressed();
             gradientMenuItem.setSelected(gradient.isSelected());
         });
+        JButton eraser = createButton("icons/eraser.png", "Erase isolines", e->logicController.eraseIsolines());
+        JButton net = createButton("icons/net.png", "Draw net", e->logicController.drawNet());
+        JButton allIsolines = createButton("icons/allIsolines.png", "Draw all isolines", e -> logicController.drawAllLevelIsolines());
         toolBar.add(gradient);
+        toolBar.add(eraser);
+        toolBar.add(net);
+        toolBar.add(allIsolines);
         return toolBar;
     }
 
