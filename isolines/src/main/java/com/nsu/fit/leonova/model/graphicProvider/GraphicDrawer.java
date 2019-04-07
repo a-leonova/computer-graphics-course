@@ -4,10 +4,11 @@ import com.nsu.fit.leonova.model.SafeColor;
 
 import java.awt.image.BufferedImage;
 
-public class GraphicDrawer extends GraphicProvider {
+public class GraphicDrawer{
     private SafeColor[] colorsRGB;
     private double minZ;
     private double maxZ;
+    private GraphicValues graphicValues;
 
     public double getMinZ() {
         return minZ;
@@ -21,6 +22,10 @@ public class GraphicDrawer extends GraphicProvider {
         this.colorsRGB = colorsRGB;
     }
 
+    public void setGraphicValues(GraphicValues graphicValues) {
+        this.graphicValues = graphicValues;
+    }
+
     public void createGraphic(BufferedImage image, Boolean gradient){
         double[] minMax = findMinMax(image.getWidth(), image.getHeight());
         minZ = minMax[0];
@@ -28,14 +33,13 @@ public class GraphicDrawer extends GraphicProvider {
 
         for(int y = 0; y < image.getHeight(); ++y){
             for (int x = 0; x < image.getWidth(); ++x){
-                double y0 =+ y / (double)image.getHeight() * definitionAreaWidth + minY;
-                double x0 = x / (double)image.getWidth() * definitionAreaHeight + minX;
+                DoublePoint point = graphicValues.pixelToGraphicCoord(new DoublePoint(x, y), image.getWidth(), image.getHeight());
                 int color;
                 if(gradient){
-                    color = findGradientColor(Function.countValue(x0, y0), minZ, maxZ);
+                    color = findGradientColor(Function.countValue(point), minZ, maxZ);
                 }
                 else{
-                    color = findUsualColor(Function.countValue(x0, y0), minZ, maxZ);
+                    color = findUsualColor(Function.countValue(point), minZ, maxZ);
                 }
                 image.setRGB(x, y, color);
             }
@@ -59,13 +63,12 @@ public class GraphicDrawer extends GraphicProvider {
     }
 
     private double[] findMinMax(int imageWidth, int imageHeight){
-        double minZ = Function.countValue(minX, minY);
-        double maxZ = Function.countValue(minX, minY);
+        double minZ = Function.countValue(new DoublePoint(graphicValues.getMinX(), graphicValues.getMinY()));
+        double maxZ = Function.countValue(new DoublePoint(graphicValues.getMinX(), graphicValues.getMinY()));
         for(int y = 0; y < imageHeight; ++y){
             for (int x = 0; x < imageWidth; ++x){
-                double y0 = y / (double)imageHeight * definitionAreaHeight + minY;
-                double x0 = x / (double)imageWidth * definitionAreaWidth + minX;
-                double z = Function.countValue(x0, y0);
+                DoublePoint point = graphicValues.pixelToGraphicCoord(new DoublePoint(x, y), imageWidth, imageHeight);
+                double z = Function.countValue(point);
                 minZ = z < minZ ? z : minZ;
                 maxZ = z > maxZ ? z : maxZ;
             }

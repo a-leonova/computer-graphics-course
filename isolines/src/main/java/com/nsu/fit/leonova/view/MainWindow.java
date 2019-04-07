@@ -19,6 +19,9 @@ public class MainWindow extends JFrame implements Observer {
     private JToggleButton gradient;
     private JCheckBoxMenuItem gradientMenuItem = new JCheckBoxMenuItem("Gradient");
 
+    private JToggleButton netButton;
+    private JCheckBoxMenuItem netMenuItem = new JCheckBoxMenuItem("Draw net");
+
     public MainWindow(int width, int height){
         super("Isolines");
         imageManager = new ImageManager(width, height);
@@ -52,15 +55,15 @@ public class MainWindow extends JFrame implements Observer {
 
     private JToolBar createToolBar(){
         JToolBar toolBar = new JToolBar();
-        gradient = new JToggleButton();
-        gradient.setToolTipText("Gradient");
-        gradient.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("icons/gradient.png"))));
-        gradient.addActionListener(e -> {
+        gradient = createToggleButton("icons/gradient.png", "Gradient", e -> {
             logicController.gradientWasPressed();
             gradientMenuItem.setSelected(gradient.isSelected());
         });
+        JToggleButton net = createToggleButton("icons/net.png", "Draw net", e -> {
+            logicController.drawNet();
+            netMenuItem.setSelected(gradient.isSelected());
+        });
         JButton eraser = createButton("icons/eraser.png", "Erase isolines", e->logicController.eraseIsolines());
-        JButton net = createButton("icons/net.png", "Draw net", e->logicController.drawNet());
         JButton allIsolines = createButton("icons/allIsolines.png", "Draw all isolines", e -> logicController.drawAllLevelIsolines());
         toolBar.add(gradient);
         toolBar.add(eraser);
@@ -93,6 +96,14 @@ public class MainWindow extends JFrame implements Observer {
 
     private JButton createButton(String relativePath, String tip, ActionListener actionListener) {
         JButton button = new JButton();
+        button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
+        button.setToolTipText(tip);
+        button.addActionListener(actionListener);
+        return button;
+    }
+
+    private JToggleButton createToggleButton(String relativePath, String tip, ActionListener actionListener){
+        JToggleButton button = new JToggleButton();
         button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
         button.setToolTipText(tip);
         button.addActionListener(actionListener);

@@ -1,10 +1,10 @@
 package com.nsu.fit.leonova.model.graphicProvider;
 
-public class Point {
+public class DoublePoint {
     private final double x;
     private final double y;
 
-    public Point(double x, double y) {
+    public DoublePoint(double x, double y) {
         this.x = x;
         this.y = y;
     }

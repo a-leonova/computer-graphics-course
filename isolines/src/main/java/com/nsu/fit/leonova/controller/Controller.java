@@ -36,6 +36,7 @@ public class Controller implements LogicController, ImageController {
 
     @Override
     public void eraseIsolines() {
+        model.removeIsolines();
         model.createGraphic(gradient);
     }
 

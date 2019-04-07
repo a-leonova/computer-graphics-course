@@ -8,6 +8,7 @@ public interface IsolineManager {
     void clickedIsoline(Point pressedPixel);
     void draggedIsoline(Point pressedPixel);
     void setDefinitionArea(double minX, double minY, double maxX, double maxY);
+    void removeIsolines();
     void setWidthInSquares(int width);
     void setHeightInSquares(int height);
 }

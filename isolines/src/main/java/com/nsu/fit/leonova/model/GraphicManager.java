@@ -5,4 +5,5 @@ public interface GraphicManager {
     void createLegend(boolean gradient);
     void setColorsRGB(SafeColor[] colorsRGB);
     void setDefinitionArea(double minX, double minY, double maxX, double maxY);
+    void drawNet();
 }
