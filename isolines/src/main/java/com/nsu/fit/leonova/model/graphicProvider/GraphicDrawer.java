@@ -56,9 +56,14 @@ public class GraphicDrawer{
             else{
                 rgb = findUsualColor(1 - y0, 0, 1);
             }
-            for (int x = 0; x < legend.getWidth(); ++x){
+            for (int x = 0; x < 10; ++x){
                 legend.setRGB(x, y, rgb);
             }
+        }
+        //TODO:Constants!
+        int step = (legend.getHeight() - 10) / (colorsRGB.length + 1);
+        for(int i = 0; i < colorsRGB.length; ++i){
+
         }
     }
 

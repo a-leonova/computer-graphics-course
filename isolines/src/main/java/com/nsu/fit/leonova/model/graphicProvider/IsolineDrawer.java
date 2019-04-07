@@ -12,9 +12,15 @@ public class IsolineDrawer {
     private int k;
     private int m;
 
+    private Color color = Color.WHITE;
+
     public IsolineDrawer(int k, int m) {
         this.k = k;
         this.m = m;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     private GraphicValues graphicValues;
@@ -74,13 +80,13 @@ public class IsolineDrawer {
         }
         if(doublePoints.size() == 2){
             Graphics2D graphics2D = image.createGraphics();
+            graphics2D.setPaint(color);
             int resX1 = (int)Math.round((doublePoints.get(1).getX()));
             int resX0 = (int)Math.round((doublePoints.get(0).getX()));
             int resY0 = (int)Math.round((doublePoints.get(0).getY()));
             int resY1 = (int)Math.round((doublePoints.get(1).getY()));
 
             graphics2D.drawLine(resX0, resY0, resX1, resY1);
-            graphics2D.drawLine(0, 0, 10, 10);
 
             for(DoublePoint doublePoint : doublePoints){
                 pivots.add(new Point((int)Math.floor(doublePoint.getX()), (int)Math.floor(doublePoint.getY())));

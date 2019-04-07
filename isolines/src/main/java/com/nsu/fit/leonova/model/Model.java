@@ -29,8 +29,6 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     private boolean drawNet = false;
     private boolean pivotPoints = false;
     private HashSet<Double> isolinesToDraw = new HashSet<>();
-    private List<Point> points;
-
 
     @Override
     public void createGraphic(boolean gradient) {
@@ -102,6 +100,11 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
+    public void setIsolineColor(SafeColor color) {
+        isolineDrawer.setColor(new Color(color.getIntRgb()));
+    }
+
+    @Override
     public void drawNet() {
         drawNet = !drawNet;
         createImage();
@@ -133,7 +136,7 @@ public class Model implements GraphicManager, IsolineManager, Observable {
 
     private void createImage(){
         BufferedImage image = deepCopy(sourceGraphic);
-        points = new ArrayList<>();
+        List<Point> points = new ArrayList<>();
         for(Double isolineValue: isolinesToDraw){
             points.addAll(isolineDrawer.drawIsoline(image, isolineValue));
         }

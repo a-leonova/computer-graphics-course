@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.view;
 
+import com.nsu.fit.leonova.controller.FileController;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.model.graphicProvider.DoublePoint;
 import com.nsu.fit.leonova.observers.Observer;
@@ -20,6 +21,7 @@ public class MainWindow extends JFrame implements Observer {
     private GraphicHolder imageManager;
     private ImageManager legend = new ImageManager(10, 500);
     private LogicController logicController;
+    private FileController fileController;
 
     private JToggleButton gradient;
     private JCheckBoxMenuItem gradientMenuItem = new JCheckBoxMenuItem("Gradient");
@@ -59,6 +61,10 @@ public class MainWindow extends JFrame implements Observer {
         imageManager.setImageController(imageController);
     }
 
+    public void setFileController(FileController fileController) {
+        this.fileController = fileController;
+    }
+
     @Override
     public void setImage(BufferedImage image) {
         imageManager.setImage(image);
@@ -87,6 +93,11 @@ public class MainWindow extends JFrame implements Observer {
         JButton eraser = createButton("icons/eraser.png", "Erase isolines", e->logicController.eraseIsolines());
         JButton allIsolines = createButton("icons/allIsolines.png", "Draw all isolines", e -> logicController.drawAllLevelIsolines());
         JButton pivotPoints = createButton("icons/points.png", "Pivot points", e -> logicController.pivotPoints());
+        JButton openFile = createButton("icons/icons8-open-folder-16.png", "Open config file", e ->{
+            new OpenConfigFileHandler(fileController).openConfig();
+        });
+        toolBar.add(openFile);
+        toolBar.addSeparator();
         toolBar.add(gradient);
         toolBar.add(eraser);
         toolBar.add(net);

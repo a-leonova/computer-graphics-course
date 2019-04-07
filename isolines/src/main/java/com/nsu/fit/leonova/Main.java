@@ -17,6 +17,7 @@ public class Main {
         model.addObserver(mainWindow);
         mainWindow.setLogicController(controller);
         mainWindow.setImageController(controller);
+        mainWindow.setFileController(controller);
 
         model.setDefinitionArea(0, 0, 10, 10);
         model.setColorsRGB(new SafeColor[]{

@@ -10,4 +10,5 @@ public interface IsolineManager {
     void setDefinitionArea(double minX, double minY, double maxX, double maxY);
     void removeIsolines();
     void setNet(int k, int m);
+    void setIsolineColor(SafeColor color);
 }
