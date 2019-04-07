@@ -8,8 +8,13 @@ public class IsolineDrawer {
     private double dx;
     private double dy;
 
-    private int k = 100;
-    private int m = 100;
+    private int k;
+    private int m;
+
+    public IsolineDrawer(int k, int m) {
+        this.k = k;
+        this.m = m;
+    }
 
     private GraphicValues graphicValues;
 
@@ -17,12 +22,9 @@ public class IsolineDrawer {
         this.graphicValues = graphicValues;
     }
 
-    public void setWidthInSquares(int widthInSquares) {
-        k = widthInSquares;
-    }
-
-    public void setHeightInSquares(int heightInSquares) {
-        m = heightInSquares;
+    public void setNet(int k, int m){
+        this.k = k;
+        this.m = m;
     }
 
     public void drawIsoline(BufferedImage image, double z) {

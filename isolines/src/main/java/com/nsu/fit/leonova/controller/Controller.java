@@ -42,7 +42,7 @@ public class Controller implements LogicController, ImageController {
 
     @Override
     public void drawNet() {
-
+        model.drawNet();
     }
 
     @Override

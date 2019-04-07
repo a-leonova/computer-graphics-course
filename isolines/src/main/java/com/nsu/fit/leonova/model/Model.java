@@ -14,17 +14,19 @@ import java.util.HashSet;
 
 public class Model implements GraphicManager, IsolineManager, Observable {
 
+    private int k = 100;
+    private int m = 100;
+
     private GraphicValues graphicValues;
     private ArrayList<Observer> observers = new ArrayList<>();
 
-    private IsolineDrawer isolineDrawer = new IsolineDrawer();
+    private IsolineDrawer isolineDrawer = new IsolineDrawer(k, m);
     private GraphicDrawer graphicDrawer = new GraphicDrawer();
     private int colorsCnt;
 
     private BufferedImage sourceGraphic;
     private boolean drawNet = false;
     private HashSet<Double> isolinesToDraw = new HashSet<>();
-
 
 
     @Override
@@ -78,16 +80,6 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
-    public void setWidthInSquares(int width) {
-        isolineDrawer.setWidthInSquares(width);
-    }
-
-    @Override
-    public void setHeightInSquares(int height) {
-        isolineDrawer.setHeightInSquares(height);
-    }
-
-    @Override
     public void setDefinitionArea(double minX, double minY, double maxX, double maxY) {
         graphicValues = new GraphicValues(minX, minY, maxX, maxY);
         graphicDrawer.setGraphicValues(graphicValues);
@@ -100,8 +92,16 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
-    public void drawNet() {
+    public void setNet(int k, int m) {
+        this.k = k;
+        this.m = m;
+        isolineDrawer.setNet(k, m);
+    }
 
+    @Override
+    public void drawNet() {
+        drawNet = !drawNet;
+        createImage();
     }
 
     @Override
@@ -120,7 +120,15 @@ public class Model implements GraphicManager, IsolineManager, Observable {
             isolineDrawer.drawIsoline(image, isolineValue);
         }
         if(drawNet){
-            //TODO: drawNet
+            int stepX = image.getWidth() / k;
+            int stepY = image.getHeight() / m;
+            Graphics2D g2 = image.createGraphics();
+            for(int i = 0; i < image.getWidth(); i += stepX){
+                g2.drawLine(i, 0, i, image.getHeight() - 1);
+            }
+            for(int i = 0; i < image.getHeight(); i += stepY){
+                g2.drawLine(0, i, image.getWidth() - 1, i);
+            }
         }
         for(Observer observer : observers){
             observer.setImage(image);
