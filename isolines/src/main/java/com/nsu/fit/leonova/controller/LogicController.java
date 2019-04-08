@@ -1,7 +1,6 @@
 package com.nsu.fit.leonova.controller;
 
-
-import java.awt.*;
+import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 
 public interface LogicController {
     void createGraphic();
@@ -11,5 +10,6 @@ public interface LogicController {
     void eraseIsolines();
     void drawNet();
     void pivotPoints();
+    void setParameters(GraphicValues graphicValues, int k, int m);
 
 }

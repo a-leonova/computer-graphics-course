@@ -5,13 +5,15 @@ import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.Model;
 import com.nsu.fit.leonova.model.graphicProvider.GraphicDrawer;
 import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 import com.nsu.fit.leonova.view.MainWindow;
 
 public class Main {
     public static void main(String[] args) {
-        MainWindow mainWindow = new MainWindow(Globals.WIDTH, Globals.HEIGHT);
+        GraphicValues graphicValues = new GraphicValues(0, 0, 10, 10);
+        MainWindow mainWindow = new MainWindow(graphicValues, 60, 60);
         Controller controller = new Controller();
-        Model model = new Model();
+        Model model = new Model(graphicValues, 60, 60);
 
         controller.setModel(model);
         model.addObserver(mainWindow);
@@ -19,7 +21,6 @@ public class Main {
         mainWindow.setImageController(controller);
         mainWindow.setFileController(controller);
 
-        model.setDefinitionArea(0, 0, 10, 10);
         model.setColorsRGB(new SafeColor[]{
                 new SafeColor(255,0,0),
                 new SafeColor(255, 127, 0),

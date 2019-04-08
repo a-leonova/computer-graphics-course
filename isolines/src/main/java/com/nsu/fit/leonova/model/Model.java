@@ -15,8 +15,8 @@ import java.util.List;
 
 public class Model implements GraphicManager, IsolineManager, Observable {
 
-    private int k = 60;
-    private int m = 60;
+    private int k;
+    private int m;
 
     private GraphicValues graphicValues;
     private ArrayList<Observer> observers = new ArrayList<>();
@@ -29,6 +29,15 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     private boolean drawNet = false;
     private boolean pivotPoints = false;
     private HashSet<Double> isolinesToDraw = new HashSet<>();
+
+    public Model(GraphicValues graphicValues, int k, int m) {
+        this.k = k;
+        this.m = m;
+        this.graphicValues = graphicValues;
+        graphicDrawer.setGraphicValues(graphicValues);
+        isolineDrawer.setGraphicValues(graphicValues);
+        isolineDrawer.setNet(k, m);
+    }
 
     @Override
     public void createGraphic(boolean gradient) {
@@ -81,10 +90,13 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
-    public void setDefinitionArea(double minX, double minY, double maxX, double maxY) {
-        graphicValues = new GraphicValues(minX, minY, maxX, maxY);
+    public void setDefinitionArea(GraphicValues graphicValues) {
+        this.graphicValues = graphicValues;
         graphicDrawer.setGraphicValues(graphicValues);
         isolineDrawer.setGraphicValues(graphicValues);
+        for(Observer obs : observers){
+            obs.setGraphicValues(graphicValues);
+        }
     }
 
     @Override
@@ -97,6 +109,9 @@ public class Model implements GraphicManager, IsolineManager, Observable {
         this.k = k;
         this.m = m;
         isolineDrawer.setNet(k, m);
+        for(Observer obs : observers){
+            obs.setNetParameters(k, m);
+        }
     }
 
     @Override
@@ -155,7 +170,6 @@ public class Model implements GraphicManager, IsolineManager, Observable {
         if(pivotPoints){
             for(Point point : points){
                 Graphics2D g2 = image.createGraphics();
-                //g2.drawRect(point.x, point.y, 4, 4);
                 g2.setPaint(Color.BLACK);
                 g2.fillRect(point.x, point.y, 3, 3);
 

@@ -4,8 +4,11 @@ import com.nsu.fit.leonova.controller.FileController;
 import com.nsu.fit.leonova.controller.ImageController;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.graphicProvider.DoublePoint;
+import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 import com.nsu.fit.leonova.observers.Observer;
 import com.nsu.fit.leonova.controller.LogicController;
+import com.nsu.fit.leonova.view.windows.AboutWindow;
+import com.nsu.fit.leonova.view.windows.ConfigurationWindow;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -29,10 +32,12 @@ public class MainWindow extends JFrame implements Observer {
     private JCheckBoxMenuItem netMenuItem = new JCheckBoxMenuItem("Draw net");
 
     private JLabel statusLabel = new JLabel("status");
+    private AboutWindow aboutWindow = new AboutWindow();
+    private ConfigurationWindow configurationWindow;
 
-    public MainWindow(int width, int height){
+    public MainWindow(GraphicValues graphicValues, int k, int m){
         super("Isolines");
-        imageManager = new GraphicHolder(width, height);
+        imageManager = new GraphicHolder(Globals.WIDTH, Globals.HEIGHT);
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenu();
         setJMenuBar(menuBar);
@@ -49,12 +54,14 @@ public class MainWindow extends JFrame implements Observer {
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
 
-       setMinimumSize(new Dimension(600, 650));
+        configurationWindow = new ConfigurationWindow(graphicValues, k, m);
+        setMinimumSize(new Dimension(600, 650));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public void setLogicController(LogicController logicController) {
         this.logicController = logicController;
+        configurationWindow.setLogicController(logicController);
     }
 
     public void setImageController(ImageController imageController){
@@ -77,7 +84,17 @@ public class MainWindow extends JFrame implements Observer {
 
     @Override
     public void setCoordinates(DoublePoint coordinates, double value) {
-        statusLabel.setText("X: " + Globals.DECIMAL_FORMAT.format(coordinates.getX()) + " Y: " + Globals.DECIMAL_FORMAT.format(coordinates.getY()) + "Z: " + Globals.DECIMAL_FORMAT.format(value));
+        statusLabel.setText("X: " + Globals.DECIMAL_FORMAT.format(coordinates.getX()) + " Y: " + Globals.DECIMAL_FORMAT.format(coordinates.getY()) + " Z: " + Globals.DECIMAL_FORMAT.format(value));
+    }
+
+    @Override
+    public void setGraphicValues(GraphicValues graphicValues) {
+        configurationWindow.setGraphicsOptions(graphicValues);
+    }
+
+    @Override
+    public void setNetParameters(int k, int m) {
+        configurationWindow.setNetOptions(k, m);
     }
 
     private JToolBar createToolBar(){
@@ -96,6 +113,8 @@ public class MainWindow extends JFrame implements Observer {
         JButton openFile = createButton("icons/icons8-open-folder-16.png", "Open config file", e ->{
             new OpenConfigFileHandler(fileController).openConfig();
         });
+        JButton config = createButton("icons/icons8-settings-button-24.png", "Graphic Configurations", e ->configurationWindow.setVisible(true));
+        JButton about = createButton("icons/icons8-question-mark-in-a-chat-bubble-16.png", "About", e->aboutWindow.show());
         toolBar.add(openFile);
         toolBar.addSeparator();
         toolBar.add(gradient);
@@ -103,6 +122,9 @@ public class MainWindow extends JFrame implements Observer {
         toolBar.add(net);
         toolBar.add(allIsolines);
         toolBar.add(pivotPoints);
+        toolBar.addSeparator();
+        toolBar.add(config);
+        toolBar.add(about);
         return toolBar;
     }
 

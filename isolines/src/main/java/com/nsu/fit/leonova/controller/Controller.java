@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Model;
 import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 
 import java.awt.*;
 import java.io.File;
@@ -52,6 +53,13 @@ public class Controller implements LogicController, ImageController, FileControl
     @Override
     public void pivotPoints() {
         model.pivotPoints();
+    }
+
+    @Override
+    public void setParameters(GraphicValues graphicValues, int k, int m) {
+        model.setNet(k, m);
+        model.setDefinitionArea(graphicValues);
+        model.createGraphic(gradient);
     }
 
     @Override
