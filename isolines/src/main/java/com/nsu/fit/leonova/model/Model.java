@@ -43,9 +43,7 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     public void createGraphic(boolean gradient) {
         sourceGraphic = new BufferedImage(Globals.WIDTH, Globals.HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         graphicDrawer.createGraphic(sourceGraphic, gradient);
-        for(Observer observer : observers){
-            observer.setImage(sourceGraphic);
-        }
+        createImage();
     }
 
     @Override

@@ -132,7 +132,7 @@ public class MainWindow extends JFrame implements Observer {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("File");
-        JMenuItem openConfigs = createMenuItem("Open configuration file", e -> {});
+        JMenuItem openConfigs = createMenuItem("Open configuration file", e -> new OpenConfigFileHandler(fileController).openConfig());
         file.add(openConfigs);
 
         JMenu graphic = new JMenu("Graphic");
@@ -142,14 +142,27 @@ public class MainWindow extends JFrame implements Observer {
             logicController.gradientWasPressed();
         });
         JMenuItem isolines = createMenuItem("Show all isolines", e -> logicController.drawAllLevelIsolines());
+        JMenuItem net = createMenuItem("Draw net", e -> logicController.drawNet());
+        JMenuItem eraser = createMenuItem("Erase isolines", e -> logicController.eraseIsolines());
+        JMenuItem pivots = createMenuItem("Pivot points", e -> logicController.pivotPoints());
+        JMenu aboutMenu = new JMenu("About");
+        JMenuItem  about = createMenuItem("About", e->aboutWindow.show());
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenuItem  setting = createMenuItem("Settings", e->configurationWindow.setVisible(true));
+        aboutMenu.add(about);
+        settingsMenu.add(setting);
         graphic.add(isolines);
+        graphic.add(net);
+        graphic.add(eraser);
+        graphic.add(pivots);
 
         menu.add(file);
         menu.add(graphic);
+        menu.add(setting);
+        menu.add(aboutMenu);
 
         return menu;
     }
-
     private JButton createButton(String relativePath, String tip, ActionListener actionListener) {
         JButton button = new JButton();
         button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
