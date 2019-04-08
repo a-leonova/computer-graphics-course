@@ -1,7 +1,9 @@
 package com.nsu.fit.leonova.model.graphicProvider;
 
+import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.SafeColor;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GraphicDrawer{
@@ -61,10 +63,16 @@ public class GraphicDrawer{
             }
         }
         //TODO:Constants!
-        int step = (legend.getHeight() - 10) / (colorsRGB.length + 1);
+        int step = (legend.getHeight() ) / (colorsRGB.length);
+        double valueStep = (maxZ - minZ) / colorsRGB.length;
+        Graphics2D g2 = legend.createGraphics();
+        g2.setPaint(Color.WHITE);
         for(int i = 0; i < colorsRGB.length; ++i){
-
+            int y = legend.getHeight() - step * i;
+            double value = minZ + i * valueStep;
+            g2.drawString(Globals.DECIMAL_FORMAT.format(value), 15, y);
         }
+        g2.drawString(Globals.DECIMAL_FORMAT.format(maxZ), 15, 10);
     }
 
     private double[] findMinMax(int imageWidth, int imageHeight){

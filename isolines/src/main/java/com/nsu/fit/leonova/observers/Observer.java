@@ -7,5 +7,5 @@ import java.awt.image.BufferedImage;
 public interface Observer {
     void setImage(BufferedImage image);
     void setLegend(BufferedImage legend);
-    void setCoordinates(DoublePoint coordinates);
+    void setCoordinates(DoublePoint coordinates, double value);
 }

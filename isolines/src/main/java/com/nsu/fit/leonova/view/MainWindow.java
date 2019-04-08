@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.FileController;
 import com.nsu.fit.leonova.controller.ImageController;
+import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.graphicProvider.DoublePoint;
 import com.nsu.fit.leonova.observers.Observer;
 import com.nsu.fit.leonova.controller.LogicController;
@@ -16,10 +17,8 @@ import java.util.Objects;
 
 public class MainWindow extends JFrame implements Observer {
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
-
     private GraphicHolder imageManager;
-    private ImageManager legend = new ImageManager(10, 500);
+    private ImageManager legend = new ImageManager(Globals.LEGEND_WIDTH, Globals.LEGEND_HEIGHT);
     private LogicController logicController;
     private FileController fileController;
 
@@ -37,6 +36,7 @@ public class MainWindow extends JFrame implements Observer {
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenu();
         setJMenuBar(menuBar);
+
         add(toolBar, BorderLayout.PAGE_START);
         add(imageManager, BorderLayout.CENTER);
         add(legend, BorderLayout.EAST);
@@ -49,7 +49,7 @@ public class MainWindow extends JFrame implements Observer {
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
 
-        setMinimumSize(new Dimension(width + 40, height));
+       setMinimumSize(new Dimension(600, 650));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
@@ -76,8 +76,8 @@ public class MainWindow extends JFrame implements Observer {
     }
 
     @Override
-    public void setCoordinates(DoublePoint coordinates) {
-        statusLabel.setText("X: " + DECIMAL_FORMAT.format(coordinates.getX()) + " Y: " + DECIMAL_FORMAT.format(coordinates.getY()));
+    public void setCoordinates(DoublePoint coordinates, double value) {
+        statusLabel.setText("X: " + Globals.DECIMAL_FORMAT.format(coordinates.getX()) + " Y: " + Globals.DECIMAL_FORMAT.format(coordinates.getY()) + "Z: " + Globals.DECIMAL_FORMAT.format(value));
     }
 
     private JToolBar createToolBar(){

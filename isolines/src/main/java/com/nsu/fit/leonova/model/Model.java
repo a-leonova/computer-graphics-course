@@ -119,8 +119,9 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     @Override
     public void pixelToCoordinate(Point pixel) {
         DoublePoint graphicCoordinate = graphicValues.pixelToGraphicCoord(new DoublePoint(pixel), sourceGraphic.getWidth(), sourceGraphic.getHeight());
+        double value = Function.countValue(graphicCoordinate);
         for(Observer observer : observers){
-            observer.setCoordinates(graphicCoordinate);
+            observer.setCoordinates(graphicCoordinate, value);
         }
     }
 
