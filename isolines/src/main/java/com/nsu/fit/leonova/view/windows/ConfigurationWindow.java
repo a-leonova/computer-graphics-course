@@ -83,16 +83,24 @@ public class ConfigurationWindow extends JFrame{
     public void setLogicController(LogicController logicController) {
         this.logicController = logicController;
         ok.addActionListener(e ->{
-            //TODO:errors
-            int k = Integer.parseInt(netWidthTF.getText());
-            int m = Integer.parseInt(netHeightTF.getText());
-            double minX = Double.parseDouble(minXTF.getText());
-            double minY = Double.parseDouble(minYTF.getText());
-            double maxX = Double.parseDouble(maxXTF.getText());
-            double maxY = Double.parseDouble(maxYTF.getText());
-            graphicValues = new GraphicValues(minX, minY, maxX, maxY);
-            this.logicController.setParameters(graphicValues, k, m);
-            setVisible(false);
+            try{
+                int k = Integer.parseInt(netWidthTF.getText());
+                int m = Integer.parseInt(netHeightTF.getText());
+                double minX = Double.parseDouble(minXTF.getText());
+                double minY = Double.parseDouble(minYTF.getText());
+                double maxX = Double.parseDouble(maxXTF.getText());
+                double maxY = Double.parseDouble(maxYTF.getText());
+                if(k < 1 || m < 1 || k > 1000 || m > 1000){
+                    throw  new IllegalArgumentException("Check parameters of net! They must be in range [1; 1000]");
+                }
+                graphicValues = new GraphicValues(minX, minY, maxX, maxY);
+                this.logicController.setParameters(graphicValues, k, m);
+                setVisible(false);
+            } catch (NumberFormatException e1){
+                new ErrorWindow("Not a number: " + e1.getMessage()).show();
+            } catch (IllegalArgumentException e1){
+                new ErrorWindow(e1.getMessage()).show();
+            }
         });
     }
 }

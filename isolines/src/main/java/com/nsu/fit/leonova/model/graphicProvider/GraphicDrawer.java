@@ -7,10 +7,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GraphicDrawer{
+
+    private static final int LEGEND_VALUE_X = 15;
+    private static final int LEGEND_MAX_VALUE_Y = 15;
+
     private SafeColor[] colorsRGB;
+
+    private GraphicValues graphicValues;
     private double minZ;
     private double maxZ;
-    private GraphicValues graphicValues;
 
     public double getMinZ() {
         return minZ;
@@ -49,6 +54,7 @@ public class GraphicDrawer{
     }
 
     public void createLegend(BufferedImage legend , boolean gradient) {
+        //fill colors in legend
         for(int y = 0; y < legend.getHeight(); ++y){
             double y0 = y / ((double)legend.getHeight());
             int rgb;
@@ -62,7 +68,7 @@ public class GraphicDrawer{
                 legend.setRGB(x, y, rgb);
             }
         }
-        //TODO:Constants!
+        //fill values in legend
         int step = (legend.getHeight() ) / (colorsRGB.length);
         double valueStep = (maxZ - minZ) / colorsRGB.length;
         Graphics2D g2 = legend.createGraphics();
@@ -70,9 +76,9 @@ public class GraphicDrawer{
         for(int i = 0; i < colorsRGB.length; ++i){
             int y = legend.getHeight() - step * i;
             double value = minZ + i * valueStep;
-            g2.drawString(Globals.DECIMAL_FORMAT.format(value), 15, y);
+            g2.drawString(Globals.DECIMAL_FORMAT.format(value), LEGEND_VALUE_X, y);
         }
-        g2.drawString(Globals.DECIMAL_FORMAT.format(maxZ), 15, 10);
+        g2.drawString(Globals.DECIMAL_FORMAT.format(maxZ), LEGEND_VALUE_X, LEGEND_MAX_VALUE_Y);
     }
 
     private double[] findMinMax(int imageWidth, int imageHeight){
