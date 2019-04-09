@@ -11,4 +11,5 @@ public interface Observer {
     void setCoordinates(DoublePoint coordinates, double value);
     void setGraphicValues(GraphicValues graphicValues);
     void setNetParameters(int k, int m);
+    void error(String message);
 }

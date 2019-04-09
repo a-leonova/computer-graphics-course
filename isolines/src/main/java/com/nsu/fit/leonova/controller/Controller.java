@@ -106,7 +106,9 @@ public class Controller implements LogicController, ImageController, FileControl
             createGraphic(imageWidth, imageHeight);
             createLegend(legendWidth, legendHeight);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            model.showError(e.getMessage());
+        } catch (IllegalArgumentException e){
+            model.showError(e.getMessage());
         }
     }
 
@@ -125,7 +127,7 @@ public class Controller implements LogicController, ImageController, FileControl
         int g = Integer.parseInt(numbers[1]);
         int b = Integer.parseInt(numbers[2]);
         if(r < 0 || r > 255 || g < 0 || g > 255 | b < 0 || b > 255){
-            throw new IllegalArgumentException("Wrong color value!");
+            throw new IllegalArgumentException("Wrong color value in configuration file. They must be in range [0; 255]");
         }
         return new SafeColor(r, g, b);
     }
@@ -141,11 +143,8 @@ public class Controller implements LogicController, ImageController, FileControl
         } while ("".equals(line));
         String[] numbers = line.split(" ");
         if (numbers.length != n) {
-            throw new IllegalArgumentException("Bad number of parameters");
+            throw new IllegalArgumentException("Bad number of parameters in configuration file");
         }
         return numbers;
     }
-
-
-
 }

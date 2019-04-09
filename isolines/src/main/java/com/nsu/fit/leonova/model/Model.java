@@ -148,6 +148,12 @@ public class Model implements GraphicManager, IsolineManager, Observable {
         observers.remove(observer);
     }
 
+    public void showError(String message){
+        for(Observer observer : observers){
+            observer.error(message);
+        }
+    }
+
     private void createImage(){
         BufferedImage image = deepCopy(sourceGraphic);
         List<Point> points = new ArrayList<>();

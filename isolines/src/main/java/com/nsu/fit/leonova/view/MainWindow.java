@@ -9,6 +9,7 @@ import com.nsu.fit.leonova.observers.Observer;
 import com.nsu.fit.leonova.controller.LogicController;
 import com.nsu.fit.leonova.view.windows.AboutWindow;
 import com.nsu.fit.leonova.view.windows.ConfigurationWindow;
+import com.nsu.fit.leonova.view.windows.ErrorWindow;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -104,6 +105,11 @@ public class MainWindow extends JFrame implements Observer {
         configurationWindow.setNetOptions(k, m);
     }
 
+    @Override
+    public void error(String message) {
+        new ErrorWindow(message).show();
+    }
+
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
         gradient = createButton(JToggleButton.class, e -> {
@@ -192,21 +198,20 @@ public class MainWindow extends JFrame implements Observer {
         return null;
     }
 
-    private class MyComponentAdapter extends ComponentAdapter{
+    private class MyComponentAdapter extends ComponentAdapter {
         @Override
         public void componentResized(ComponentEvent e) {
             Rectangle rectangle = e.getComponent().getBounds();
-            if(rectangle.width == oldFrameWidth && rectangle.height == oldWindowHeight){
+            if (rectangle.width == oldFrameWidth && rectangle.height == oldWindowHeight) {
                 return;
             }
             int newImageWidth = imageManager.getImageWidth() + (rectangle.width - oldFrameWidth);
             int newImageHeight = imageManager.getImageHeight() + (rectangle.height - oldWindowHeight);
-            if(logicController != null){
+            if (logicController != null) {
                 logicController.resizeImage(newImageWidth, newImageHeight);
             }
             oldFrameWidth = rectangle.width;
             oldWindowHeight = rectangle.height;
         }
     }
-
 }
