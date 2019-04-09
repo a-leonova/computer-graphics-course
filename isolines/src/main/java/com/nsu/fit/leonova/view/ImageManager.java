@@ -9,15 +9,21 @@ public class ImageManager extends JPanel {
 
     public ImageManager(int width, int height){
         image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-        //setSize(new Dimension(width, height));
         setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
-        System.out.println("!");
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(image, 0, 0, this);
+    }
+
+    public int getImageWidth(){
+        return image.getWidth();
+    }
+
+    public int getImageHeight(){
+        return image.getHeight();
     }
 
     public void setImage(BufferedImage newImage){

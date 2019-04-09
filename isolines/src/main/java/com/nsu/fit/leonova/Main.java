@@ -3,7 +3,6 @@ package com.nsu.fit.leonova;
 import com.nsu.fit.leonova.controller.Controller;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.Model;
-import com.nsu.fit.leonova.model.graphicProvider.GraphicDrawer;
 import com.nsu.fit.leonova.model.SafeColor;
 import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 import com.nsu.fit.leonova.view.MainWindow;
@@ -29,8 +28,8 @@ public class Main {
                 new SafeColor(0, 0, 255),
                 new SafeColor(139, 0, 255)
         });
-        controller.createGraphic();
-        controller.createLegend();
+        controller.createGraphic(Globals.START_IMAGE_WIDTH, Globals.START_IMAGE_HEIGHT);
+        controller.createLegend(Globals.START_LEGEND_WIDTH, Globals.START_LEGEND_HEIGHT);
         mainWindow.setVisible(true);
     }
 }

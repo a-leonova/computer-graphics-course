@@ -14,14 +14,15 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class MainWindow extends JFrame implements Observer {
 
     private GraphicHolder imageManager;
-    private ImageManager legend = new ImageManager(Globals.LEGEND_WIDTH, Globals.LEGEND_HEIGHT);
+    private ImageManager legend = new ImageManager(Globals.START_LEGEND_WIDTH, Globals.START_LEGEND_HEIGHT);
     private LogicController logicController;
     private FileController fileController;
 
@@ -35,9 +36,13 @@ public class MainWindow extends JFrame implements Observer {
     private AboutWindow aboutWindow = new AboutWindow();
     private ConfigurationWindow configurationWindow;
 
-    public MainWindow(GraphicValues graphicValues, int k, int m){
+    private int oldFrameWidth, oldWindowHeight;
+
+    public MainWindow(GraphicValues graphicValues, int k, int m) {
         super("Isolines");
-        imageManager = new GraphicHolder(Globals.WIDTH, Globals.HEIGHT);
+        imageManager = new GraphicHolder(Globals.START_IMAGE_WIDTH, Globals.START_IMAGE_HEIGHT);
+        oldFrameWidth = 600;
+        oldWindowHeight = 650;
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenu();
         setJMenuBar(menuBar);
@@ -54,8 +59,10 @@ public class MainWindow extends JFrame implements Observer {
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
 
+        this.addComponentListener(new MyComponentAdapter());
+
         configurationWindow = new ConfigurationWindow(graphicValues, k, m);
-        setMinimumSize(new Dimension(600, 650));
+        setMinimumSize(new Dimension(Globals.MIN_FRAME_WIDTH, Globals.MIN_FRAME_HEIGHT));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
@@ -64,7 +71,7 @@ public class MainWindow extends JFrame implements Observer {
         configurationWindow.setLogicController(logicController);
     }
 
-    public void setImageController(ImageController imageController){
+    public void setImageController(ImageController imageController) {
         imageManager.setImageController(imageController);
     }
 
@@ -97,29 +104,29 @@ public class MainWindow extends JFrame implements Observer {
         configurationWindow.setNetOptions(k, m);
     }
 
-    private JToolBar createToolBar(){
+    private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
-        gradient = createToggleButton("icons/gradient.png", "Gradient", e -> {
+        gradient = createButton(JToggleButton.class, e -> {
             logicController.gradientWasPressed();
             gradientMenuItem.setSelected(gradient.isSelected());
-        });
-        JToggleButton net = createToggleButton("icons/net.png", "Draw net", e -> {
+        }, "icons/gradient.png", "Gradient");
+        netButton = createButton(JToggleButton.class, e -> {
             logicController.drawNet();
             netMenuItem.setSelected(gradient.isSelected());
-        });
-        JButton eraser = createButton("icons/eraser.png", "Erase isolines", e->logicController.eraseIsolines());
-        JButton allIsolines = createButton("icons/allIsolines.png", "Draw all isolines", e -> logicController.drawAllLevelIsolines());
-        JButton pivotPoints = createButton("icons/points.png", "Pivot points", e -> logicController.pivotPoints());
-        JButton openFile = createButton("icons/icons8-open-folder-16.png", "Open config file", e ->{
+        }, "icons/net.png", "Draw net");
+        JButton eraser = createButton(JButton.class, e -> logicController.eraseIsolines(), "icons/eraser.png", "Erase isolines");
+        JButton allIsolines = createButton(JButton.class, e -> logicController.drawAllLevelIsolines(), "icons/allIsolines.png", "Draw all isolines");
+        JButton pivotPoints = createButton(JButton.class, e -> logicController.pivotPoints(), "icons/points.png", "Pivot points");
+        JButton openFile = createButton(JButton.class, e -> {
             new OpenConfigFileHandler(fileController).openConfig();
-        });
-        JButton config = createButton("icons/icons8-settings-button-24.png", "Graphic Configurations", e ->configurationWindow.setVisible(true));
-        JButton about = createButton("icons/icons8-question-mark-in-a-chat-bubble-16.png", "About", e->aboutWindow.show());
+        }, "icons/icons8-open-folder-16.png", "Open config file");
+        JButton config = createButton(JButton.class, e -> configurationWindow.setVisible(true), "icons/icons8-settings-button-24.png", "Graphic Configurations");
+        JButton about = createButton(JButton.class, e -> aboutWindow.show(), "icons/icons8-question-mark-in-a-chat-bubble-16.png", "About");
         toolBar.add(openFile);
         toolBar.addSeparator();
         toolBar.add(gradient);
         toolBar.add(eraser);
-        toolBar.add(net);
+        toolBar.add(netButton);
         toolBar.add(allIsolines);
         toolBar.add(pivotPoints);
         toolBar.addSeparator();
@@ -128,11 +135,11 @@ public class MainWindow extends JFrame implements Observer {
         return toolBar;
     }
 
-    private JMenuBar createMenu(){
+    private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
 
         JMenu file = new JMenu("File");
-        JMenuItem openConfigs = createMenuItem("Open configuration file", e -> new OpenConfigFileHandler(fileController).openConfig());
+        JMenuItem openConfigs = createButton(JMenuItem.class, e -> new OpenConfigFileHandler(fileController).openConfig(), "Open configuration file");
         file.add(openConfigs);
 
         JMenu graphic = new JMenu("Graphic");
@@ -141,47 +148,65 @@ public class MainWindow extends JFrame implements Observer {
             gradient.setSelected(gradientMenuItem.isSelected());
             logicController.gradientWasPressed();
         });
-        JMenuItem isolines = createMenuItem("Show all isolines", e -> logicController.drawAllLevelIsolines());
-        JMenuItem net = createMenuItem("Draw net", e -> logicController.drawNet());
-        JMenuItem eraser = createMenuItem("Erase isolines", e -> logicController.eraseIsolines());
-        JMenuItem pivots = createMenuItem("Pivot points", e -> logicController.pivotPoints());
+        JMenuItem isolines = createButton(JMenuItem.class, e -> logicController.drawAllLevelIsolines(), "Show all isolines");
+        netMenuItem = createButton(JCheckBoxMenuItem.class, e -> {
+            netButton.setSelected(netMenuItem.isSelected());
+            logicController.drawNet();
+        }, "Draw net");
+        JMenuItem eraser = createButton(JMenuItem.class, e -> logicController.eraseIsolines(), "Erase isolines");
+        JMenuItem pivots = createButton(JMenuItem.class, e -> logicController.pivotPoints(), "Pivot points");
         JMenu aboutMenu = new JMenu("About");
-        JMenuItem  about = createMenuItem("About", e->aboutWindow.show());
+        JMenuItem about = createButton(JMenuItem.class, e -> aboutWindow.show(), "About");
         JMenu settingsMenu = new JMenu("Settings");
-        JMenuItem  setting = createMenuItem("Settings", e->configurationWindow.setVisible(true));
+        JMenuItem setting = createButton(JMenuItem.class, e -> configurationWindow.setVisible(true), "Settings");
         aboutMenu.add(about);
         settingsMenu.add(setting);
         graphic.add(isolines);
-        graphic.add(net);
+        graphic.add(netMenuItem);
         graphic.add(eraser);
         graphic.add(pivots);
 
         menu.add(file);
         menu.add(graphic);
-        menu.add(setting);
+        menu.add(settingsMenu);
         menu.add(aboutMenu);
 
         return menu;
     }
-    private JButton createButton(String relativePath, String tip, ActionListener actionListener) {
-        JButton button = new JButton();
-        button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
-        button.setToolTipText(tip);
-        button.addActionListener(actionListener);
-        return button;
+
+    public <T extends AbstractButton> T createButton(Class<T> targetClass, ActionListener listener, String... args) {
+        try {
+            T button = targetClass.newInstance();
+            button.addActionListener(listener);
+            if (args.length == 2) {
+                button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(args[0]))));
+                button.setToolTipText(args[1]);
+            }
+            if (args.length == 1) {
+                button.setText(args[0]);
+            }
+            return button;
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    private JToggleButton createToggleButton(String relativePath, String tip, ActionListener actionListener){
-        JToggleButton button = new JToggleButton();
-        button.setIcon(new ImageIcon(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(relativePath))));
-        button.setToolTipText(tip);
-        button.addActionListener(actionListener);
-        return button;
+    private class MyComponentAdapter extends ComponentAdapter{
+        @Override
+        public void componentResized(ComponentEvent e) {
+            Rectangle rectangle = e.getComponent().getBounds();
+            if(rectangle.width == oldFrameWidth && rectangle.height == oldWindowHeight){
+                return;
+            }
+            int newImageWidth = imageManager.getImageWidth() + (rectangle.width - oldFrameWidth);
+            int newImageHeight = imageManager.getImageHeight() + (rectangle.height - oldWindowHeight);
+            if(logicController != null){
+                logicController.resizeImage(newImageWidth, newImageHeight);
+            }
+            oldFrameWidth = rectangle.width;
+            oldWindowHeight = rectangle.height;
+        }
     }
 
-    private JMenuItem createMenuItem(String name, ActionListener listener){
-        JMenuItem item = new JMenuItem(name);
-        item.addActionListener(listener);
-        return item;
-    }
 }

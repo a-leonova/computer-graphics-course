@@ -40,15 +40,15 @@ public class Model implements GraphicManager, IsolineManager, Observable {
     }
 
     @Override
-    public void createGraphic(boolean gradient) {
-        sourceGraphic = new BufferedImage(Globals.WIDTH, Globals.HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+    public void createGraphic(boolean gradient, int width, int height) {
+        sourceGraphic = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         graphicDrawer.createGraphic(sourceGraphic, gradient);
         createImage();
     }
 
     @Override
-    public void createLegend(boolean gradient) {
-        BufferedImage legend = new BufferedImage(Globals.LEGEND_WIDTH, Globals.LEGEND_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+    public void createLegend(boolean gradient, int width, int height) {
+        BufferedImage legend = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         graphicDrawer.createLegend(legend, gradient);
         for(Observer observer : observers){
             observer.setLegend(legend);

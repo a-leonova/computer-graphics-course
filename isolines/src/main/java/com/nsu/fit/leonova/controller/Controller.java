@@ -13,25 +13,31 @@ public class Controller implements LogicController, ImageController, FileControl
     private Model model;
     private boolean gradient = false;
 
+    private int imageWidth, imageHeight, legendWidth, legendHeight;
+
     public void setModel(Model model) {
         this.model = model;
     }
 
     @Override
-    public void createGraphic() {
-        model.createGraphic(gradient);
+    public void createGraphic(int width, int height) {
+        imageWidth = width;
+        imageHeight = height;
+        model.createGraphic(gradient, width, height);
     }
 
     @Override
-    public void createLegend() {
-        model.createLegend(gradient);
+    public void createLegend(int width, int height) {
+        legendWidth = width;
+        legendHeight = height;
+        model.createLegend(gradient, width, height);
     }
 
     @Override
     public void gradientWasPressed() {
         gradient = !gradient;
-        model.createGraphic(gradient);
-        model.createLegend(gradient);
+        model.createGraphic(gradient, imageWidth, imageHeight);
+        model.createLegend(gradient, legendWidth, legendHeight);
     }
 
     @Override
@@ -42,7 +48,7 @@ public class Controller implements LogicController, ImageController, FileControl
     @Override
     public void eraseIsolines() {
         model.removeIsolines();
-        model.createGraphic(gradient);
+        model.createGraphic(gradient, imageWidth, imageHeight);
     }
 
     @Override
@@ -59,7 +65,16 @@ public class Controller implements LogicController, ImageController, FileControl
     public void setParameters(GraphicValues graphicValues, int k, int m) {
         model.setNet(k, m);
         model.setDefinitionArea(graphicValues);
-        model.createGraphic(gradient);
+        model.createGraphic(gradient, imageWidth, imageHeight);
+    }
+
+    @Override
+    public void resizeImage(int width, int height) {
+        imageWidth = width;
+        imageHeight = height;
+        legendHeight = height;
+        createGraphic(width, height);
+        createLegend(legendWidth, height);
     }
 
     @Override
@@ -88,8 +103,8 @@ public class Controller implements LogicController, ImageController, FileControl
             model.setColorsRGB(colors);
             model.setNet(k, m);
             model.setIsolineColor(isolineColor);
-            createGraphic();
-            createLegend();
+            createGraphic(imageWidth, imageHeight);
+            createLegend(legendWidth, legendHeight);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
