@@ -1,6 +1,5 @@
 package com.nsu.fit.leonova.model;
 
-import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.graphicProvider.*;
 import com.nsu.fit.leonova.observers.Observable;
 import com.nsu.fit.leonova.observers.Observer;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Model implements GraphicManager, IsolineManager, Observable {
+public class Model implements GraphicManager, IsolineManager, Observable, InfoManager {
 
     private int k;
     private int m;
@@ -148,6 +147,7 @@ public class Model implements GraphicManager, IsolineManager, Observable {
         observers.remove(observer);
     }
 
+    @Override
     public void showError(String message){
         for(Observer observer : observers){
             observer.error(message);

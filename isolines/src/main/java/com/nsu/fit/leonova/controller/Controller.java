@@ -1,7 +1,7 @@
 package com.nsu.fit.leonova.controller;
 
-import com.nsu.fit.leonova.model.Model;
-import com.nsu.fit.leonova.model.SafeColor;
+import com.nsu.fit.leonova.globals.Globals;
+import com.nsu.fit.leonova.model.*;
 import com.nsu.fit.leonova.model.graphicProvider.GraphicValues;
 
 import java.awt.*;
@@ -10,62 +10,74 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Controller implements LogicController, ImageController, FileController {
-    private Model model;
+    private InfoManager infoManager;
+    private GraphicManager graphicManager;
+    private IsolineManager isolineManager;
+
     private boolean gradient = false;
 
     private int imageWidth, imageHeight, legendWidth, legendHeight;
 
-    public void setModel(Model model) {
-        this.model = model;
+
+    public void setInfoManager(InfoManager infoManager) {
+        this.infoManager = infoManager;
+    }
+
+    public void setGraphicManager(GraphicManager graphicManager) {
+        this.graphicManager = graphicManager;
+    }
+
+    public void setIsolineManager(IsolineManager isolineManager) {
+        this.isolineManager = isolineManager;
     }
 
     @Override
     public void createGraphic(int width, int height) {
         imageWidth = width;
         imageHeight = height;
-        model.createGraphic(gradient, width, height);
+        graphicManager.createGraphic(gradient, width, height);
     }
 
     @Override
     public void createLegend(int width, int height) {
         legendWidth = width;
         legendHeight = height;
-        model.createLegend(gradient, width, height);
+        graphicManager.createLegend(gradient, width, height);
     }
 
     @Override
     public void gradientWasPressed() {
         gradient = !gradient;
-        model.createGraphic(gradient, imageWidth, imageHeight);
-        model.createLegend(gradient, legendWidth, legendHeight);
+        graphicManager.createGraphic(gradient, imageWidth, imageHeight);
+        graphicManager.createLegend(gradient, legendWidth, legendHeight);
     }
 
     @Override
     public void drawAllLevelIsolines() {
-        model.drawAllLevelIsolines();
+        isolineManager.drawAllLevelIsolines();
     }
 
     @Override
     public void eraseIsolines() {
-        model.removeIsolines();
-        model.createGraphic(gradient, imageWidth, imageHeight);
+        isolineManager.removeIsolines();
+        graphicManager.createGraphic(gradient, imageWidth, imageHeight);
     }
 
     @Override
     public void drawNet() {
-        model.drawNet();
+        graphicManager.drawNet();
     }
 
     @Override
     public void pivotPoints() {
-        model.pivotPoints();
+        graphicManager.pivotPoints();
     }
 
     @Override
     public void setParameters(GraphicValues graphicValues, int k, int m) {
-        model.setNet(k, m);
-        model.setDefinitionArea(graphicValues);
-        model.createGraphic(gradient, imageWidth, imageHeight);
+        isolineManager.setNet(k, m);
+        graphicManager.setDefinitionArea(graphicValues);
+        graphicManager.createGraphic(gradient, imageWidth, imageHeight);
     }
 
     @Override
@@ -79,17 +91,17 @@ public class Controller implements LogicController, ImageController, FileControl
 
     @Override
     public void imageWasClicked(Point pressedPixel) {
-        model.clickedIsoline(pressedPixel);
+        isolineManager.clickedIsoline(pressedPixel);
     }
 
     @Override
     public void imageWasDragged(Point draggedPixel) {
-        model.draggedIsoline(draggedPixel);
+        isolineManager.draggedIsoline(draggedPixel);
     }
 
     @Override
     public void imageWasMoved(Point pixel) {
-        model.pixelToCoordinate(pixel);
+        graphicManager.pixelToCoordinate(pixel);
     }
 
     @Override
@@ -98,17 +110,18 @@ public class Controller implements LogicController, ImageController, FileControl
             String[] netValues = readNextNumbers(scanner, 2);
             int k = Integer.parseInt(netValues[0]);
             int m = Integer.parseInt(netValues[1]);
+            if(k < Globals.MIN_NET || k > Globals.MAX_NET || m < Globals.MIN_NET || m > Globals.MAX_NET){
+                infoManager.showError("Check parameters of net! They must be in range [1; 1000]");
+            }
             SafeColor[] colors = readColors(scanner);
             SafeColor isolineColor = readNextColor(scanner);
-            model.setColorsRGB(colors);
-            model.setNet(k, m);
-            model.setIsolineColor(isolineColor);
+            graphicManager.setColorsRGB(colors);
+            isolineManager.setNet(k, m);
+            isolineManager.setIsolineColor(isolineColor);
             createGraphic(imageWidth, imageHeight);
             createLegend(legendWidth, legendHeight);
-        } catch (FileNotFoundException e) {
-            model.showError(e.getMessage());
-        } catch (IllegalArgumentException e){
-            model.showError(e.getMessage());
+        } catch (FileNotFoundException | IllegalArgumentException e) {
+            infoManager.showError(e.getMessage());
         }
     }
 
