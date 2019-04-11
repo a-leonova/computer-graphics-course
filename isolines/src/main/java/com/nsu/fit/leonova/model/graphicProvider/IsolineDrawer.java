@@ -56,6 +56,11 @@ public class IsolineDrawer {
         double f3 = Function.countValue(new DoublePoint(leftTop.getX(), rightBottom.getY()));
         double f4 = Function.countValue(rightBottom);
 
+        f1 = f1 == z ? f1 + Math.ulp(f1) : f1;
+        f2 = f2 == z ? f2 + Math.ulp(f2) : f2;
+        f3 = f3 == z ? f3 + Math.ulp(f3) : f3;
+        f4 = f4 == z ? f4 + Math.ulp(f4) : f4;
+
         ArrayList<DoublePoint> doublePoints = new ArrayList<>(4);
         if((z > f1 || z > f2) && (z < f1 || z < f2)){
             double p1 = point.getX() + ((z - f1) / (f2 - f1) * dx);
@@ -75,7 +80,7 @@ public class IsolineDrawer {
         }
 
         ArrayList<Point> pivots = new ArrayList<>();
-        if(doublePoints.size() < 2){
+        if(doublePoints.size() == 0){
             return pivots;
         }
         if(doublePoints.size() == 2){
@@ -87,19 +92,44 @@ public class IsolineDrawer {
             int resY1 = (int)Math.round((doublePoints.get(1).getY()));
 
             graphics2D.drawLine(resX0, resY0, resX1, resY1);
-
             for(DoublePoint doublePoint : doublePoints){
                 pivots.add(new Point((int)Math.floor(doublePoint.getX()), (int)Math.floor(doublePoint.getY())));
             }
+            return pivots;
         }
-        if(doublePoints.size() == 3){
-            return drawLine(image, point, dx, dy, z - 0.00001);
+        else if(doublePoints.size() == 4){
+
+            DoublePoint center = new DoublePoint(rightBottom.getX() + dx/2, rightBottom.getY() - dy/2);
+            double valueInCenter = Function.countValue(center);
+
+            Graphics2D graphics2D = image.createGraphics();
+            graphics2D.setPaint(color);
+
+            int resX0 = (int)Math.round((doublePoints.get(0).getX()));
+            int resY0 = (int)Math.round((doublePoints.get(0).getY()));
+            int resX3 = (int)Math.round((doublePoints.get(3).getX()));
+            int resY3 = (int)Math.round((doublePoints.get(3).getY()));
+
+            int resX1 = (int)Math.round((doublePoints.get(1).getX()));
+            int resY1 = (int)Math.round((doublePoints.get(1).getY()));
+            int resX2 = (int)Math.round((doublePoints.get(2).getX()));
+            int resY2 = (int)Math.round((doublePoints.get(2).getY()));
+
+            if(valueInCenter < z){
+                graphics2D.drawLine(resX0, resY0, resX3, resY3);
+                graphics2D.drawLine(resX2, resY2, resX1, resY1);
+            }
+            else{
+                graphics2D.drawLine(resX0, resY0, resX2, resY2);
+                graphics2D.drawLine(resX3, resY3, resX1, resY1);
+            }
+            for(DoublePoint doublePoint : doublePoints){
+                pivots.add(new Point((int)Math.floor(doublePoint.getX()), (int)Math.floor(doublePoint.getY())));
+            }
+            return pivots;
         }
-        if(doublePoints.size() == 4){
-            pivots.addAll(drawLine(image, point, dx/2, dy/2, z));
-            pivots.addAll(drawLine(image,  new DoublePoint(point.getX() + dx/2, point.getY()) , dx/2, dy/2, z));
-            pivots.addAll(drawLine(image, new DoublePoint(point.getX(), point.getY() + dy/2), dx/2, dy/2, z));
-            pivots.addAll(drawLine(image, new DoublePoint(point.getX() + dx/2, point.getY() + dy/2), dx/2, dy/2, z));
+        else{
+            System.out.println(pivots.size());
         }
         return pivots;
     }

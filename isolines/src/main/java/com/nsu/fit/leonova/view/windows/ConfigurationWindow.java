@@ -70,7 +70,7 @@ public class ConfigurationWindow extends JFrame{
 
     public void setGraphicsOptions(GraphicValues graphicValues) {
         this.graphicValues = graphicValues;
-        minXTF.setText(Globals.DECIMAL_FORMAT.format(graphicValues.getMinY()));
+        minXTF.setText(Globals.DECIMAL_FORMAT.format(graphicValues.getMinX()));
         minYTF.setText(Globals.DECIMAL_FORMAT.format(graphicValues.getMinY()));
         maxXTF.setText(Globals.DECIMAL_FORMAT.format(graphicValues.getMaxX()));
         maxYTF.setText(Globals.DECIMAL_FORMAT.format(graphicValues.getMaxY()));
@@ -92,6 +92,11 @@ public class ConfigurationWindow extends JFrame{
                 double maxY = Double.parseDouble(maxYTF.getText());
                 if(k < Globals.MIN_NET || k > Globals.MAX_NET || m < Globals.MIN_NET || m > Globals.MAX_NET){
                     new ErrorWindow("Check parameters of net! They must be in range [1; 1000]").show();
+                    return;
+                }
+                if(minX >= maxX || minY >= maxY){
+                    new ErrorWindow("Check area values!Min value must be less than max value!").show();
+                    return;
                 }
                 graphicValues = new GraphicValues(minX, minY, maxX, maxY);
                 this.logicController.setParameters(graphicValues, k, m);

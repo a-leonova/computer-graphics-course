@@ -12,8 +12,28 @@ public final class GraphicValues {
         this.maxX = maxX;
         this.maxY = maxY;
 
-        definitionAreaWidth = Math.abs(minX) + Math.abs(maxX);
-        definitionAreaHeight = Math.abs(minY) + Math.abs(maxY);
+        definitionAreaWidth = maxX - minX;
+        definitionAreaHeight = maxY - minY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ;
     }
 
     public double getMinX() {

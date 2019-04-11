@@ -15,6 +15,6 @@ public class Globals {
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     public static final int MIN_NET = 1;
-    public static final int MAX_NET = 100;
+    public static final int MAX_NET = 1000;
 
 }
