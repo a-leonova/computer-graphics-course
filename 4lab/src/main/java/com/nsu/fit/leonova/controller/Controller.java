@@ -13,12 +13,12 @@ public class Controller implements BSplineController {
 
     @Override
     public void ImageLeftPressed(Point pressedPoint) {
-
+        bSpline.pressedPoint(pressedPoint);
     }
 
     @Override
     public void ImageLeftDragged(Point draggedPoint) {
-
+        bSpline.draggedPoint(draggedPoint);
     }
 
     @Override

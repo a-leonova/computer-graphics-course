@@ -23,6 +23,7 @@ public class BSplineImpl implements BSpline, Observable {
     private List<Point> pivotPoints = new ArrayList<>();
     private BufferedImage bspline;
     private List<Observer> observers = new ArrayList<>();
+    private Point pressedPoint;
 
     public BSplineImpl() {
         addPoint(new Point(20, 100));
@@ -45,6 +46,27 @@ public class BSplineImpl implements BSpline, Observable {
             }
         }
         createBSpline();
+    }
+
+    @Override
+    public void pressedPoint(Point point) {
+        for(Point p : pivotPoints){
+            double distance = Math.sqrt(Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2));
+            if(distance <= radius){
+                pressedPoint = p;
+                return;
+            }
+        }
+        pressedPoint = null;
+    }
+
+    @Override
+    public void draggedPoint(Point point) {
+        if(pressedPoint != null){
+            pressedPoint.x = point.x;
+            pressedPoint.y = point.y;
+            createBSpline();
+        }
     }
 
     private void createBSpline(){

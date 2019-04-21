@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
@@ -16,8 +17,9 @@ public class ImageManager extends JPanel {
         setPreferredSize(new Dimension(width, height));
     }
 
-    public void setMouseListener(MouseListener listener){
+    public void setMouseListener(MouseAdapter listener){
         addMouseListener(listener);
+        addMouseMotionListener(listener);
     }
 
     @Override
