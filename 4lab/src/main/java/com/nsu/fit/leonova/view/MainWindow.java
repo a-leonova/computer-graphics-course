@@ -66,4 +66,9 @@ public class MainWindow extends JFrame implements Observer {
     public void setBSpline(BufferedImage bSpline) {
         bSplineWindow.setImage(bSpline);
     }
+
+    @Override
+    public void setMainImage(BufferedImage image) {
+        imageManager.setImage(image);
+    }
 }

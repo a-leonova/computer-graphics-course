@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BSplineImpl implements BSpline, Observable {
+public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Observable {
     private static final int radius = 3;
     private static final double STEP = 100.;
     private static final SimpleMatrix MATRIX = new SimpleMatrix(new double[][]{
@@ -24,10 +24,16 @@ public class BSplineImpl implements BSpline, Observable {
     private BufferedImage bspline;
     private List<Observer> observers = new ArrayList<>();
     private Point pressedPoint;
+    private double splineLength = 0.0;
 
-    public BSplineImpl() {
+    private List<Point> pointsToRotate = new ArrayList<>(Globals.K * Globals.U);
+    private boolean correctPointsToRotate = false;
+
+    public BSplineCreatorImpl() {
         addPoint(new Point(20, 100));
         addPoint(new Point(40, 150));
+        addPoint(new Point(60, 170));
+        addPoint(new Point(100, 170));
     }
 
     @Override
@@ -69,10 +75,54 @@ public class BSplineImpl implements BSpline, Observable {
         }
     }
 
+    public List<Point> getPointsToRotate(){
+        if(!correctPointsToRotate){
+            countPointsToRotate();
+        }
+        return  pointsToRotate;
+    }
+
+    private void countPointsToRotate(){
+        double currentLength = 0.0;
+        int oldX = 0;
+        int oldY = 0;
+        int lastIdx = 0;
+        double step = splineLength / (Globals.U * Globals.K - 1);
+        boolean oldInited = false;
+        Graphics2D graphics = bspline.createGraphics();
+        graphics.setPaint(Color.GREEN);
+        for(int i = 1; i < pivotPoints.size() - 2; ++i){
+            SimpleMatrix Px = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).x}, {pivotPoints.get(i).x}, {pivotPoints.get(i + 1).x}, {pivotPoints.get(i + 2).x}});
+            SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
+            for(double t = 0.0; t < 1.0; t += 1 / STEP){
+                SimpleMatrix T = new SimpleMatrix(new double[][]{{t * t * t, t * t, t, 1}});
+                int x = (int)Math.round(T.mult(MATRIX).mult(Px).get(0, 0) * COEFFICIENT);
+                int y = (int)Math.round(T.mult(MATRIX).mult(Py).get(0, 0) * COEFFICIENT);
+                if(oldInited){
+                    currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
+                        if(currentLength >= lastIdx * step && lastIdx < Globals.U * Globals.K - 1){
+                            pointsToRotate.add(new Point(x, y));
+                            ++lastIdx;
+                            graphics.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
+                        }
+                    }
+                else {
+                    oldInited = true;
+                }
+                oldX = x;
+                oldY = y;
+            }
+        }
+        pointsToRotate.add(new Point(oldX, oldY));
+        graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
+    }
+
     private void createBSpline(){
         bspline = new BufferedImage(Globals.BSPLINE_WIDTH, Globals.BSPLINE_HEIGH, BufferedImage.TYPE_3BYTE_BGR);
         drawPivotPoints();
         drawBSpline();
+        correctPointsToRotate = false;
+        pointsToRotate.clear();
         for(Observer obs : observers){
             obs.setBSpline(bspline);
         }
@@ -81,19 +131,20 @@ public class BSplineImpl implements BSpline, Observable {
     private void drawBSpline(){
         int oldX = 0;
         int oldY = 0;
+        splineLength = 0.0;
         boolean oldInited = false;
         Graphics2D graphics = bspline.createGraphics();
         graphics.setPaint(Color.MAGENTA);
         for(int i = 1; i < pivotPoints.size() - 2; ++i){
             SimpleMatrix Px = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).x}, {pivotPoints.get(i).x}, {pivotPoints.get(i + 1).x}, {pivotPoints.get(i + 2).x}});
             SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
-//            oldInited = false;
             for(double t = 0.0; t < 1.0; t += 1 / STEP){
                 SimpleMatrix T = new SimpleMatrix(new double[][]{{t * t * t, t * t, t, 1}});
                 int x = (int)Math.round(T.mult(MATRIX).mult(Px).get(0, 0) * COEFFICIENT);
                 int y = (int)Math.round(T.mult(MATRIX).mult(Py).get(0, 0) * COEFFICIENT);
                 if(oldInited){
                     graphics.drawLine(oldX, oldY, x, y);
+                    splineLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
                 }
                 else {
                     oldInited = true;
@@ -102,6 +153,7 @@ public class BSplineImpl implements BSpline, Observable {
                 oldY = y;
             }
         }
+        getPointsToRotate();
     }
 
     private void drawPivotPoints(){

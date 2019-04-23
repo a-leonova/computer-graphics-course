@@ -12,16 +12,22 @@ import java.awt.image.BufferedImage;
 public class BSplineWindow extends JFrame {
     private BSplineController controller;
     private ImageManager imageManager = new ImageManager();
+    private JButton apply = new JButton("Apply");
 
     public BSplineWindow() throws HeadlessException {
         super("Creating B-Spline");
         add(imageManager, BorderLayout.CENTER);
+        add(apply, BorderLayout.SOUTH);
         imageManager.setMouseListener(new MyMouseAdapter());
         pack();
     }
 
     public void setController(BSplineController controller) {
         this.controller = controller;
+        apply.addActionListener(e -> {
+            this.controller.apply();
+            this.setVisible(false);
+        });
     }
 
     public void setImage(BufferedImage image){

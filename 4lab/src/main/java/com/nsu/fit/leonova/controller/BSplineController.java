@@ -7,4 +7,5 @@ public interface BSplineController {
     void ImageLeftDragged(Point draggedPoint);
     void ImageLeftClicked(Point clickedPoint);
     void ImageRightClicked(Point clickedPoint);
+    void apply();
 }

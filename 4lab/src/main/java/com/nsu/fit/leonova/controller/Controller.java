@@ -1,33 +1,44 @@
 package com.nsu.fit.leonova.controller;
 
-import com.nsu.fit.leonova.model.BSpline;
+import com.nsu.fit.leonova.model.BSplineCreator;
+import com.nsu.fit.leonova.model.World3D;
 
 import java.awt.*;
 
 public class Controller implements BSplineController {
-    private BSpline bSpline;
+    private BSplineCreator bSplineCreator;
+    private World3D world3D;
 
-    public void setbSpline(BSpline bSpline) {
-        this.bSpline = bSpline;
+    public void setbSplineCreator(BSplineCreator bSplineCreator) {
+        this.bSplineCreator = bSplineCreator;
+    }
+
+    public void setWorld3D(World3D world3D) {
+        this.world3D = world3D;
     }
 
     @Override
     public void ImageLeftPressed(Point pressedPoint) {
-        bSpline.pressedPoint(pressedPoint);
+        bSplineCreator.pressedPoint(pressedPoint);
     }
 
     @Override
     public void ImageLeftDragged(Point draggedPoint) {
-        bSpline.draggedPoint(draggedPoint);
+        bSplineCreator.draggedPoint(draggedPoint);
     }
 
     @Override
     public void ImageLeftClicked(Point clickedPoint) {
-        bSpline.addPoint(clickedPoint);
+        bSplineCreator.addPoint(clickedPoint);
     }
 
     @Override
     public void ImageRightClicked(Point clickedPoint) {
-        bSpline.removePoint(clickedPoint);
+        bSplineCreator.removePoint(clickedPoint);
+    }
+
+    @Override
+    public void apply() {
+        world3D.showSpline3D();
     }
 }
