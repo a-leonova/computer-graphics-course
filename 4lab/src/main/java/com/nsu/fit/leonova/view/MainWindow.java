@@ -7,6 +7,8 @@ import com.nsu.fit.leonova.view.windows.BSplineWindow;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -70,5 +72,34 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void setMainImage(BufferedImage image) {
         imageManager.setImage(image);
+    }
+
+    private class MyMouseAdapter extends MouseAdapter {
+
+        private Point oldPoint;
+
+        @Override
+        public void mousePressed(MouseEvent e){
+            oldPoint = e.getPoint();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e){
+            if(oldPoint != null){
+                int shiftX = e.getX() - oldPoint.x;
+                int shiftY = e.getY() - oldPoint.y;
+                if(shiftX != 0){
+
+                }
+                if(shiftY != 0){
+
+                }
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e){
+            oldPoint = null;
+        }
     }
 }
