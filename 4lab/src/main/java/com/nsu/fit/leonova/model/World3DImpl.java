@@ -88,6 +88,24 @@ public class World3DImpl implements World3D, Observable {
     }
 
     @Override
+    public void rotationForOX(int shift) {
+        rotationAngleRadOX += Math.toRadians(shift);
+        if(rotationAngleRadOX > 2 * Math.PI){
+            rotationAngleRadOX = 0.0;
+        }
+        showSpline3D();
+    }
+
+    @Override
+    public void rotationForOY(int shift) {
+        rotationAngleRadOY += Math.toRadians(shift);
+        if(rotationAngleRadOY > 2 * Math.PI){
+            rotationAngleRadOY = 0.0;
+        }
+        showSpline3D();
+    }
+
+    @Override
     public void addObserver(Observer obs) {
         observers.add(obs);
     }

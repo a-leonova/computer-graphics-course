@@ -5,7 +5,7 @@ import com.nsu.fit.leonova.model.World3D;
 
 import java.awt.*;
 
-public class Controller implements BSplineController {
+public class Controller implements BSplineController, WorldController{
     private BSplineCreator bSplineCreator;
     private World3D world3D;
 
@@ -41,5 +41,15 @@ public class Controller implements BSplineController {
     public void apply() {
         world3D.showSpline3D();
         //world3D.drawAxis();
+    }
+
+    @Override
+    public void shiftX(int dx) {
+        world3D.rotationForOY(dx);
+    }
+
+    @Override
+    public void shiftY(int dy) {
+        world3D.rotationForOX(dy);
     }
 }

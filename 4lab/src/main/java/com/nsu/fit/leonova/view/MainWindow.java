@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.view;
 
 import com.nsu.fit.leonova.controller.BSplineController;
+import com.nsu.fit.leonova.controller.WorldController;
 import com.nsu.fit.leonova.observer.Observer;
 import com.nsu.fit.leonova.view.windows.BSplineWindow;
 
@@ -15,10 +16,12 @@ import java.util.Objects;
 public class MainWindow extends JFrame implements Observer {
     private ImageManager imageManager;
     private BSplineWindow bSplineWindow = new BSplineWindow();
+    private WorldController worldController;
 
     public MainWindow(int width, int height) throws HeadlessException {
         super("Wireframe");
         imageManager = new ImageManager(width, height);
+        imageManager.setMouseListener(new MyMouseAdapter());
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenuBar();
         add(toolBar, BorderLayout.PAGE_START);
@@ -32,6 +35,10 @@ public class MainWindow extends JFrame implements Observer {
 
     public void setBSplineController(BSplineController bSplineController){
         bSplineWindow.setController(bSplineController);
+    }
+
+    public void setWorldController(WorldController worldController) {
+        this.worldController = worldController;
     }
 
     private JToolBar createToolBar() {
@@ -86,13 +93,13 @@ public class MainWindow extends JFrame implements Observer {
         @Override
         public void mouseDragged(MouseEvent e){
             if(oldPoint != null){
-                int shiftX = e.getX() - oldPoint.x;
-                int shiftY = e.getY() - oldPoint.y;
-                if(shiftX != 0){
-
+                int dx = e.getX() - oldPoint.x;
+                int dy = e.getY() - oldPoint.y;
+                if(dx != 0){
+                    worldController.shiftX(dx);
                 }
-                if(shiftY != 0){
-
+                if(dy != 0){
+                    worldController.shiftY(dy);
                 }
             }
         }

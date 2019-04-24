@@ -16,6 +16,7 @@ public class Main {
         controller.setbSplineCreator(bSpline);
         controller.setWorld3D(world);
         mainWindow.setBSplineController(controller);
+        mainWindow.setWorldController(controller);
         bSpline.addObserver(mainWindow);
         world.setbSplineProvider(bSpline);
         world.addObserver(mainWindow);
