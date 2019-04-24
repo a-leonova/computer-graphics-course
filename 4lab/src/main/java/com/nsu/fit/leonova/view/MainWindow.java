@@ -102,6 +102,7 @@ public class MainWindow extends JFrame implements Observer {
                     worldController.shiftY(dy);
                 }
             }
+            oldPoint = e.getPoint();
         }
 
         @Override

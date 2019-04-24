@@ -14,9 +14,7 @@ public class World3DImpl implements World3D, Observable {
     private BSplineProvider bSplineProvider;
     private List<Observer> observers = new ArrayList<>();
 
-    private double rotationAngleRadOX = Math.toRadians(45.0);
-    private double rotationAngleRadOY = Math.toRadians(60.0);
-    private double rotationAngleRadOZ = Math.toRadians(85.0);
+    SimpleMatrix rotationMatrix = MatrixGenerator.identity4();
 
     private Point3D splinePoints3D[][];
     private Point splinePoints2D[][];
@@ -89,19 +87,15 @@ public class World3DImpl implements World3D, Observable {
 
     @Override
     public void rotationForOX(int shift) {
-        rotationAngleRadOX += Math.toRadians(shift * 0.01);
-        if(rotationAngleRadOX > 2 * Math.PI){
-            rotationAngleRadOX = 0.0;
-        }
+        double d = Math.toRadians(shift * 0.5);
+        rotationMatrix = MatrixGenerator.rotationMatrix4OX(d).mult(rotationMatrix);
         showSpline3D();
     }
 
     @Override
     public void rotationForOY(int shift) {
-        rotationAngleRadOY += Math.toRadians(shift * 0.01);
-        if(rotationAngleRadOY > 2 * Math.PI){
-            rotationAngleRadOY = 0.0;
-        }
+        double d = Math.toRadians(shift * 0.5);
+        rotationMatrix = MatrixGenerator.rotationMatrix4OY(d).mult(rotationMatrix);
         showSpline3D();
     }
 
@@ -116,9 +110,6 @@ public class World3DImpl implements World3D, Observable {
     }
 
     private void transform(){
-        SimpleMatrix rotationOZ = MatrixGenerator.rotationMatrix4OZ(rotationAngleRadOZ);
-        SimpleMatrix rotationOX = MatrixGenerator.rotationMatrix4OX(rotationAngleRadOX);
-        SimpleMatrix rotationOY = MatrixGenerator.rotationMatrix4OY(rotationAngleRadOY);
         splinePoints2D = new Point[bSplineProvider.getPointsToRotate().size()][Globals.M];
         for(int k = 0; k < bSplineProvider.getPointsToRotate().size(); ++k){
             for(int v = 0; v < Globals.M; v++){
@@ -126,7 +117,7 @@ public class World3DImpl implements World3D, Observable {
                         {splinePoints3D[k][v].getY()},
                         {splinePoints3D[k][v].getZ()},
                         {1}});
-                coordinates = rotationOX.mult(rotationOY).mult(rotationOZ).mult(coordinates);
+                coordinates = rotationMatrix.mult(coordinates);
                 coordinates = MatrixGenerator.projectionMatrix().mult(coordinates);
                 coordinates = coordinates.divide(coordinates.get(3, 0));
                 splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),

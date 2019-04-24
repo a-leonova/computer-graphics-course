@@ -78,5 +78,13 @@ public class MatrixGenerator {
                 {0, 0, 0, 1}});
     }
 
+    public static SimpleMatrix identity4(){
+        return new SimpleMatrix(new double[][]{
+                {1, 0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1}});
+    }
+
 
 }
