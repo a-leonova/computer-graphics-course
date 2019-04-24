@@ -18,6 +18,10 @@ public class World3DImpl implements World3D, Observable {
     private double rotationAngleRadOY = Math.toRadians(60.0);
     private double rotationAngleRadOZ = Math.toRadians(85.0);
 
+    private Point3D splinePoints3D[][];
+    private Point splinePoints2D[][];
+    private boolean isActualSplinePoints3D = false;
+
     public void setbSplineProvider(BSplineProvider bSplineProvider) {
         this.bSplineProvider = bSplineProvider;
     }
@@ -26,46 +30,37 @@ public class World3DImpl implements World3D, Observable {
     public void showSpline3D() {
         BufferedImage image = new BufferedImage(Globals.IMAGE_WIDTH, Globals.IMAGE_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D graphics = image.createGraphics();
-        List<Point> points = bSplineProvider.getPointsToRotate();
-        Point allPoints[][] = new Point[points.size()][Globals.M];
-        double step = 2 * Math.PI / (Globals.M - 1);
-        for(int k = 0; k < points.size(); ++k){
-            for(int v = 0; v < Globals.M; v++){
-                Point p = points.get(k);
-                int z = 0;
-                SimpleMatrix vector1 = new SimpleMatrix(new double[][]{{p.x}, {p.y}, {z}});
-                SimpleMatrix rotationMtx = MatrixGenerator.rotationMatrix3OX(v * step);
-                SimpleMatrix result1 = rotationMtx.mult(vector1);
-                SimpleMatrix vector2 = new SimpleMatrix(new double[][]{
-                        {result1.get(0, 0)}, {result1.get(1, 0)}, {result1.get(2,0)}, {1}
-                });
-                //SimpleMatrix result2 = MatrixGenerator.shiftMatrix(-200, -100, 0).mult(vector2);
-                SimpleMatrix rotationOZ = MatrixGenerator.rotationMatrix4OZ(rotationAngleRadOZ);
-                SimpleMatrix rotationOX = MatrixGenerator.rotationMatrix4OX(rotationAngleRadOX);
-                SimpleMatrix rotationOY = MatrixGenerator.rotationMatrix4OY(rotationAngleRadOY);
-                SimpleMatrix result2 =  rotationOX.mult(rotationOY).mult(rotationOZ).mult(vector2);
-                result2 = MatrixGenerator.projectionMatrix().mult(result2);
-                result2 = result2.divide(result2.get(3, 0));
-                allPoints[k][v] = new Point((int)Math.round(result2.get(0,0)) + image.getWidth() / 2 , (int)Math.round(result2.get(1, 0)) + image.getHeight()/2);
+        if(!isActualSplinePoints3D){
+            //Point allPoints[][] = new Point[points.size()][Globals.M];
+            List<Point> points = bSplineProvider.getPointsToRotate();
+            splinePoints3D = new Point3D[points.size()][Globals.M];
+            double step = 2 * Math.PI / (Globals.M - 1);
+            for(int k = 0; k < points.size(); ++k){
+                for(int v = 0; v < Globals.M; v++){
+                    Point p = points.get(k);
+                    int z = 0;
+                    SimpleMatrix coordinates = new SimpleMatrix(new double[][]{{p.x}, {p.y}, {z}});
+                    SimpleMatrix rotationMtx = MatrixGenerator.rotationMatrix3OX(v * step);
+                    SimpleMatrix result = rotationMtx.mult(coordinates);
+                    splinePoints3D[k][v] = new Point3D(result.get(0, 0), result.get(1, 0), result.get(2, 0));
+                    //allPoints[k][v] = new Point((int)Math.round(result2.get(0,0)) + image.getWidth() / 2 , (int)Math.round(result2.get(1, 0)) + image.getHeight()/2);
+                }
             }
+            isActualSplinePoints3D = true;
         }
-
-        for(int i = 1; i < points.size(); ++i){
+        //create transformation
+        transform();
+        for(int i = 1; i < bSplineProvider.getPointsToRotate().size(); ++i){
             for(int j = 0; j < Globals.M; j++){
-                graphics.drawLine(allPoints[i - 1][j].x, allPoints[i - 1][j].y, allPoints[i][j].x, allPoints[i][j].y);
+                graphics.drawLine(splinePoints2D[i - 1][j].x, splinePoints2D[i - 1][j].y, splinePoints2D[i][j].x, splinePoints2D[i][j].y);
             }
         }
 
-        for(int i = 0; i < points.size(); i += Globals.K){
+        for(int i = 0; i < bSplineProvider.getPointsToRotate().size(); i += Globals.K){
             for(int j = 1; j < Globals.M; j++){
-                graphics.drawLine(allPoints[i][j - 1].x, allPoints[i][j - 1].y, allPoints[i][j].x, allPoints[i][j].y);
+                graphics.drawLine(splinePoints2D[i][j - 1].x, splinePoints2D[i][j - 1].y, splinePoints2D[i][j].x, splinePoints2D[i][j].y);
             }
-            //graphics.drawLine(allPoints[i][0].x, allPoints[i][0].y, allPoints[i][Globals.M - 1].x, allPoints[i][Globals.M - 1].y);
         }
-
-
-
-
 
         for(Observer observer : observers){
             observer.setMainImage(image);
@@ -88,8 +83,13 @@ public class World3DImpl implements World3D, Observable {
     }
 
     @Override
+    public void newBspline() {
+        isActualSplinePoints3D = false;
+    }
+
+    @Override
     public void rotationForOX(int shift) {
-        rotationAngleRadOX += Math.toRadians(shift);
+        rotationAngleRadOX += Math.toRadians(shift * 0.01);
         if(rotationAngleRadOX > 2 * Math.PI){
             rotationAngleRadOX = 0.0;
         }
@@ -98,7 +98,7 @@ public class World3DImpl implements World3D, Observable {
 
     @Override
     public void rotationForOY(int shift) {
-        rotationAngleRadOY += Math.toRadians(shift);
+        rotationAngleRadOY += Math.toRadians(shift * 0.01);
         if(rotationAngleRadOY > 2 * Math.PI){
             rotationAngleRadOY = 0.0;
         }
@@ -113,5 +113,25 @@ public class World3DImpl implements World3D, Observable {
     @Override
     public void deleteObserver(Observer obs) {
         observers.remove(obs);
+    }
+
+    private void transform(){
+        SimpleMatrix rotationOZ = MatrixGenerator.rotationMatrix4OZ(rotationAngleRadOZ);
+        SimpleMatrix rotationOX = MatrixGenerator.rotationMatrix4OX(rotationAngleRadOX);
+        SimpleMatrix rotationOY = MatrixGenerator.rotationMatrix4OY(rotationAngleRadOY);
+        splinePoints2D = new Point[bSplineProvider.getPointsToRotate().size()][Globals.M];
+        for(int k = 0; k < bSplineProvider.getPointsToRotate().size(); ++k){
+            for(int v = 0; v < Globals.M; v++){
+                SimpleMatrix coordinates = new SimpleMatrix(new double[][] {{splinePoints3D[k][v].getX()},
+                        {splinePoints3D[k][v].getY()},
+                        {splinePoints3D[k][v].getZ()},
+                        {1}});
+                coordinates = rotationOX.mult(rotationOY).mult(rotationOZ).mult(coordinates);
+                coordinates = MatrixGenerator.projectionMatrix().mult(coordinates);
+                coordinates = coordinates.divide(coordinates.get(3, 0));
+                splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),
+                        (int)Math.round(coordinates.get(1, 0) + Globals.IMAGE_HEIGHT /2));
+            }
+        }
     }
 }

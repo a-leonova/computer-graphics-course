@@ -39,6 +39,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void apply() {
+        world3D.newBspline();
         world3D.showSpline3D();
         //world3D.drawAxis();
     }

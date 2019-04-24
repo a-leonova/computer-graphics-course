@@ -77,9 +77,10 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
 
     public List<Point> getPointsToRotate(){
         if(!correctPointsToRotate){
+            pointsToRotate.clear();
             countPointsToRotate();
         }
-        return  pointsToRotate;
+        return pointsToRotate;
     }
 
     private void countPointsToRotate(){
@@ -115,6 +116,7 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
         }
         pointsToRotate.add(new Point(oldX, oldY));
         graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
+        correctPointsToRotate = true;
     }
 
     private void createBSpline(){
