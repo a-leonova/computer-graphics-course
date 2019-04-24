@@ -26,7 +26,7 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
     private Point pressedPoint;
     private double splineLength = 0.0;
 
-    private List<Point> pointsToRotate = new ArrayList<>(Globals.K * Globals.U);
+    private List<Point> pointsToRotate = new ArrayList<>(Globals.K * Globals.N);
     private boolean correctPointsToRotate = false;
 
     public BSplineCreatorImpl() {
@@ -87,7 +87,7 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
         int oldX = 0;
         int oldY = 0;
         int lastIdx = 0;
-        double step = splineLength / (Globals.U * Globals.K - 1);
+        double step = splineLength / (Globals.N * Globals.K);
         boolean oldInited = false;
         Graphics2D graphics = bspline.createGraphics();
         graphics.setPaint(Color.GREEN);
@@ -100,7 +100,7 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
                 int y = (int)Math.round(T.mult(MATRIX).mult(Py).get(0, 0) * COEFFICIENT);
                 if(oldInited){
                     currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
-                        if(currentLength >= lastIdx * step && lastIdx < Globals.U * Globals.K - 1){
+                        if(currentLength >= lastIdx * step && lastIdx < Globals.N * Globals.K){
                             pointsToRotate.add(new Point(x, y));
                             ++lastIdx;
                             graphics.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
