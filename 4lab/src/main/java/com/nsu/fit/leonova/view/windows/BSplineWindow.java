@@ -55,7 +55,6 @@ public class BSplineWindow extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e){
-//            System.out.println("Dragged");
             if(SwingUtilities.isLeftMouseButton(e)){
                 controller.ImageLeftDragged(e.getPoint());
             }

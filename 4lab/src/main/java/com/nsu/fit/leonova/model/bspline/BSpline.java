@@ -1,4 +1,4 @@
-package com.nsu.fit.leonova.model;
+package com.nsu.fit.leonova.model.bspline;
 
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.observer.Observable;
@@ -10,16 +10,16 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Observable {
+public class BSpline implements BSplineProvider, BSplineCreator,Observable {
     private static final int radius = 3;
     private static final double STEP = 100.;
-    private static final SimpleMatrix MATRIX = new SimpleMatrix(new double[][]{
+    private static final SimpleMatrix SPLINE_MATRIX = new SimpleMatrix(new double[][]{
             {-1, 3, -3, 1},
             {3, -6, 3, 0},
             {-3, 0, 3, 0},
             {1, 4, 1, 0}
     });
-    private static final double COEFFICIENT = 1/6f;
+    private static final double SPLINE_MATRIX_COEFFICIENT = 1/6f;
     private List<Point> pivotPoints = new ArrayList<>();
     private BufferedImage bspline;
     private List<Observer> observers = new ArrayList<>();
@@ -29,7 +29,7 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
     private List<Point> pointsToRotate = new ArrayList<>(Globals.K * Globals.N);
     private boolean correctPointsToRotate = false;
 
-    public BSplineCreatorImpl() {
+    public BSpline() {
         addPoint(new Point(20, 100));
         addPoint(new Point(40, 150));
         addPoint(new Point(60, 170));
@@ -83,6 +83,20 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
         return pointsToRotate;
     }
 
+    @Override
+    public void addObserver(Observer obs) {
+        observers.add(obs);
+    }
+
+    public void addObserver(List<Observer> obs){
+        observers.addAll(obs);
+    }
+
+    @Override
+    public void deleteObserver(Observer obs) {
+        observers.remove(obs);
+    }
+
     private void countPointsToRotate(){
         double currentLength = 0.0;
         int oldX = 0;
@@ -97,8 +111,8 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
             SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
             for(double t = 0.0; t < 1.0; t += 1 / STEP){
                 SimpleMatrix T = new SimpleMatrix(new double[][]{{t * t * t, t * t, t, 1}});
-                int x = (int)Math.round(T.mult(MATRIX).mult(Px).get(0, 0) * COEFFICIENT);
-                int y = (int)Math.round(T.mult(MATRIX).mult(Py).get(0, 0) * COEFFICIENT);
+                int x = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Px).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
+                int y = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Py).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 if(oldInited){
                     currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
                         if(currentLength >= lastIdx * step && lastIdx < Globals.N * Globals.K){
@@ -142,8 +156,8 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
             SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
             for(double t = 0.0; t < 1.0; t += 1 / STEP){
                 SimpleMatrix T = new SimpleMatrix(new double[][]{{t * t * t, t * t, t, 1}});
-                int x = (int)Math.round(T.mult(MATRIX).mult(Px).get(0, 0) * COEFFICIENT);
-                int y = (int)Math.round(T.mult(MATRIX).mult(Py).get(0, 0) * COEFFICIENT);
+                int x = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Px).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
+                int y = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Py).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 if(oldInited){
                     graphics.drawLine(oldX, oldY, x, y);
                     splineLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
@@ -169,15 +183,5 @@ public class BSplineCreatorImpl implements BSplineCreator, BSplineProvider,Obser
                 graphics.drawLine(pivot.x, pivot.y, nextPoint.x, nextPoint.y);
             }
         }
-    }
-
-    @Override
-    public void addObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    @Override
-    public void deleteObserver(Observer obs) {
-        observers.remove(obs);
     }
 }

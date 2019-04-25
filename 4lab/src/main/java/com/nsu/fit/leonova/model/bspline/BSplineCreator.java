@@ -1,4 +1,4 @@
-package com.nsu.fit.leonova.model;
+package com.nsu.fit.leonova.model.bspline;
 
 import java.awt.*;
 

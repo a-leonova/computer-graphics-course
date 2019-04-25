@@ -1,13 +1,13 @@
 package com.nsu.fit.leonova.controller;
 
-import com.nsu.fit.leonova.model.BSplineCreator;
 import com.nsu.fit.leonova.model.World3D;
+import com.nsu.fit.leonova.model.bspline.BSplineCreator;
 
 import java.awt.*;
 
 public class Controller implements BSplineController, WorldController{
-    private BSplineCreator bSplineCreator;
     private World3D world3D;
+    private BSplineCreator bSplineCreator;
 
     public void setbSplineCreator(BSplineCreator bSplineCreator) {
         this.bSplineCreator = bSplineCreator;
@@ -39,9 +39,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void apply() {
-        world3D.newBspline();
         world3D.showSpline3D();
-        //world3D.drawAxis();
     }
 
     @Override

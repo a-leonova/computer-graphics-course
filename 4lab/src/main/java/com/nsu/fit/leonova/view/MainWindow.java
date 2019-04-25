@@ -93,8 +93,8 @@ public class MainWindow extends JFrame implements Observer {
         @Override
         public void mouseDragged(MouseEvent e){
             if(oldPoint != null){
-                int dx = e.getX() - oldPoint.x;
-                int dy = e.getY() - oldPoint.y;
+                int dx = oldPoint.x - e.getX();
+                int dy = oldPoint.y - e.getY();
                 if(dx != 0){
                     worldController.shiftX(dx);
                 }
