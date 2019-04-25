@@ -118,6 +118,7 @@ public class World3DImpl implements World3D, Observable {
                         {splinePoints3D[k][v].getZ()},
                         {1}});
                 coordinates = rotationMatrix.mult(coordinates);
+                coordinates = MatrixGenerator.shiftMatrix(0, 0, 1000).mult(coordinates);
                 coordinates = MatrixGenerator.projectionMatrix().mult(coordinates);
                 coordinates = coordinates.divide(coordinates.get(3, 0));
                 splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),

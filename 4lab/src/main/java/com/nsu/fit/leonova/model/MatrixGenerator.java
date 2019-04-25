@@ -71,11 +71,16 @@ public class MatrixGenerator {
     }
 
     public static SimpleMatrix projectionMatrix(){
+//        return new SimpleMatrix(new double[][]{
+//                {1, 0, 0, 0},
+//                {0, 1, 0, 0},
+//                {0, 0, 0, 0},
+//                {0, 0, 0, 1}});
         return new SimpleMatrix(new double[][]{
-                {1, 0, 0, 0},
-                {0, 1, 0, 0},
-                {0, 0, 0, 0},
-                {0, 0, 0, 1}});
+                {500, 0, 0, 0},
+                {0, 500, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 1, 0}});
     }
 
     public static SimpleMatrix identity4(){
