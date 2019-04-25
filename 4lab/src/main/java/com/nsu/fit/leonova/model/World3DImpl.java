@@ -1,17 +1,19 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.globals.Globals;
-import com.nsu.fit.leonova.model.bspline.BSplineCreator;
-import com.nsu.fit.leonova.observer.Observable;
-import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.observer.BSplineObservable;
+import com.nsu.fit.leonova.observer.BSplineObserver;
+import com.nsu.fit.leonova.observer.WorldObservable;
+import com.nsu.fit.leonova.observer.WorldObserver;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class World3DImpl implements World3D, BSplineCreator, Observable {
-    private List<Observer> observers = new ArrayList<>();
+public class World3DImpl implements World3D, WorldObservable, BSplineObservable {
+    private List<WorldObserver> worldObservers = new ArrayList<>();
+    private List<BSplineObserver> bSplineObservers = new ArrayList<>();
     private List<Figure> figures = new ArrayList<>();
     private Figure currentWorkingFigure;
 
@@ -37,58 +39,81 @@ public class World3DImpl implements World3D, BSplineCreator, Observable {
             }
         }
 
-        for(Observer observer : observers){
-            observer.setMainImage(image);
+        for(WorldObserver worldObserver : worldObservers){
+            worldObserver.setMainImage(image);
         }
     }
 
     @Override
     public void rotationForOX(int shift) {
-        double d = Math.toRadians(shift * 0.5);
+        double d = Math.toRadians(-shift * 0.5);
         currentWorkingFigure.rotateForOX(d);
         showSpline3D();
     }
 
     @Override
     public void rotationForOY(int shift) {
-        double d = Math.toRadians(shift * 0.5);
+        double d = Math.toRadians(-shift * 0.5);
         currentWorkingFigure.rotateForOY(d);
         showSpline3D();
     }
 
     @Override
-    public void addObserver(Observer obs) {
-        observers.add(obs);
+    public void addPointToCurrentBSpline(Point point) {
+        currentWorkingFigure.addPoint(point);
+    }
+
+    @Override
+    public void removePointFromCurrentBSpline(Point point) {
+        currentWorkingFigure.removePoint(point);
+    }
+
+    @Override
+    public void pressedPointOnCurrentBSpline(Point point) {
+        currentWorkingFigure.pressedPoint(point);
+    }
+
+    @Override
+    public void draggedPointOnCurrentBSpline(Point point) {
+        currentWorkingFigure.draggedPoint(point);
+    }
+
+    @Override
+    public void showBSplineInfo(int index) {
+        if (figures.size() < 1 && index == 1){
+            Figure figure = new Figure(bSplineObservers, index);
+            figures.add(figure);
+        }
+        else if (figures.size() != index){
+            throw new IllegalArgumentException("Impossible! Size: " + figures.size() + " Index: " + index);
+        }
+        currentWorkingFigure = figures.get(index - 1);
+        figures.get(index - 1).showBspline();
+    }
+
+    @Override
+    public void addObserver(WorldObserver obs) {
+        worldObservers.add(obs);
+    }
+
+    @Override
+    public void removeObserver(WorldObserver obs) {
+        worldObservers.remove(obs);
+    }
+
+    @Override
+    public void addObserver(BSplineObserver obs) {
+        bSplineObservers.add(obs);
         for(Figure figure : figures){
             figure.addObserver(obs);
         }
     }
 
     @Override
-    public void deleteObserver(Observer obs) {
-        observers.remove(obs);
+    public void removeObserver(BSplineObserver obs) {
+        bSplineObservers.remove(obs);
         for(Figure figure : figures){
-            figure.deleteObserver(obs);
+            figure.removeObserver(obs);
         }
-    }
-
-    @Override
-    public void addPoint(Point point) {
-        currentWorkingFigure.addPoint(point);
-    }
-
-    @Override
-    public void removePoint(Point point) {
-        currentWorkingFigure.removePoint(point);
-    }
-
-    @Override
-    public void pressedPoint(Point point) {
-        currentWorkingFigure.pressedPoint(point);
-    }
-
-    @Override
-    public void draggedPoint(Point point) {
-        currentWorkingFigure.draggedPoint(point);
     }
 }

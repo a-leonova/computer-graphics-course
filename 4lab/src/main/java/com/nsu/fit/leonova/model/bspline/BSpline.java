@@ -1,8 +1,8 @@
 package com.nsu.fit.leonova.model.bspline;
 
 import com.nsu.fit.leonova.globals.Globals;
-import com.nsu.fit.leonova.observer.Observable;
-import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.observer.BSplineObservable;
+import com.nsu.fit.leonova.observer.BSplineObserver;
 import org.ejml.simple.SimpleMatrix;
 
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BSpline implements BSplineProvider, BSplineCreator,Observable {
+public class BSpline implements BSplineObservable {
     private static final int radius = 3;
     private static final double STEP = 100.;
     private static final SimpleMatrix SPLINE_MATRIX = new SimpleMatrix(new double[][]{
@@ -20,29 +20,44 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
             {1, 4, 1, 0}
     });
     private static final double SPLINE_MATRIX_COEFFICIENT = 1/6f;
-    private List<Point> pivotPoints = new ArrayList<>();
-    private BufferedImage bspline;
-    private List<Observer> observers = new ArrayList<>();
-    private Point pressedPoint;
-    private double splineLength = 0.0;
 
-    private List<Point> pointsToRotate = new ArrayList<>(Globals.K * Globals.N);
+    private List<Point> pivotPoints = new ArrayList<>();
+    private SplineParameters parameters;
+    private BufferedImage bspline;
+    private double splineLength = 0.0;
+    private List<BSplineObserver> observers = new ArrayList<>();
+    private Point pressedPoint;
+
+    private List<Point> pointsToRotate = new ArrayList<>();
     private boolean correctPointsToRotate = false;
 
-    public BSpline() {
+    public BSpline(SplineParameters parameters) {
+        this.parameters = parameters;
         addPoint(new Point(20, 100));
         addPoint(new Point(40, 150));
         addPoint(new Point(60, 170));
         addPoint(new Point(100, 170));
     }
 
+    public void setParameters(SplineParameters parameters) {
+        this.parameters = parameters;
+    }
+
     @Override
+    public void addObserver(BSplineObserver obs) {
+        observers.add(obs);
+    }
+
+    @Override
+    public void removeObserver(BSplineObserver obs) {
+        observers.remove(obs);
+    }
+
     public void addPoint(Point point) {
         pivotPoints.add(point);
         createBSpline();
     }
 
-    @Override
     public void removePoint(Point point) {
         for(Point p : pivotPoints){
             double distance = Math.sqrt(Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2));
@@ -54,7 +69,6 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
         createBSpline();
     }
 
-    @Override
     public void pressedPoint(Point point) {
         for(Point p : pivotPoints){
             double distance = Math.sqrt(Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2));
@@ -66,7 +80,6 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
         pressedPoint = null;
     }
 
-    @Override
     public void draggedPoint(Point point) {
         if(pressedPoint != null){
             pressedPoint.x = point.x;
@@ -83,18 +96,11 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
         return pointsToRotate;
     }
 
-    @Override
-    public void addObserver(Observer obs) {
-        observers.add(obs);
-    }
-
-    public void addObserver(List<Observer> obs){
-        observers.addAll(obs);
-    }
-
-    @Override
-    public void deleteObserver(Observer obs) {
-        observers.remove(obs);
+    public void showBspline() {
+        createBSpline();
+        for (BSplineObserver observer : observers){
+            observer.setBSplineParameters(parameters);
+        }
     }
 
     private void countPointsToRotate(){
@@ -102,7 +108,7 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
         int oldX = 0;
         int oldY = 0;
         int lastIdx = 0;
-        double step = splineLength / (Globals.N * Globals.K);
+        double step = splineLength / (parameters.getN() * parameters.getK());
         boolean oldInited = false;
         Graphics2D graphics = bspline.createGraphics();
         graphics.setPaint(Color.GREEN);
@@ -115,7 +121,7 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
                 int y = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Py).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 if(oldInited){
                     currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
-                        if(currentLength >= lastIdx * step && lastIdx < Globals.N * Globals.K){
+                        if(currentLength >= lastIdx * step && lastIdx < parameters.getN() * parameters.getK()){
                             pointsToRotate.add(new Point(x, y));
                             ++lastIdx;
                             graphics.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -139,7 +145,7 @@ public class BSpline implements BSplineProvider, BSplineCreator,Observable {
         drawBSpline();
         correctPointsToRotate = false;
         pointsToRotate.clear();
-        for(Observer obs : observers){
+        for(BSplineObserver obs : observers){
             obs.setBSpline(bspline);
         }
     }

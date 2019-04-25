@@ -1,9 +1,9 @@
-package com.nsu.fit.leonova.view;
+package com.nsu.fit.leonova.view.windows;
 
 import com.nsu.fit.leonova.controller.BSplineController;
 import com.nsu.fit.leonova.controller.WorldController;
-import com.nsu.fit.leonova.observer.Observer;
-import com.nsu.fit.leonova.view.windows.BSplineWindow;
+import com.nsu.fit.leonova.observer.WorldObserver;
+import com.nsu.fit.leonova.view.ImageManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,13 +13,13 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public class MainWindow extends JFrame implements Observer {
+public class WorldWindow extends JFrame implements WorldObserver {
     private ImageManager imageManager;
-    private BSplineWindow bSplineWindow = new BSplineWindow();
     private WorldController worldController;
 
-    public MainWindow(int width, int height) throws HeadlessException {
+    public WorldWindow(int width, int height, WorldController worldController) throws HeadlessException {
         super("Wireframe");
+        this.worldController = worldController;
         imageManager = new ImageManager(width, height);
         imageManager.setMouseListener(new MyMouseAdapter());
         JToolBar toolBar = createToolBar();
@@ -33,17 +33,13 @@ public class MainWindow extends JFrame implements Observer {
         setVisible(true);
     }
 
-    public void setBSplineController(BSplineController bSplineController){
-        bSplineWindow.setController(bSplineController);
-    }
-
     public void setWorldController(WorldController worldController) {
         this.worldController = worldController;
     }
 
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
-        JButton settings = createButton(JButton.class, e -> bSplineWindow.setVisible(true),  "icons/icons8-table-of-content-16.png", "Create B-spline");
+        JButton settings = createButton(JButton.class, e -> worldController.showBSplineInfo(1),  "icons/icons8-table-of-content-16.png", "Create B-spline");
         toolBar.add(settings);
         return toolBar;
     }
@@ -69,11 +65,6 @@ public class MainWindow extends JFrame implements Observer {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    public void setBSpline(BufferedImage bSpline) {
-        bSplineWindow.setImage(bSpline);
     }
 
     @Override

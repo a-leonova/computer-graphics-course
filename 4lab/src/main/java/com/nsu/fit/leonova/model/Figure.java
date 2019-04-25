@@ -1,19 +1,17 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.globals.Globals;
-import com.nsu.fit.leonova.model.bspline.BSplineCreator;
-import com.nsu.fit.leonova.model.bspline.BSplineProvider;
 import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
-import com.nsu.fit.leonova.observer.Observable;
-import com.nsu.fit.leonova.observer.Observer;
+import com.nsu.fit.leonova.observer.BSplineObservable;
+import com.nsu.fit.leonova.observer.BSplineObserver;
 import org.ejml.simple.SimpleMatrix;
 
 import java.awt.*;
 import java.util.List;
 
-public class Figure implements BSplineProvider, BSplineCreator, Observable {
-    private BSpline bSpline = new BSpline();
+public class Figure implements BSplineObservable {
+    private BSpline bSpline;
     private SplineParameters parameters;
     private SimpleMatrix rotationMatrix = MatrixGenerator.identity4();
     //TODO: think about this matrix
@@ -24,8 +22,13 @@ public class Figure implements BSplineProvider, BSplineCreator, Observable {
     private Point splinePoints2D[][];
     private boolean isActualSplinePoints2D = false;
 
-    public Figure(List<Observer> observers) {
-        bSpline.addObserver(observers);
+    public Figure(List<BSplineObserver> obs, int index) {
+        parameters = Globals.SPLINE_PARAMETERS;
+        parameters.setSplineName("Figure #" + index);
+        bSpline = new BSpline(this.parameters);
+        for(BSplineObserver o : obs){
+            bSpline.addObserver(o);
+        }
     }
 
     public Point[][] getSplinePoints2D(){
@@ -38,30 +41,29 @@ public class Figure implements BSplineProvider, BSplineCreator, Observable {
         return splinePoints2D;
     }
 
-    @Override
-    public List<Point> getPointsToRotate() {
-        return bSpline.getPointsToRotate();
+//    public List<Point> getPointsToRotate() {
+//        return bSpline.getPointsToRotate();
+//    }
+
+    public void showBspline() {
+        bSpline.showBspline();
     }
 
-    @Override
     public void addPoint(Point point) {
         bSpline.addPoint(point);
         isActualSplinePoints3D = false;
     }
 
-    @Override
     public void removePoint(Point point) {
         bSpline.removePoint(point);
         isActualSplinePoints3D = false;
     }
 
-    @Override
     public void pressedPoint(Point point) {
         bSpline.pressedPoint(point);
         isActualSplinePoints3D = false;
     }
 
-    @Override
     public void draggedPoint(Point point) {
         bSpline.draggedPoint(point);
         isActualSplinePoints3D = false;
@@ -134,12 +136,12 @@ public class Figure implements BSplineProvider, BSplineCreator, Observable {
     }
 
     @Override
-    public void addObserver(Observer obs) {
+    public void addObserver(BSplineObserver obs) {
         bSpline.addObserver(obs);
     }
 
     @Override
-    public void deleteObserver(Observer obs) {
-        bSpline.deleteObserver(obs);
+    public void removeObserver(BSplineObserver obs) {
+        bSpline.removeObserver(obs);
     }
 }

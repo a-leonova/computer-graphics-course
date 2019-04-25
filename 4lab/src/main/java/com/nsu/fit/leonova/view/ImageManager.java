@@ -3,7 +3,6 @@ package com.nsu.fit.leonova.view;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 public class ImageManager extends JPanel {

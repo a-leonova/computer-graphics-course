@@ -3,7 +3,7 @@ package com.nsu.fit.leonova.model.bspline;
 import java.awt.*;
 
 public class SplineParameters {
-    private String splineName;
+    private String splineName = "Figure with some number";
     private int n;
     private int m;
     private int k;
@@ -20,8 +20,7 @@ public class SplineParameters {
     private int sw;
     private int sh;
 
-    public SplineParameters(String splineName, int n, int m, int k, int a, int b, int c, int d, Color color, int zn, int zf, int sw, int sh) {
-        this.splineName = splineName;
+    public SplineParameters(int n, int m, int k, int a, int b, int c, int d, Color color, int zn, int zf, int sw, int sh) {
         this.n = n;
         this.m = m;
         this.k = k;
@@ -34,6 +33,10 @@ public class SplineParameters {
         this.zf = zf;
         this.sw = sw;
         this.sh = sh;
+    }
+
+    public void setSplineName(String splineName) {
+        this.splineName = splineName;
     }
 
     public String getSplineName() {
