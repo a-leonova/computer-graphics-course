@@ -41,32 +41,28 @@ public class Figure implements BSplineObservable {
         return splinePoints2D;
     }
 
-//    public List<Point> getPointsToRotate() {
-//        return bSpline.getPointsToRotate();
-//    }
-
     public void showBspline() {
         bSpline.showBspline();
     }
 
     public void addPoint(Point point) {
         bSpline.addPoint(point);
-        isActualSplinePoints3D = false;
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
     }
 
     public void removePoint(Point point) {
         bSpline.removePoint(point);
-        isActualSplinePoints3D = false;
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
     }
 
     public void pressedPoint(Point point) {
         bSpline.pressedPoint(point);
-        isActualSplinePoints3D = false;
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
     }
 
     public void draggedPoint(Point point) {
         bSpline.draggedPoint(point);
-        isActualSplinePoints3D = false;
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
     }
 
     public void setParameters(SplineParameters parameters) {

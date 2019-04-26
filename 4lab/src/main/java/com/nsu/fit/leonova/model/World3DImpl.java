@@ -32,7 +32,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
                 }
             }
 
-            for(int i = 0; i < figure.getPointsToRotateCount(); i += Globals.K){
+            for(int i = 0; i < figure.getPointsToRotateCount(); i += figure.getParameters().getK()){
                 for(int j = 1; j < figure.getParameters().getM(); j++){
                     graphics.drawLine(splinePoints2D[i][j - 1].x, splinePoints2D[i][j - 1].y, splinePoints2D[i][j].x, splinePoints2D[i][j].y);
                 }
@@ -46,14 +46,14 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
     @Override
     public void rotationForOX(int shift) {
-        double d = Math.toRadians(-shift * 0.5);
+        double d = Math.toRadians(shift * 0.5);
         currentWorkingFigure.rotateForOX(d);
         showSpline3D();
     }
 
     @Override
     public void rotationForOY(int shift) {
-        double d = Math.toRadians(-shift * 0.5);
+        double d = Math.toRadians(shift * 0.5);
         currentWorkingFigure.rotateForOY(d);
         showSpline3D();
     }
