@@ -3,7 +3,7 @@ package com.nsu.fit.leonova;
 import com.nsu.fit.leonova.controller.Controller;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.World3DImpl;
-import com.nsu.fit.leonova.view.windows.BSplineWindow;
+import com.nsu.fit.leonova.view.windows.bsplineWindow.BSplineWindow;
 import com.nsu.fit.leonova.view.windows.WorldWindow;
 
 public class Main {

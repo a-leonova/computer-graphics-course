@@ -8,4 +8,7 @@ public interface BSplineController {
     void ImageLeftClicked(Point clickedPoint);
     void ImageRightClicked(Point clickedPoint);
     void apply();
+
+    void addSpline();
+    void removeSpline(int index);
 }

@@ -37,6 +37,16 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void addSpline() {
+        world3D.addSpline();
+    }
+
+    @Override
+    public void removeSpline(int index) {
+        world3D.removeSpline(index);
+    }
+
+    @Override
     public void shiftX(int dx) {
         world3D.rotationForOY(dx);
     }

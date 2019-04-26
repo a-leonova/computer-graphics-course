@@ -13,4 +13,6 @@ public interface World3D {
     void draggedPointOnCurrentBSpline(Point point);
 
     void showBSplineInfo(int index);
+    void addSpline();
+    void removeSpline(int index);
 }
