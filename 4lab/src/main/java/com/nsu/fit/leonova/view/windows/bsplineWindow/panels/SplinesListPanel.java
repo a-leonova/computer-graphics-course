@@ -54,6 +54,16 @@ public class SplinesListPanel extends JPanel {
         repaint();
     }
 
+    public void rename(String name, int idx){
+        JPanel panel = splines.get(idx);
+        for (Component c : panel.getComponents()){
+            if (c instanceof JToggleButton){
+                JToggleButton b = (JToggleButton)c;
+                b.setText(name);
+            }
+        }
+    }
+
     public void removeSpline(int index){
         mainList.remove(index);
         validate();

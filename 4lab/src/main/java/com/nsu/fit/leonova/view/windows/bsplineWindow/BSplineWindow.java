@@ -65,6 +65,11 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
         splines.removeSpline(index);
     }
 
+    @Override
+    public void changeFigureName(String name, int index) {
+        splines.rename(name, index);
+    }
+
     private class MyMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e){

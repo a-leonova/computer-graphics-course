@@ -9,4 +9,5 @@ public interface BSplineObserver {
     void setBSplineParameters(SplineParameters parameters);
     void addSpline(String name);
     void removeSpline(int index);
+    void changeFigureName(String name, int index);
 }

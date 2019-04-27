@@ -111,6 +111,9 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     @Override
     public void setParameters(SplineParameters parameters) {
         currentWorkingFigure.setParameters(parameters);
+        for(BSplineObserver obs : bSplineObservers){
+            obs.changeFigureName(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
+        }
     }
 
     @Override
