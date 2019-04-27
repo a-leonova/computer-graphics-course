@@ -28,6 +28,7 @@ public class WorldWindow extends JFrame implements WorldObserver {
         add(imageManager, BorderLayout.CENTER);
         setJMenuBar(menuBar);
         //setMinimumSize(new Dimension(Globals.MIN_FRAME_WIDTH, Globals.MIN_FRAME_HEIGHT));
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -39,7 +40,7 @@ public class WorldWindow extends JFrame implements WorldObserver {
 
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
-        JButton settings = createButton(JButton.class, e -> worldController.showBSplineInfo(0),  "icons/icons8-table-of-content-16.png", "Create B-spline");
+        JButton settings = createButton(JButton.class, e -> worldController.settingsButtonPressed(),  "icons/icons8-table-of-content-16.png", "Create B-spline");
         toolBar.add(settings);
         return toolBar;
     }

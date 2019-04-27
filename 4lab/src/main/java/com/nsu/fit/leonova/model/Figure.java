@@ -67,6 +67,9 @@ public class Figure implements BSplineObservable {
 
     public void setParameters(SplineParameters parameters) {
         this.parameters = parameters;
+        bSpline.setParameters(parameters);
+        isActualSplinePoints2D = false;
+        isActualSplinePoints3D = false;
     }
 
     public SplineParameters getParameters() {
@@ -98,7 +101,7 @@ public class Figure implements BSplineObservable {
     private void countBSpline3D(){
         List<Point> points = bSpline.getPointsToRotate();
         splinePoints3D = new Point3D[points.size()][parameters.getM()];
-        double step = 2 * Math.PI / (parameters.getM() - 1);
+        double step = (parameters.getD() - parameters.getC()) / (parameters.getM() - 1);
         for(int k = 0; k < points.size(); ++k){
             for(int v = 0; v < parameters.getM(); v++){
                 Point p = points.get(k);

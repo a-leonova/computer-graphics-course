@@ -4,5 +4,5 @@ public interface WorldController {
     void shiftX(int dx);
     void shiftY(int dy);
 
-    void showBSplineInfo(int index);
+    void settingsButtonPressed();
 }

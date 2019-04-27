@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.World3D;
+import com.nsu.fit.leonova.model.bspline.SplineParameters;
 
 import java.awt.*;
 
@@ -32,7 +33,8 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
-    public void apply() {
+    public void apply(SplineParameters parameters) {
+        world3D.setParameters(parameters);
         world3D.showSpline3D();
     }
 
@@ -54,6 +56,11 @@ public class Controller implements BSplineController, WorldController{
     @Override
     public void shiftY(int dy) {
         world3D.rotationForOX(dy);
+    }
+
+    @Override
+    public void settingsButtonPressed() {
+        world3D.showBSplineInfo(0);
     }
 
     @Override

@@ -35,6 +35,11 @@ public class SplineParameters {
         this.sh = sh;
     }
 
+    public SplineParameters(String splineName, int n, int m, int k, double a, double b, double c, double d, Color color, int zf, int zb, int sw, int sh) {
+        this(n, m, k, a, b, c, d, color, zf, zb, sw, sh);
+        this.splineName = splineName;
+    }
+
     public void setSplineName(String splineName) {
         this.splineName = splineName;
     }

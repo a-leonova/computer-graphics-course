@@ -41,6 +41,9 @@ public class BSpline implements BSplineObservable {
 
     public void setParameters(SplineParameters parameters) {
         this.parameters = parameters;
+        correctPointsToRotate = false;
+        pointsToRotate.clear();
+        createBSpline();
     }
 
     @Override
@@ -55,6 +58,8 @@ public class BSpline implements BSplineObservable {
 
     public void addPoint(Point point) {
         pivotPoints.add(point);
+        correctPointsToRotate = false;
+        pointsToRotate.clear();
         createBSpline();
     }
 
@@ -62,6 +67,8 @@ public class BSpline implements BSplineObservable {
         for(Point p : pivotPoints){
             double distance = Math.sqrt(Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2));
             if(distance <= radius){
+                correctPointsToRotate = false;
+                pointsToRotate.clear();
                 pivotPoints.remove(p);
                 break;
             }
@@ -84,6 +91,8 @@ public class BSpline implements BSplineObservable {
         if(pressedPoint != null){
             pressedPoint.x = point.x;
             pressedPoint.y = point.y;
+            correctPointsToRotate = false;
+            pointsToRotate.clear();
             createBSpline();
         }
     }
@@ -108,20 +117,20 @@ public class BSpline implements BSplineObservable {
         int oldX = 0;
         int oldY = 0;
         int lastIdx = 0;
-        double step = splineLength / (parameters.getN() * parameters.getK());
+        double step = (splineLength * (parameters.getB() - parameters.getA())) / (parameters.getN() * parameters.getK() - 1);
         boolean oldInited = false;
         Graphics2D graphics = bspline.createGraphics();
         graphics.setPaint(Color.GREEN);
         for(int i = 1; i < pivotPoints.size() - 2; ++i){
             SimpleMatrix Px = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).x}, {pivotPoints.get(i).x}, {pivotPoints.get(i + 1).x}, {pivotPoints.get(i + 2).x}});
             SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
-            for(double t = 0.0; t < 1.0; t += 1 / STEP){
+            for(double t = 0.0; t < 1.0; t += 1.0 / STEP){
                 SimpleMatrix T = new SimpleMatrix(new double[][]{{t * t * t, t * t, t, 1}});
                 int x = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Px).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 int y = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Py).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 if(oldInited){
                     currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
-                        if(currentLength >= lastIdx * step && lastIdx < parameters.getN() * parameters.getK()){
+                        if(currentLength >= (parameters.getA() * splineLength + lastIdx * step) && lastIdx < parameters.getN() * parameters.getK()){
                             pointsToRotate.add(new Point(x, y));
                             ++lastIdx;
                             graphics.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -134,8 +143,8 @@ public class BSpline implements BSplineObservable {
                 oldY = y;
             }
         }
-        pointsToRotate.add(new Point(oldX, oldY));
-        graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
+//        pointsToRotate.add(new Point(oldX, oldY));
+//        graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
         correctPointsToRotate = true;
     }
 
@@ -143,8 +152,7 @@ public class BSpline implements BSplineObservable {
         bspline = new BufferedImage(Globals.BSPLINE_WIDTH, Globals.BSPLINE_HEIGH, BufferedImage.TYPE_3BYTE_BGR);
         drawPivotPoints();
         drawBSpline();
-        correctPointsToRotate = false;
-        pointsToRotate.clear();
+        countPointsToRotate();
         for(BSplineObserver obs : observers){
             obs.setBSpline(bspline);
         }
@@ -175,7 +183,6 @@ public class BSpline implements BSplineObservable {
                 oldY = y;
             }
         }
-        getPointsToRotate();
     }
 
     private void drawPivotPoints(){

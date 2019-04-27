@@ -37,9 +37,12 @@ public class SettingsPanel extends JPanel{
 
     public SettingsPanel(BSplineController controller, JFrame parent) {
         this.controller = controller;
-        apply.addActionListener(e -> {
-            this.controller.apply();
+        ok.addActionListener(e -> {
+            this.controller.apply(createSplineParameters());
             parent.setVisible(false);
+        });
+        apply.addActionListener(e -> {
+            this.controller.apply(createSplineParameters());
         });
         newSpline.addActionListener(e -> controller.addSpline());
         fillPanel();
@@ -48,7 +51,11 @@ public class SettingsPanel extends JPanel{
     public void setController(BSplineController controller) {
         this.controller = controller;
         apply.addActionListener(e -> {
-            this.controller.apply();
+            this.controller.apply(createSplineParameters());
+            parent.setVisible(false);
+        });
+        ok.addActionListener(e -> {
+            this.controller.apply(createSplineParameters());
             parent.setVisible(false);
         });
     }
@@ -129,6 +136,7 @@ public class SettingsPanel extends JPanel{
         add(new JLabel("SH: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 6, 4));
         add(spinnerSH, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 7, 4));
 
+        add(ok, createGridBagConstraints(GridBagConstraints.CENTER, 2, 5));
         add(apply, createGridBagConstraints(GridBagConstraints.CENTER, 3, 5));
         add(newSpline, createGridBagConstraints(GridBagConstraints.CENTER, 5, 5));
     }
@@ -147,5 +155,29 @@ public class SettingsPanel extends JPanel{
         c.gridx = gridX;
         c.gridy = gridy;
         return c;
+    }
+
+    private SplineParameters createSplineParameters(){
+        String name = nameTF.getText();
+
+        double a = (double)spinnerA.getValue();
+        double b = (double)spinnerB.getValue();
+        double c = (double)spinnerC.getValue();
+        double d = (double)spinnerD.getValue();
+
+        int n = (int)spinnerN.getValue();
+        int m = (int)spinnerM.getValue();
+        int k = (int)spinnerK.getValue();
+
+        int red = (int)spinnerRed.getValue();
+        int green = (int)spinnerGreen.getValue();
+        int blue = (int)spinnerBlue.getValue();
+
+        int zf = (int)spinnerZF.getValue();
+        int zb = (int)spinnerZB.getValue();
+        int sw = (int)spinnerSW.getValue();
+        int sh = (int)spinnerSH.getValue();
+
+        return new SplineParameters(name, n, m, k, a, b, c, d, new Color(red, green, blue), zf, zb, sw, sh);
     }
 }

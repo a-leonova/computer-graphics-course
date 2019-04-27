@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.globals.Globals;
+import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
 import com.nsu.fit.leonova.observer.WorldObservable;
@@ -105,6 +106,11 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             obs.removeSpline(index);
         }
         showBSplineInfo(figures.size() - 1);
+    }
+
+    @Override
+    public void setParameters(SplineParameters parameters) {
+        currentWorkingFigure.setParameters(parameters);
     }
 
     @Override
