@@ -39,14 +39,16 @@ public class SplinesListPanel extends JPanel {
 
     public void addSpline(String name){
         JPanel panel = new JPanel();
-        panel.add(new JLabel(name));
+        JToggleButton button = new JToggleButton(name);
+        button.addActionListener(e -> {controller.showBSplineInfo(splines.indexOf(panel));});
+        panel.add(button);
         splines.add(panel);
         panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainList.add(panel, gbc, 0);
+        mainList.add(panel, gbc);
 
         validate();
         repaint();

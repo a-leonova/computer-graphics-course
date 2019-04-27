@@ -10,6 +10,7 @@ import java.awt.*;
 public class SettingsPanel extends JPanel{
     private BSplineController controller;
     private JFrame parent;
+    private JButton ok = new JButton("OK");
     private JButton apply = new JButton("Apply");
     private JButton newSpline = new JButton("New spline");
     private SplineParameters parameters = Globals.SPLINE_PARAMETERS;
@@ -39,7 +40,6 @@ public class SettingsPanel extends JPanel{
         apply.addActionListener(e -> {
             this.controller.apply();
             parent.setVisible(false);
-            //this.setVisible(false);
         });
         newSpline.addActionListener(e -> controller.addSpline());
         fillPanel();

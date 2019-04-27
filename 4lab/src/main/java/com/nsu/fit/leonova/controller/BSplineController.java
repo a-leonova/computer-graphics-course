@@ -10,5 +10,7 @@ public interface BSplineController {
     void apply();
 
     void addSpline();
+    //TODO: think about it!
+    void showBSplineInfo(int index);
     void removeSpline(int index);
 }

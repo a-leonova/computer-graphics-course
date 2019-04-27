@@ -1,6 +1,5 @@
 package com.nsu.fit.leonova.model;
 
-import com.nsu.fit.leonova.controller.BSplineController;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
@@ -81,11 +80,11 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
     @Override
     public void showBSplineInfo(int index) {
-        if (figures.size() != index){
+        if (figures.size() <= index){
             throw new IllegalArgumentException("Impossible! Size: " + figures.size() + " Index: " + index);
         }
-        currentWorkingFigure = figures.get(index - 1);
-        figures.get(index - 1).showBspline();
+        currentWorkingFigure = figures.get(index);
+        figures.get(index).showBspline();
     }
 
     @Override
@@ -93,6 +92,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         Figure figure = new Figure(bSplineObservers, figures.size());
         figures.add(figure);
         figure.showBspline();
+        currentWorkingFigure = figure;
         for(BSplineObserver obs : bSplineObservers){
             obs.addSpline(figure.getParameters().getSplineName());
         }
@@ -104,6 +104,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for(BSplineObserver obs : bSplineObservers){
             obs.removeSpline(index);
         }
+        showBSplineInfo(figures.size() - 1);
     }
 
     @Override

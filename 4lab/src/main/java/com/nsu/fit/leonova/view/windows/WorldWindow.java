@@ -39,7 +39,7 @@ public class WorldWindow extends JFrame implements WorldObserver {
 
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
-        JButton settings = createButton(JButton.class, e -> worldController.showBSplineInfo(1),  "icons/icons8-table-of-content-16.png", "Create B-spline");
+        JButton settings = createButton(JButton.class, e -> worldController.showBSplineInfo(0),  "icons/icons8-table-of-content-16.png", "Create B-spline");
         toolBar.add(settings);
         return toolBar;
     }
