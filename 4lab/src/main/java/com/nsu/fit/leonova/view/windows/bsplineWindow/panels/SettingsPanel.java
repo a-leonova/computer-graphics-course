@@ -13,33 +13,34 @@ public class SettingsPanel extends JPanel{
     private JButton ok = new JButton("OK");
     private JButton apply = new JButton("Apply");
     private JButton newSpline = new JButton("New spline");
-    private SplineParameters parameters = Globals.SPLINE_PARAMETERS;
+    private SplineParameters parameters = new SplineParameters(Globals.SPLINE_PARAMETERS);
 
     private JTextField nameTF = new JTextField();
-    private JSpinner spinnerA = new JSpinner(createSpinnerModel(parameters.getA(), 0.0, 0.99, 0.01));
-    private JSpinner spinnerB = new JSpinner(createSpinnerModel(parameters.getB(), 0.01, 1.0, 0.01));
-    private JSpinner spinnerC = new JSpinner(createSpinnerModel(parameters.getC(), 0.0, 6.27, 0.01));
-    private JSpinner spinnerD = new JSpinner(createSpinnerModel(parameters.getD(), 0.01, 6.28, 0.01));
+    private JSpinner spinnerA = new JSpinner(new SpinnerNumberModel(parameters.getA(), 0.0, 0.99, 0.01));
+    private JSpinner spinnerB = new JSpinner(new SpinnerNumberModel(parameters.getB(), 0.01, 1.0, 0.01));
+    private JSpinner spinnerC = new JSpinner(new SpinnerNumberModel(parameters.getC(), 0.0, 6.27, 0.01));
+    private JSpinner spinnerD = new JSpinner(new SpinnerNumberModel(parameters.getD(), 0.01, 6.28, 0.01));
 
-    private JSpinner spinnerN = new JSpinner(createSpinnerModel(parameters.getN(), 3, 100, 1));
-    private JSpinner spinnerM = new JSpinner(createSpinnerModel(parameters.getM(), 5, 100, 1));
-    private JSpinner spinnerK = new JSpinner(createSpinnerModel(parameters.getK(), 1, 100, 1));
+    private JSpinner spinnerN = new JSpinner(new SpinnerNumberModel(parameters.getN(), 3, 100, 1));
+    private JSpinner spinnerM = new JSpinner(new SpinnerNumberModel(parameters.getM(), 5, 100, 1));
+    private JSpinner spinnerK = new JSpinner(new SpinnerNumberModel(parameters.getK(), 1, 100, 1));
 
-    private JSpinner spinnerRed = new JSpinner(createSpinnerModel(parameters.getColor().getRed(), 0, 255, 1));
-    private JSpinner spinnerGreen = new JSpinner(createSpinnerModel(parameters.getColor().getGreen(), 0, 255, 1));
-    private JSpinner spinnerBlue = new JSpinner(createSpinnerModel(parameters.getColor().getBlue(), 0, 255, 1));
+    private JSpinner spinnerRed = new JSpinner(new SpinnerNumberModel(parameters.getColor().getRed(), 0, 255, 1));
+    private JSpinner spinnerGreen = new JSpinner(new SpinnerNumberModel(parameters.getColor().getGreen(), 0, 255, 1));
+    private JSpinner spinnerBlue = new JSpinner(new SpinnerNumberModel(parameters.getColor().getBlue(), 0, 255, 1));
 
-    private JSpinner spinnerZF = new JSpinner(createSpinnerModel(parameters.getZf(), -3000, 3000, 1));
-    private JSpinner spinnerZB = new JSpinner(createSpinnerModel(parameters.getZb(), -3000, 3000, 1));
-    private JSpinner spinnerSW = new JSpinner(createSpinnerModel(parameters.getSw(), 100, 700, 1));
-    private JSpinner spinnerSH = new JSpinner(createSpinnerModel(parameters.getSh(), 100, 700, 1));
+    private JSpinner spinnerZF = new JSpinner(new SpinnerNumberModel(parameters.getZf(), -3000, 3000, 1));
+    private JSpinner spinnerZB = new JSpinner(new SpinnerNumberModel(parameters.getZb(), -3000, 3000, 1));
+    private JSpinner spinnerSW = new JSpinner(new SpinnerNumberModel(parameters.getSw(), 100, 700, 1));
+    private JSpinner spinnerSH = new JSpinner(new SpinnerNumberModel(parameters.getSh(), 100, 700, 1));
 
 
     public SettingsPanel(BSplineController controller, JFrame parent) {
         this.controller = controller;
+        this.parent = parent;
         ok.addActionListener(e -> {
             this.controller.apply(createSplineParameters());
-            parent.setVisible(false);
+            this.parent.setVisible(false);
         });
         apply.addActionListener(e -> {
             this.controller.apply(createSplineParameters());
@@ -139,14 +140,6 @@ public class SettingsPanel extends JPanel{
         add(ok, createGridBagConstraints(GridBagConstraints.CENTER, 2, 5));
         add(apply, createGridBagConstraints(GridBagConstraints.CENTER, 3, 5));
         add(newSpline, createGridBagConstraints(GridBagConstraints.CENTER, 5, 5));
-    }
-
-    private SpinnerModel createSpinnerModel(double defaultValue, double minimum, double maximum, double step){
-        return new SpinnerNumberModel(defaultValue, minimum, maximum, step);
-    }
-
-    private SpinnerModel createSpinnerModel(int defaultValue, int minimum, int maximum, int step){
-        return new SpinnerNumberModel(defaultValue, minimum, maximum, step);
     }
 
     private GridBagConstraints createGridBagConstraints(int fill, int gridX, int gridy){

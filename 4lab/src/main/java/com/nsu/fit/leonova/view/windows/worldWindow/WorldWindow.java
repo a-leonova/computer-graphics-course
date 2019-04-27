@@ -1,7 +1,7 @@
-package com.nsu.fit.leonova.view.windows;
+package com.nsu.fit.leonova.view.windows.worldWindow;
 
-import com.nsu.fit.leonova.controller.BSplineController;
 import com.nsu.fit.leonova.controller.WorldController;
+import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.observer.WorldObserver;
 import com.nsu.fit.leonova.view.ImageManager;
 
@@ -16,19 +16,21 @@ import java.util.Objects;
 public class WorldWindow extends JFrame implements WorldObserver {
     private ImageManager imageManager;
     private WorldController worldController;
+    private FigureSettingsPanel figureSettingsPanel;
 
     public WorldWindow(int width, int height, WorldController worldController) throws HeadlessException {
         super("Wireframe");
         this.worldController = worldController;
+        figureSettingsPanel = new FigureSettingsPanel(worldController);
         imageManager = new ImageManager(width, height);
         imageManager.setMouseListener(new MyMouseAdapter());
         JToolBar toolBar = createToolBar();
         JMenuBar menuBar = createMenuBar();
         add(toolBar, BorderLayout.PAGE_START);
         add(imageManager, BorderLayout.CENTER);
+        add(figureSettingsPanel, BorderLayout.EAST);
         setJMenuBar(menuBar);
         //setMinimumSize(new Dimension(Globals.MIN_FRAME_WIDTH, Globals.MIN_FRAME_HEIGHT));
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -71,6 +73,26 @@ public class WorldWindow extends JFrame implements WorldObserver {
     @Override
     public void setMainImage(BufferedImage image) {
         imageManager.setImage(image);
+    }
+
+    @Override
+    public void addFigure(String name) {
+        figureSettingsPanel.addFigure(name);
+    }
+
+    @Override
+    public void removeFigure(int index) {
+        figureSettingsPanel.removeFigure(index);
+    }
+
+    @Override
+    public void renameFigure(String name, int index) {
+        figureSettingsPanel.renameFigure(name, index);
+    }
+
+    @Override
+    public void setInfo(Point3D figureCenter) {
+        figureSettingsPanel.setInfo(figureCenter);
     }
 
     private class MyMouseAdapter extends MouseAdapter {

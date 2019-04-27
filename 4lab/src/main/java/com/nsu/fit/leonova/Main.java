@@ -4,7 +4,7 @@ import com.nsu.fit.leonova.controller.Controller;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.World3DImpl;
 import com.nsu.fit.leonova.view.windows.bsplineWindow.BSplineWindow;
-import com.nsu.fit.leonova.view.windows.WorldWindow;
+import com.nsu.fit.leonova.view.windows.worldWindow.WorldWindow;
 
 public class Main {
     public static void main(String[] args) {

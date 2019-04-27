@@ -18,5 +18,7 @@ public interface World3D {
     void addSpline();
     void removeSpline(int index);
 
-    void setParameters(SplineParameters parameters);
+    void setSplineParameters(SplineParameters parameters);
+
+    void setFigureCenter(Point3D figureCenter);
 }

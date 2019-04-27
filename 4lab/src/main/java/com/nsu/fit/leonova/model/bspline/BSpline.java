@@ -42,7 +42,6 @@ public class BSpline implements BSplineObservable {
     public void setParameters(SplineParameters parameters) {
         this.parameters = parameters;
         correctPointsToRotate = false;
-        pointsToRotate.clear();
         createBSpline();
     }
 
@@ -59,7 +58,6 @@ public class BSpline implements BSplineObservable {
     public void addPoint(Point point) {
         pivotPoints.add(point);
         correctPointsToRotate = false;
-        pointsToRotate.clear();
         createBSpline();
     }
 
@@ -68,7 +66,6 @@ public class BSpline implements BSplineObservable {
             double distance = Math.sqrt(Math.pow(p.x - point.x, 2) + Math.pow(p.y - point.y, 2));
             if(distance <= radius){
                 correctPointsToRotate = false;
-                pointsToRotate.clear();
                 pivotPoints.remove(p);
                 break;
             }
@@ -92,14 +89,12 @@ public class BSpline implements BSplineObservable {
             pressedPoint.x = point.x;
             pressedPoint.y = point.y;
             correctPointsToRotate = false;
-            pointsToRotate.clear();
             createBSpline();
         }
     }
 
     public List<Point> getPointsToRotate(){
         if(!correctPointsToRotate){
-            pointsToRotate.clear();
             countPointsToRotate();
         }
         return pointsToRotate;
@@ -113,6 +108,7 @@ public class BSpline implements BSplineObservable {
     }
 
     private void countPointsToRotate(){
+        pointsToRotate.clear();
         double currentLength = 0.0;
         int oldX = 0;
         int oldY = 0;

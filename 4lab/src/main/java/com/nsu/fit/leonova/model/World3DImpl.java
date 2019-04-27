@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.model;
 
+import com.nsu.fit.leonova.controller.WorldController;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.observer.BSplineObservable;
@@ -29,7 +30,13 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
             for(int i = 1; i < figure.getPointsToRotateCount(); ++i){
                 for(int j = 0; j < figure.getParameters().getM(); j++){
-                    graphics.drawLine(splinePoints2D[i - 1][j].x, splinePoints2D[i - 1][j].y, splinePoints2D[i][j].x, splinePoints2D[i][j].y);
+                    try{
+                        graphics.drawLine(splinePoints2D[i - 1][j].x, splinePoints2D[i - 1][j].y, splinePoints2D[i][j].x, splinePoints2D[i][j].y);
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        System.out.println("!!!");
+                        throw e;
+                    }
                 }
             }
 
@@ -97,6 +104,9 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for(BSplineObserver obs : bSplineObservers){
             obs.addSpline(figure.getParameters().getSplineName());
         }
+        for(WorldObserver obs : worldObservers){
+            obs.addFigure(figure.getParameters().getSplineName());
+        }
     }
 
     @Override
@@ -105,15 +115,27 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for(BSplineObserver obs : bSplineObservers){
             obs.removeSpline(index);
         }
+        for(WorldObserver obs : worldObservers){
+            obs.removeFigure(index);
+        }
         showBSplineInfo(figures.size() - 1);
     }
 
     @Override
-    public void setParameters(SplineParameters parameters) {
+    public void setSplineParameters(SplineParameters parameters) {
         currentWorkingFigure.setParameters(parameters);
         for(BSplineObserver obs : bSplineObservers){
             obs.changeFigureName(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
         }
+        for(WorldObserver obs : worldObservers){
+            obs.renameFigure(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
+        }
+    }
+
+    @Override
+    public void setFigureCenter(Point3D figureCenter) {
+        currentWorkingFigure.shift(figureCenter);
+        showSpline3D();
     }
 
     @Override

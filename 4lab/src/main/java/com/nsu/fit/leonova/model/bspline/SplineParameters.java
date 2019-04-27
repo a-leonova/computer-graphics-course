@@ -40,6 +40,25 @@ public class SplineParameters {
         this.splineName = splineName;
     }
 
+    public SplineParameters(SplineParameters p){
+        splineName = p.splineName;
+        a = p.a;
+        b = p.b;
+        c = p.c;
+        d = p.d;
+
+        n = p.n;
+        m = p.m;
+        k = p.k;
+
+        color = p.color;
+
+        zf = p.zf;
+        zb = p.zb;
+        sw = p.sw;
+        sh = p.sh;
+    }
+
     public void setSplineName(String splineName) {
         this.splineName = splineName;
     }

@@ -12,10 +12,9 @@ import java.util.List;
 
 public class Figure implements BSplineObservable {
     private BSpline bSpline;
-    private SplineParameters parameters;
+    private SplineParameters parameters = new SplineParameters(Globals.SPLINE_PARAMETERS);
     private SimpleMatrix rotationMatrix = MatrixGenerator.identity4();
-    //TODO: think about this matrix
-    private SimpleMatrix shiftMatrix;
+    private SimpleMatrix shiftMatrix = MatrixGenerator.shiftMatrix(0, 0, 0);
 
     private Point3D splinePoints3D[][];
     private boolean isActualSplinePoints3D = false;
@@ -23,7 +22,6 @@ public class Figure implements BSplineObservable {
     private boolean isActualSplinePoints2D = false;
 
     public Figure(List<BSplineObserver> obs, int index) {
-        parameters = Globals.SPLINE_PARAMETERS;
         parameters.setSplineName("Figure #" + index);
         bSpline = new BSpline(this.parameters);
         for(BSplineObserver o : obs){
@@ -70,6 +68,11 @@ public class Figure implements BSplineObservable {
         bSpline.setParameters(parameters);
         isActualSplinePoints2D = false;
         isActualSplinePoints3D = false;
+    }
+
+    public void shift(Point3D center){
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        shiftMatrix = MatrixGenerator.shiftMatrix((int)center.getX(), (int)center.getY(), (int)center.getZ());
     }
 
     public SplineParameters getParameters() {
@@ -124,7 +127,9 @@ public class Figure implements BSplineObservable {
                         {splinePoints3D[k][v].getZ()},
                         {1}});
                 coordinates = rotationMatrix.mult(coordinates);
+                //TODO: camera in z = -1000, remove below line
                 coordinates = MatrixGenerator.shiftMatrix(0, 0, 1000).mult(coordinates);
+                coordinates = shiftMatrix.mult(coordinates);
                 coordinates = MatrixGenerator.projectionMatrix().mult(coordinates);
                 coordinates = coordinates.divide(coordinates.get(3, 0));
                 splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),

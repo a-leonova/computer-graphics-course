@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.controller;
 
+import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.World3D;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 
@@ -34,7 +35,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void apply(SplineParameters parameters) {
-        world3D.setParameters(parameters);
+        world3D.setSplineParameters(parameters);
         world3D.showSpline3D();
     }
 
@@ -61,6 +62,11 @@ public class Controller implements BSplineController, WorldController{
     @Override
     public void settingsButtonPressed() {
         world3D.showBSplineInfo(0);
+    }
+
+    @Override
+    public void setFigureCenter(Point3D figureCenter) {
+        world3D.setFigureCenter(figureCenter);
     }
 
     @Override
