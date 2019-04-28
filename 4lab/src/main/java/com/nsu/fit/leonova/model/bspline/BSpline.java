@@ -117,6 +117,7 @@ public class BSpline implements BSplineObservable {
         boolean oldInited = false;
         Graphics2D graphics = bspline.createGraphics();
         graphics.setPaint(Color.GREEN);
+        boolean stopOuterLoop = false;
         for(int i = 1; i < pivotPoints.size() - 2; ++i){
             SimpleMatrix Px = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).x}, {pivotPoints.get(i).x}, {pivotPoints.get(i + 1).x}, {pivotPoints.get(i + 2).x}});
             SimpleMatrix Py = new SimpleMatrix(new double[][]{{pivotPoints.get(i -1).y}, {pivotPoints.get(i).y}, {pivotPoints.get(i + 1).y}, {pivotPoints.get(i + 2).y}});
@@ -126,7 +127,7 @@ public class BSpline implements BSplineObservable {
                 int y = (int)Math.round(T.mult(SPLINE_MATRIX).mult(Py).get(0, 0) * SPLINE_MATRIX_COEFFICIENT);
                 if(oldInited){
                     currentLength += Math.sqrt(Math.pow(oldX - x, 2) + Math.pow(oldY - y, 2));
-                        if(currentLength >= (parameters.getA() * splineLength + lastIdx * step) && lastIdx < parameters.getN() * parameters.getK() + 1){
+                        if(currentLength >= (parameters.getA() * splineLength + lastIdx * step) && lastIdx < parameters.getN() * parameters.getK()){
                             pointsToRotate.add(new Point(x, y));
                             ++lastIdx;
                             graphics.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -137,10 +138,17 @@ public class BSpline implements BSplineObservable {
                 }
                 oldX = x;
                 oldY = y;
+                if(currentLength >= (parameters.getA() * splineLength + lastIdx * step) && lastIdx >= parameters.getN() * parameters.getK()){
+                    stopOuterLoop = true;
+                    break;
+                }
+            }
+            if(stopOuterLoop){
+                break;
             }
         }
-//        pointsToRotate.add(new Point(oldX, oldY));
-//        graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
+        pointsToRotate.add(new Point(oldX, oldY));
+        graphics.drawOval(oldX - radius, oldY - radius, 2 * radius, 2 * radius);
         correctPointsToRotate = true;
     }
 

@@ -12,23 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FigureSettingsPanel extends JPanel {
+    private static final int MIN_X = -1000;
+    private static final int MIN_Y = -1000;
+    private static final int MIN_Z = -5000;
+    private static final int MAX_X = 1000;
+    private static final int MAX_Y = 1000;
+    private static final int MAX_Z = 5000;
     private List<String> figures = new ArrayList<>();
     private JComboBox<String> box = new JComboBox<>();
     private WorldController controller;
 
-    //TODO: good constants!
-    private JSpinner spinnerX = new JSpinner(new SpinnerNumberModel(0, -Globals.IMAGE_WIDTH/2, Globals.IMAGE_WIDTH/2, 1));
-    private JSpinner spinnerY = new JSpinner(new SpinnerNumberModel(0, -Globals.IMAGE_HEIGHT/2, Globals.IMAGE_HEIGHT/2, 1));
-    private JSpinner spinnerZ = new JSpinner(new SpinnerNumberModel(0, -Globals.IMAGE_WIDTH, Globals.IMAGE_WIDTH, 1));
+    private JSpinner spinnerX = new JSpinner(new SpinnerNumberModel(0, MIN_X, MAX_X, 1));
+    private JSpinner spinnerY = new JSpinner(new SpinnerNumberModel(0, MIN_Y, MAX_Y, 1));
+    private JSpinner spinnerZ = new JSpinner(new SpinnerNumberModel(0, MIN_Z, MAX_Z, 1));
 
     public FigureSettingsPanel(WorldController controller) {
         this.controller = controller;
         spinnerX.addChangeListener(new SpinnerListener());
         spinnerY.addChangeListener(new SpinnerListener());
         spinnerZ.addChangeListener(new SpinnerListener());
-        //TODO: constants!
-        box.addItem("Figure #0");
-        figures.add("Figure #0");
+        box.addItem(Globals.FIRST_FIGURE_NAME);
+        figures.add(Globals.FIRST_FIGURE_NAME);
 
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 6),

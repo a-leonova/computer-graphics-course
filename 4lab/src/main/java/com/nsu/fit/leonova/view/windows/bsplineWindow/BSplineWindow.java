@@ -30,8 +30,6 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
         add(splines, BorderLayout.WEST);
 
         controller.addSpline();
-        //TODO: think about this shitty place
-        splines.addSpline("Figure #0");
 
         imageManager.setMouseListener(new MyMouseAdapter());
         pack();
