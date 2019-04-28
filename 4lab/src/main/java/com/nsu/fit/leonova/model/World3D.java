@@ -21,4 +21,6 @@ public interface World3D {
     void setSplineParameters(SplineParameters parameters);
 
     void setFigureCenter(Point3D figureCenter);
+
+    void setSelectedFigure(int index);
 }

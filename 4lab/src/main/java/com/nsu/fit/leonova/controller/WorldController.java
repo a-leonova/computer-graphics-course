@@ -9,4 +9,5 @@ public interface WorldController {
     void settingsButtonPressed();
 
     void setFigureCenter(Point3D figureCenter);
+    void setSelectedFigure(int index);
 }

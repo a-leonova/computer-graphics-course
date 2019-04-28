@@ -70,6 +70,11 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void setSelectedFigure(int index) {
+        world3D.setSelectedFigure(index);
+    }
+
+    @Override
     public void showBSplineInfo(int index) {
         world3D.showBSplineInfo(index);
     }

@@ -8,6 +8,10 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,13 @@ public class FigureSettingsPanel extends JPanel {
         add(spinnerY, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 2));
         add(new JLabel("Z: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 0, 3));
         add(spinnerZ, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 3));
+
+        box.addItemListener(e -> {
+            String name = (String)e.getItem();
+            int index = figures.indexOf(name);
+            System.out.println(index);
+            controller.setSelectedFigure(index);
+        });
     }
 
     public void addFigure(String name){
@@ -61,12 +72,13 @@ public class FigureSettingsPanel extends JPanel {
         figures.set(idx, name);
         box.removeItemAt(idx);
         box.insertItemAt(name, idx);
+        box.setSelectedIndex(idx);
     }
 
     public void setInfo(Point3D figureCenter){
-        spinnerX.setValue(figureCenter.getX());
-        spinnerY.setValue(figureCenter.getY());
-        spinnerZ.setValue(figureCenter.getZ());
+        spinnerX.setValue((int)figureCenter.getX());
+        spinnerY.setValue((int)figureCenter.getY());
+        spinnerZ.setValue((int)figureCenter.getZ());
     }
 
     private GridBagConstraints createGridBagConstraints(int fill, int gridX, int gridy){
@@ -80,7 +92,6 @@ public class FigureSettingsPanel extends JPanel {
     private class SpinnerListener implements ChangeListener{
         @Override
         public void stateChanged(ChangeEvent e) {
-            //System.out.println("WOW!");
             controller.setFigureCenter(new Point3D((int)spinnerX.getValue(), (int)spinnerY.getValue(), (int)spinnerZ.getValue()));
         }
     }

@@ -139,6 +139,17 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     @Override
+    public void setSelectedFigure(int index) {
+        currentWorkingFigure = figures.get(index);
+        Point3D center = new Point3D(currentWorkingFigure.getShiftMatrix().get(0, 3),
+                currentWorkingFigure.getShiftMatrix().get(1, 3),
+                currentWorkingFigure.getShiftMatrix().get(2, 3));
+        for(WorldObserver obs : worldObservers){
+            obs.setInfo(center);
+        }
+    }
+
+    @Override
     public void addObserver(WorldObserver obs) {
         worldObservers.add(obs);
     }
