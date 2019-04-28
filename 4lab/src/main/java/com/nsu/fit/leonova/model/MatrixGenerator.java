@@ -62,6 +62,14 @@ public class MatrixGenerator {
                 {0, 0, 0, 1}});
     }
 
+    public static SimpleMatrix scaleMatrix(double x, double y, double z){
+        return new SimpleMatrix(new double[][]{
+                {x, 0, 0, 0},
+                {0, y, 0, 0},
+                {0, 0, z, 0},
+                {0, 0, 0, 1}});
+    }
+
     public static SimpleMatrix shiftMatrix(int x, int y, int z){
         return new SimpleMatrix(new double[][]{
                 {1, 0, 0, x},
@@ -70,15 +78,15 @@ public class MatrixGenerator {
                 {0, 0, 0, 1}});
     }
 
-    public static SimpleMatrix projectionMatrix(){
+    public static SimpleMatrix projectionMatrix(double zf){
 //        return new SimpleMatrix(new double[][]{
 //                {1, 0, 0, 0},
 //                {0, 1, 0, 0},
 //                {0, 0, 0, 0},
 //                {0, 0, 0, 1}});
         return new SimpleMatrix(new double[][]{
-                {500, 0, 0, 0},
-                {0, 500, 0, 0},
+                {zf, 0, 0, 0},
+                {0, zf, 0, 0},
                 {0, 0, 1, 0},
                 {0, 0, 1, 0}});
     }

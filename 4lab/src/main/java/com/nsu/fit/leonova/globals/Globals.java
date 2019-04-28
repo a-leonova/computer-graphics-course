@@ -24,7 +24,7 @@ public class Globals {
     private static final int ZF = 20;
     private static final int ZB = 100;
 
-    public static final SplineParameters SPLINE_PARAMETERS = new SplineParameters(N, M, K, A, B, C, D, new Color(255, 255, 0), ZF, ZB, SW, SH);
+    public static final SplineParameters SPLINE_PARAMETERS = new SplineParameters(N, M, K, A, B, C, D, new Color(255, 255, 0), SW, SH);
     public static final String FIRST_FIGURE_NAME = "Figure #0";
 
 }

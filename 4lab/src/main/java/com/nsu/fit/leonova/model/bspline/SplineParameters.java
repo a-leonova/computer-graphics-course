@@ -15,12 +15,12 @@ public class SplineParameters {
 
     private Color color;
 
-    private int zf;
-    private int zb;
+//    private int zf;
+//    private int zb;
     private int sw;
     private int sh;
 
-    public SplineParameters(int n, int m, int k, double a, double b, double c, double d, Color color, int zf, int zb, int sw, int sh) {
+    public SplineParameters(int n, int m, int k, double a, double b, double c, double d, Color color, int sw, int sh) {
         this.n = n;
         this.m = m;
         this.k = k;
@@ -29,14 +29,14 @@ public class SplineParameters {
         this.c = c;
         this.d = d;
         this.color = color;
-        this.zf = zf;
-        this.zb = zb;
+//        this.zf = zf;
+//        this.zb = zb;
         this.sw = sw;
         this.sh = sh;
     }
 
-    public SplineParameters(String splineName, int n, int m, int k, double a, double b, double c, double d, Color color, int zf, int zb, int sw, int sh) {
-        this(n, m, k, a, b, c, d, color, zf, zb, sw, sh);
+    public SplineParameters(String splineName, int n, int m, int k, double a, double b, double c, double d, Color color, int sw, int sh) {
+        this(n, m, k, a, b, c, d, color, sw, sh);
         this.splineName = splineName;
     }
 
@@ -53,8 +53,6 @@ public class SplineParameters {
 
         color = p.color;
 
-        zf = p.zf;
-        zb = p.zb;
         sw = p.sw;
         sh = p.sh;
     }
@@ -97,14 +95,6 @@ public class SplineParameters {
 
     public Color getColor() {
         return color;
-    }
-
-    public int getZf() {
-        return zf;
-    }
-
-    public int getZb() {
-        return zb;
     }
 
     public int getSw() {

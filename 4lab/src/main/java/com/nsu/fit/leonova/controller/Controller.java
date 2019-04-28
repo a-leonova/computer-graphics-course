@@ -75,6 +75,11 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void setZf(int zf) {
+        world3D.setZf(zf);
+    }
+
+    @Override
     public void showBSplineInfo(int index) {
         world3D.showBSplineInfo(index);
     }

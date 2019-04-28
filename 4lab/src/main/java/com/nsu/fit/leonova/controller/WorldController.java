@@ -10,4 +10,5 @@ public interface WorldController {
 
     void setFigureCenter(Point3D figureCenter);
     void setSelectedFigure(int index);
+    void setZf(int zf);
 }

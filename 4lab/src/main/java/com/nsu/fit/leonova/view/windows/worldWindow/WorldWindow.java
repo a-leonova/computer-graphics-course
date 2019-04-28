@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -123,5 +124,11 @@ public class WorldWindow extends JFrame implements WorldObserver {
         public void mouseReleased(MouseEvent e){
             oldPoint = null;
         }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e){
+            System.out.println("It's work!");
+        }
+
     }
 }

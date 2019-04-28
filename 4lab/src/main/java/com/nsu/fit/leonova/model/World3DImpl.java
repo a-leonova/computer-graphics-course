@@ -150,6 +150,14 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     @Override
+    public void setZf(int zf) {
+        for(Figure figure : figures){
+            figure.setZf(zf);
+        }
+        showSpline3D();
+    }
+
+    @Override
     public void addObserver(WorldObserver obs) {
         worldObservers.add(obs);
     }

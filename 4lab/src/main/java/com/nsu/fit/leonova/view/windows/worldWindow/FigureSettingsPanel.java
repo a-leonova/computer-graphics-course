@@ -8,10 +8,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +22,25 @@ public class FigureSettingsPanel extends JPanel {
     private JComboBox<String> box = new JComboBox<>();
     private WorldController controller;
 
-    private JSpinner spinnerX = new JSpinner(new SpinnerNumberModel(0, MIN_X, MAX_X, 1));
-    private JSpinner spinnerY = new JSpinner(new SpinnerNumberModel(0, MIN_Y, MAX_Y, 1));
-    private JSpinner spinnerZ = new JSpinner(new SpinnerNumberModel(0, MIN_Z, MAX_Z, 1));
+    private JSpinner spinnerX = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
+    private JSpinner spinnerY = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
+    private JSpinner spinnerZ = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
+    private JSpinner spinnerZf = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
+    private JSpinner spinnerZb = new JSpinner(new SpinnerNumberModel(0, null, null, 1));
 
     public FigureSettingsPanel(WorldController controller) {
         this.controller = controller;
         spinnerX.addChangeListener(new SpinnerListener());
         spinnerY.addChangeListener(new SpinnerListener());
         spinnerZ.addChangeListener(new SpinnerListener());
+
+        spinnerZf.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                controller.setZf((int)spinnerZf.getValue());
+            }
+        });
+
         box.addItem(Globals.FIRST_FIGURE_NAME);
         figures.add(Globals.FIRST_FIGURE_NAME);
 
@@ -49,6 +55,11 @@ public class FigureSettingsPanel extends JPanel {
         add(spinnerY, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 2));
         add(new JLabel("Z: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 0, 3));
         add(spinnerZ, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 3));
+
+        add(new JLabel("Zf: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 0, 4));
+        add(spinnerZf, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 4));
+        add(new JLabel("Zb: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 0, 5));
+        add(spinnerZb, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 5));
 
         box.addItemListener(e -> {
             String name = (String)e.getItem();

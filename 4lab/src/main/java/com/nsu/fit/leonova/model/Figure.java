@@ -21,6 +21,8 @@ public class Figure implements BSplineObservable {
     private Point splinePoints2D[][];
     private boolean isActualSplinePoints2D = false;
 
+    private double zf = 900;
+
     public Figure(List<BSplineObserver> obs, int index) {
         parameters.setSplineName("Figure #" + index);
         bSpline = new BSpline(this.parameters);
@@ -37,6 +39,11 @@ public class Figure implements BSplineObservable {
             useTransformation();
         }
         return splinePoints2D;
+    }
+
+    public void setZf(double zf) {
+        this.zf = zf;
+        isActualSplinePoints2D = isActualSplinePoints3D = false;
     }
 
     public void showBspline() {
@@ -128,9 +135,9 @@ public class Figure implements BSplineObservable {
                         {1}});
                 coordinates = rotationMatrix.mult(coordinates);
                 //TODO: camera in z = -1000, remove below line
-                coordinates = MatrixGenerator.shiftMatrix(0, 0, 1000).mult(coordinates);
+                //coordinates = MatrixGenerator.shiftMatrix(0, 0, 1000).mult(coordinates);
                 coordinates = shiftMatrix.mult(coordinates);
-                coordinates = MatrixGenerator.projectionMatrix().mult(coordinates);
+                coordinates = MatrixGenerator.projectionMatrix(zf).mult(coordinates);
                 coordinates = coordinates.divide(coordinates.get(3, 0));
                 splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),
                         (int)Math.round(coordinates.get(1, 0) + Globals.IMAGE_HEIGHT /2));
