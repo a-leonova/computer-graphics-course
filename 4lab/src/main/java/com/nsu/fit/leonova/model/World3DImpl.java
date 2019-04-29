@@ -158,6 +158,13 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     @Override
+    public void scale(double ds) {
+        for(Figure figure : figures){
+            figure.changeScale(ds);
+        }
+    }
+
+    @Override
     public void addObserver(WorldObserver obs) {
         worldObservers.add(obs);
     }

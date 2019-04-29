@@ -5,19 +5,11 @@ import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.Point3D;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FigureSettingsPanel extends JPanel {
-    private static final int MIN_X = -1000;
-    private static final int MIN_Y = -1000;
-    private static final int MIN_Z = -5000;
-    private static final int MAX_X = 1000;
-    private static final int MAX_Y = 1000;
-    private static final int MAX_Z = 5000;
     private List<String> figures = new ArrayList<>();
     private JComboBox<String> box = new JComboBox<>();
     private WorldController controller;
@@ -30,16 +22,15 @@ public class FigureSettingsPanel extends JPanel {
 
     public FigureSettingsPanel(WorldController controller) {
         this.controller = controller;
-        spinnerX.addChangeListener(new SpinnerListener());
-        spinnerY.addChangeListener(new SpinnerListener());
-        spinnerZ.addChangeListener(new SpinnerListener());
+        spinnerX.addChangeListener(e -> this.controller.setFigureCenter(new Point3D((int)spinnerX.getValue(), (int)spinnerY.getValue(), (int)spinnerZ.getValue())));
+        spinnerY.addChangeListener(e -> this.controller.setFigureCenter(new Point3D((int)spinnerX.getValue(), (int)spinnerY.getValue(), (int)spinnerZ.getValue())));
+        spinnerZ.addChangeListener(e -> this.controller.setFigureCenter(new Point3D((int)spinnerX.getValue(), (int)spinnerY.getValue(), (int)spinnerZ.getValue())));
+        spinnerZf.addChangeListener(e -> controller.setZf((int)spinnerZf.getValue()));
 
-        spinnerZf.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                controller.setZf((int)spinnerZf.getValue());
-            }
-        });
+        ((JSpinner.DefaultEditor) spinnerX.getEditor()).getTextField().setColumns(10);
+        ((JSpinner.DefaultEditor) spinnerY.getEditor()).getTextField().setColumns(10);
+        ((JSpinner.DefaultEditor) spinnerZ.getEditor()).getTextField().setColumns(10);
+        ((JSpinner.DefaultEditor) spinnerZf.getEditor()).getTextField().setColumns(10);
 
         box.addItem(Globals.FIRST_FIGURE_NAME);
         figures.add(Globals.FIRST_FIGURE_NAME);
@@ -98,12 +89,5 @@ public class FigureSettingsPanel extends JPanel {
         c.gridx = gridX;
         c.gridy = gridy;
         return c;
-    }
-
-    private class SpinnerListener implements ChangeListener{
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            controller.setFigureCenter(new Point3D((int)spinnerX.getValue(), (int)spinnerY.getValue(), (int)spinnerZ.getValue()));
-        }
     }
 }

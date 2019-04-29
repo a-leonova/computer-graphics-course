@@ -46,6 +46,7 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
         setVisible(true);
         imageManager.setImage(bSpline);
         repaint();
+        pack();
     }
 
     @Override
@@ -89,7 +90,26 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
         @Override
         public void mouseDragged(MouseEvent e){
             if(SwingUtilities.isLeftMouseButton(e)){
-                controller.ImageLeftDragged(e.getPoint());
+                int x = e.getX();
+                int y = e.getY();
+                if(x >= imageManager.getImageWidth()){
+                    controller.scale();
+                    x = imageManager.getImageWidth() - 1;
+                }
+                else if (x < 0){
+                    controller.scale();
+                    x = 0;
+                }
+
+                if(y >= imageManager.getImageHeight()){
+                    controller.scale();
+                    y = imageManager.getImageHeight() - 1;
+                }
+                else if(y < 0){
+                    controller.scale();
+                    y = 0;
+                }
+                controller.ImageLeftDragged(new Point(x, y));
             }
         }
     }

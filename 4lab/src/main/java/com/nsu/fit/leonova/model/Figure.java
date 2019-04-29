@@ -41,6 +41,10 @@ public class Figure implements BSplineObservable {
         return splinePoints2D;
     }
 
+    public void changeScale(double ds){
+        bSpline.changeScale(ds);
+    }
+
     public void setZf(double zf) {
         this.zf = zf;
         isActualSplinePoints2D = isActualSplinePoints3D = false;
@@ -109,14 +113,14 @@ public class Figure implements BSplineObservable {
     }
 
     private void countBSpline3D(){
-        List<Point> points = bSpline.getPointsToRotate();
+        List<Point2D> points = bSpline.getPointsToRotate();
         splinePoints3D = new Point3D[points.size()][parameters.getM()];
         double step = (parameters.getD() - parameters.getC()) / (parameters.getM() - 1);
         for(int k = 0; k < points.size(); ++k){
             for(int v = 0; v < parameters.getM(); v++){
-                Point p = points.get(k);
+                Point2D p = points.get(k);
                 int z = 0;
-                SimpleMatrix coordinates = new SimpleMatrix(new double[][]{{p.x}, {p.y}, {z}});
+                SimpleMatrix coordinates = new SimpleMatrix(new double[][]{{p.getX()}, {p.getY()}, {z}});
                 SimpleMatrix rotationMtx = MatrixGenerator.rotationMatrix3OX(v * step);
                 SimpleMatrix result = rotationMtx.mult(coordinates);
                 splinePoints3D[k][v] = new Point3D(result.get(0, 0), result.get(1, 0), result.get(2, 0));

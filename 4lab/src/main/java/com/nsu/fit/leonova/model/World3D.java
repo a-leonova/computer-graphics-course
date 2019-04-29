@@ -24,4 +24,6 @@ public interface World3D {
 
     void setSelectedFigure(int index);
     void setZf(int zf);
+
+    void scale(double ds);
 }

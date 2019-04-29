@@ -14,4 +14,6 @@ public interface BSplineController {
     void addSpline();
     void showBSplineInfo(int index);
     void removeSpline(int index);
+
+    void scale();
 }

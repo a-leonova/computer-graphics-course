@@ -5,8 +5,6 @@ import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import java.awt.*;
 
 public class Globals {
-    public static final int BSPLINE_WIDTH = 500;
-    public static final int BSPLINE_HEIGH = 200;
     private static final int M = 50;
     private static final int N = 5;
     private static final int K = 2;

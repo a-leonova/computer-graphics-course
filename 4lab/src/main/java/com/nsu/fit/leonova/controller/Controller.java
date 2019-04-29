@@ -50,6 +50,11 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void scale() {
+        world3D.scale(0.2);
+    }
+
+    @Override
     public void shiftX(int dx) {
         world3D.rotationForOY(dx);
     }

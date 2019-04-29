@@ -21,6 +21,14 @@ public class ImageManager extends JPanel {
         addMouseMotionListener(listener);
     }
 
+    public int getImageHeight(){
+        return image.getHeight();
+    }
+
+    public int getImageWidth(){
+        return image.getWidth();
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -28,6 +36,7 @@ public class ImageManager extends JPanel {
     }
     public void setImage(BufferedImage image){
         this.image = image;
+        setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         repaint();
     }
 }
