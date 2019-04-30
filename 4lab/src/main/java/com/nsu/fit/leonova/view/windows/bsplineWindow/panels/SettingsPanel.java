@@ -13,7 +13,7 @@ public class SettingsPanel extends JPanel{
     private JButton ok = new JButton("OK");
     private JButton apply = new JButton("Apply");
     private JButton newSpline = new JButton("New spline");
-    private SplineParameters parameters = new SplineParameters(Globals.SPLINE_PARAMETERS);
+    private SplineParameters parameters = new SplineParameters("Some name");
 
     private JTextField nameTF = new JTextField();
     private JSpinner spinnerA = new JSpinner(new SpinnerNumberModel(parameters.getA(), 0.0, 0.99, 0.01));
@@ -28,10 +28,6 @@ public class SettingsPanel extends JPanel{
     private JSpinner spinnerRed = new JSpinner(new SpinnerNumberModel(parameters.getColor().getRed(), 0, 255, 1));
     private JSpinner spinnerGreen = new JSpinner(new SpinnerNumberModel(parameters.getColor().getGreen(), 0, 255, 1));
     private JSpinner spinnerBlue = new JSpinner(new SpinnerNumberModel(parameters.getColor().getBlue(), 0, 255, 1));
-
-    private JSpinner spinnerSW = new JSpinner(new SpinnerNumberModel(parameters.getSw(), 100, 700, 1));
-    private JSpinner spinnerSH = new JSpinner(new SpinnerNumberModel(parameters.getSh(), 100, 700, 1));
-
 
     public SettingsPanel(BSplineController controller, JFrame parent) {
         this.controller = controller;
@@ -78,9 +74,6 @@ public class SettingsPanel extends JPanel{
         spinnerRed.setValue(parameters.getColor().getRed());
         spinnerGreen.setValue(parameters.getColor().getGreen());
         spinnerBlue.setValue(parameters.getColor().getBlue());
-
-        spinnerSW.setValue(parameters.getSw());
-        spinnerSH.setValue(parameters.getSh());
     }
 
     private void fillPanel(){
@@ -121,18 +114,6 @@ public class SettingsPanel extends JPanel{
         add(new JLabel("Blue: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 4, 3));
         add(spinnerBlue, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 5, 3));
 
-//        add(new JLabel("ZFront: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 0, 4));
-//        add(spinnerZF, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 1, 4));
-//
-//        add(new JLabel("Zback: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 2, 4));
-//        add(spinnerZB, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 3, 4));
-
-        add(new JLabel("Sw: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 4, 4));
-        add(spinnerSW, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 5, 4));
-
-        add(new JLabel("SH: "), createGridBagConstraints(GridBagConstraints.HORIZONTAL, 6, 4));
-        add(spinnerSH, createGridBagConstraints(GridBagConstraints.HORIZONTAL, 7, 4));
-
         add(ok, createGridBagConstraints(GridBagConstraints.CENTER, 2, 5));
         add(apply, createGridBagConstraints(GridBagConstraints.CENTER, 3, 5));
         add(newSpline, createGridBagConstraints(GridBagConstraints.CENTER, 5, 5));
@@ -162,9 +143,6 @@ public class SettingsPanel extends JPanel{
         int green = (int)spinnerGreen.getValue();
         int blue = (int)spinnerBlue.getValue();
 
-        int sw = (int)spinnerSW.getValue();
-        int sh = (int)spinnerSH.getValue();
-
-        return new SplineParameters(name, n, m, k, a, b, c, d, new Color(red, green, blue), sw, sh);
+        return new SplineParameters(name, n, m, k, a, b, c, d, new Color(red, green, blue));
     }
 }

@@ -4,23 +4,21 @@ import java.awt.*;
 
 public class SplineParameters {
     private String splineName = "Figure with some number";
-    private int n;
-    private int m;
-    private int k;
+    private int n = 5;
+    private int m = 50;
+    private int k = 2;
 
-    private double a;
-    private double b;
-    private double c;
-    private double d;
+    private double a = 0.0;
+    private double b = 1.0;
+    private double c = 0.0;
+    private double d = 6.28;
 
-    private Color color;
+    private Color color = new Color(255, 255, 0);
 
-//    private int zf;
-//    private int zb;
-    private int sw;
-    private int sh;
+    public SplineParameters(String name){this.splineName = name;}
 
-    public SplineParameters(int n, int m, int k, double a, double b, double c, double d, Color color, int sw, int sh) {
+    public SplineParameters(String name, int n, int m, int k, double a, double b, double c, double d, Color color) {
+        this.splineName = name;
         this.n = n;
         this.m = m;
         this.k = k;
@@ -29,32 +27,6 @@ public class SplineParameters {
         this.c = c;
         this.d = d;
         this.color = color;
-//        this.zf = zf;
-//        this.zb = zb;
-        this.sw = sw;
-        this.sh = sh;
-    }
-
-    public SplineParameters(String splineName, int n, int m, int k, double a, double b, double c, double d, Color color, int sw, int sh) {
-        this(n, m, k, a, b, c, d, color, sw, sh);
-        this.splineName = splineName;
-    }
-
-    public SplineParameters(SplineParameters p){
-        splineName = p.splineName;
-        a = p.a;
-        b = p.b;
-        c = p.c;
-        d = p.d;
-
-        n = p.n;
-        m = p.m;
-        k = p.k;
-
-        color = p.color;
-
-        sw = p.sw;
-        sh = p.sh;
     }
 
     public void setSplineName(String splineName) {
@@ -95,13 +67,5 @@ public class SplineParameters {
 
     public Color getColor() {
         return color;
-    }
-
-    public int getSw() {
-        return sw;
-    }
-
-    public int getSh() {
-        return sh;
     }
 }

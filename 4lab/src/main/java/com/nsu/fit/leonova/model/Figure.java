@@ -1,6 +1,5 @@
 package com.nsu.fit.leonova.model;
 
-import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.observer.BSplineObservable;
@@ -12,16 +11,15 @@ import java.util.List;
 
 public class Figure implements BSplineObservable {
     private BSpline bSpline;
-    private SplineParameters parameters = new SplineParameters(Globals.SPLINE_PARAMETERS);
+    private SplineParameters parameters = new SplineParameters("Some name");
     private SimpleMatrix rotationMatrix = MatrixGenerator.identity4();
     private SimpleMatrix shiftMatrix = MatrixGenerator.shiftMatrix(0, 0, 0);
 
     private Point3D splinePoints3D[][];
     private boolean isActualSplinePoints3D = false;
-    private Point splinePoints2D[][];
-    private boolean isActualSplinePoints2D = false;
-
-    private double zf = 900;
+    private Point3D transformedPoints3D[][];
+    private boolean isActualTransformedPoints3D = false;
+    //private WorldParameters wp = new WorldParameters();
 
     public Figure(List<BSplineObserver> obs, int index) {
         parameters.setSplineName("Figure #" + index);
@@ -31,24 +29,24 @@ public class Figure implements BSplineObservable {
         }
     }
 
-    public Point[][] getSplinePoints2D(){
-        if(!isActualSplinePoints2D){
+    public Point3D[][] getTransformedPoints3D(){
+        if(!isActualTransformedPoints3D){
             if(!isActualSplinePoints3D){
                 countBSpline3D();
             }
             useTransformation();
         }
-        return splinePoints2D;
+        return transformedPoints3D;
     }
 
     public void changeScale(double ds){
         bSpline.changeScale(ds);
     }
 
-    public void setZf(double zf) {
-        this.zf = zf;
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
-    }
+//    public void setWorldParameters(WorldParameters wp) {
+//        this.wp = wp;
+//        isActualTransformedPoints3D = isActualSplinePoints3D = false;
+//    }
 
     public void showBspline() {
         bSpline.showBspline();
@@ -56,33 +54,32 @@ public class Figure implements BSplineObservable {
 
     public void addPoint(Point point) {
         bSpline.addPoint(point);
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        isActualTransformedPoints3D = isActualSplinePoints3D = false;
     }
 
     public void removePoint(Point point) {
         bSpline.removePoint(point);
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        isActualTransformedPoints3D = isActualSplinePoints3D = false;
     }
 
     public void pressedPoint(Point point) {
         bSpline.pressedPoint(point);
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        isActualTransformedPoints3D = isActualSplinePoints3D = false;
     }
 
     public void draggedPoint(Point point) {
         bSpline.draggedPoint(point);
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        isActualTransformedPoints3D = isActualSplinePoints3D = false;
     }
 
-    public void setParameters(SplineParameters parameters) {
+    public void setBsplineParameters(SplineParameters parameters) {
         this.parameters = parameters;
         bSpline.setParameters(parameters);
-        isActualSplinePoints2D = false;
-        isActualSplinePoints3D = false;
+        isActualTransformedPoints3D =  isActualSplinePoints3D = false;
     }
 
     public void shift(Point3D center){
-        isActualSplinePoints2D = isActualSplinePoints3D = false;
+        isActualTransformedPoints3D = false;
         shiftMatrix = MatrixGenerator.shiftMatrix((int)center.getX(), (int)center.getY(), (int)center.getZ());
     }
 
@@ -104,12 +101,12 @@ public class Figure implements BSplineObservable {
 
     public void rotateForOX(double angle){
         rotationMatrix = MatrixGenerator.rotationMatrix4OX(angle).mult(rotationMatrix);
-        isActualSplinePoints2D = false;
+        isActualTransformedPoints3D = false;
     }
 
     public void rotateForOY(double angle){
         rotationMatrix = MatrixGenerator.rotationMatrix4OY(angle).mult(rotationMatrix);
-        isActualSplinePoints2D = false;
+        isActualTransformedPoints3D = false;
     }
 
     private void countBSpline3D(){
@@ -130,7 +127,7 @@ public class Figure implements BSplineObservable {
     }
 
     private void useTransformation(){
-        splinePoints2D = new Point[bSpline.getPointsToRotate().size()][parameters.getM()];
+        transformedPoints3D = new Point3D[bSpline.getPointsToRotate().size()][parameters.getM()];
         for(int k = 0; k < bSpline.getPointsToRotate().size(); ++k){
             for(int v = 0; v < parameters.getM(); v++){
                 SimpleMatrix coordinates = new SimpleMatrix(new double[][] {{splinePoints3D[k][v].getX()},
@@ -139,15 +136,17 @@ public class Figure implements BSplineObservable {
                         {1}});
                 coordinates = rotationMatrix.mult(coordinates);
                 //TODO: camera in z = -1000, remove below line
-                //coordinates = MatrixGenerator.shiftMatrix(0, 0, 1000).mult(coordinates);
                 coordinates = shiftMatrix.mult(coordinates);
-                coordinates = MatrixGenerator.projectionMatrix(zf).mult(coordinates);
-                coordinates = coordinates.divide(coordinates.get(3, 0));
-                splinePoints2D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2),
-                        (int)Math.round(coordinates.get(1, 0) + Globals.IMAGE_HEIGHT /2));
+                transformedPoints3D[k][v] = new Point3D((int)Math.round(coordinates.get(0,0)),
+                        (int)Math.round(coordinates.get(1,0)),
+                                (int)Math.round(coordinates.get(2,0)));
+//                coordinates = MatrixGenerator.projectionMatrix(wp.getZf()).mult(coordinates);
+//                coordinates = coordinates.divide(coordinates.get(3, 0));
+//                transformedPoints3D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2.0),
+//                        (int)Math.round(coordinates.get(1, 0) + Globals.IMAGE_HEIGHT /2.0));
             }
         }
-        isActualSplinePoints2D = true;
+        isActualTransformedPoints3D = true;
     }
 
     @Override

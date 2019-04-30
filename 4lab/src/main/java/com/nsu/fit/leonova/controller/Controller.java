@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.World3D;
+import com.nsu.fit.leonova.model.WorldParameters;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 
 import java.awt.*;
@@ -80,8 +81,8 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
-    public void setZf(int zf) {
-        world3D.setZf(zf);
+    public void setWorldParameters(WorldParameters wp) {
+        world3D.setWorldParameters(wp);
     }
 
     @Override

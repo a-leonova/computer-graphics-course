@@ -23,7 +23,7 @@ public interface World3D {
     void setFigureCenter(Point3D figureCenter);
 
     void setSelectedFigure(int index);
-    void setZf(int zf);
+    void setWorldParameters(WorldParameters wp);
 
     void scale(double ds);
 }

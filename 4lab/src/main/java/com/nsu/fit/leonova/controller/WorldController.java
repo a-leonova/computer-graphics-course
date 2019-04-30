@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Point3D;
+import com.nsu.fit.leonova.model.WorldParameters;
 
 public interface WorldController {
     void shiftX(int dx);
@@ -10,5 +11,5 @@ public interface WorldController {
 
     void setFigureCenter(Point3D figureCenter);
     void setSelectedFigure(int index);
-    void setZf(int zf);
+    void setWorldParameters(WorldParameters wp);
 }

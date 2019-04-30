@@ -166,6 +166,7 @@ public class BSpline implements BSplineObservable {
 
     private void createBSpline(){
         bspline = new BufferedImage(WIDTH, HEIGH, BufferedImage.TYPE_3BYTE_BGR);
+        drawAxis();
         drawPivotPoints();
         drawBSpline();
         countPointsToRotate();
@@ -198,7 +199,7 @@ public class BSpline implements BSplineObservable {
 
     private void drawPivotPoints(){
         Graphics2D graphics = bspline.createGraphics();
-        graphics.setPaint(Color.RED);
+        graphics.setPaint(Color.WHITE);
         for(int i = 0; i < pivotPoints.size(); ++i){
             Point pivot = doublePointToIntPoint(pivotPoints.get(i));
             graphics.drawOval(pivot.x - RADIUS, pivot.y - RADIUS, 2 * RADIUS, 2 * RADIUS);
@@ -207,6 +208,14 @@ public class BSpline implements BSplineObservable {
                 graphics.drawLine(pivot.x, pivot.y, nextPoint.x, nextPoint.y);
             }
         }
+    }
+
+    private void drawAxis(){
+        Graphics2D graphics = bspline.createGraphics();
+        graphics.setPaint(Color.RED);
+        graphics.drawLine(WIDTH / 2, 0, WIDTH / 2, HEIGH);
+        graphics.setPaint(Color.BLUE);
+        graphics.drawLine(0, HEIGH/2, WIDTH, HEIGH/2);
     }
 
     private Point2D intPointToDoublePoint(Point point){
