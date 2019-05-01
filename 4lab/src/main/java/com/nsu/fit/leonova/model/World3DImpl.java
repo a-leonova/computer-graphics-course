@@ -205,7 +205,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     private List<ConnectedPoints2D> clipAndPerspective(Point3D[][] points, int m, int k, int pointToRotateSize){
-        List<ConnectedPoints2D> connectedPoints2D = new ArrayList<>();
+
         List<ConnectedPoints3D> connectedPoints3D = new ArrayList<>();
 
         for(int i = 1; i < pointToRotateSize; ++i){
@@ -220,32 +220,125 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             }
         }
 
-
         Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
         while(it.hasNext()){
             ConnectedPoints3D c = it.next();
-            boolean behindZfA = c.getA().getZ() > worldParameters.getZf();
-            boolean behindZfB = c.getB().getZ() > worldParameters.getZf();
-            if(behindZfA && !behindZfB){
-                double dz = c.getB().getZ() - c.getA().getZ();
-                double coefficient = (worldParameters.getZf() - c.getA().getZ())/dz;
-                double newX = (c.getA().getX() + coefficient * (c.getB().getX() - c.getA().getX()));
-                double newY = (c.getA().getY() + coefficient * (c.getB().getY() - c.getA().getY()));
-                c.setB(new Point3D(newX, newY, worldParameters.getZf()));
+            SimpleMatrix a = new SimpleMatrix(new double[][]{{c.getA().getX()}, {c.getA().getY()}, {c.getA().getZ()}});
+            SimpleMatrix b = new SimpleMatrix(new double[][]{{c.getB().getX()}, {c.getB().getY()}, {c.getB().getZ()}});
+            if(clipLineInCube(a, b, -300, 300, -300, 300, worldParameters.getZf(), worldParameters.getZb())){
+                c.setA(new Point3D(a.get(0,0), a.get(1, 0), a.get(2, 0)));
+                c.setB(new Point3D(b.get(0,0), b.get(1, 0), b.get(2, 0)));
             }
-            if(!behindZfA && behindZfB){
-                double dz = c.getA().getZ() - c.getB().getZ();
-                double coefficient = (worldParameters.getZf() - c.getB().getZ())/dz;
-                double newX = (c.getB().getX() + coefficient * (c.getA().getX() - c.getB().getX()));
-                double newY = (c.getB().getY() + coefficient * (c.getA().getY() - c.getB().getY()));
-                c.setA(new Point3D(newX, newY, worldParameters.getZf()));
-            }
-            if(!behindZfA && !behindZfB){
+            else{
                 it.remove();
             }
         }
 
+//        for(ConnectedPoints3D c : connectedPoints3D){
+//            SimpleMatrix a = new SimpleMatrix(new double[][]{{c.getA().getX()}, {c.getA().getY()}, {c.getA().getZ()}});
+//            SimpleMatrix b = new SimpleMatrix(new double[][]{{c.getB().getX()}, {c.getB().getY()}, {c.getB().getZ()}});
+//            clipLineInCube(a, b, -300, 300, -300, 300, worldParameters.getZf(), worldParameters.getZb());
+//
+//            c.setA(new Point3D(a.get(0,0), a.get(1, 0), a.get(2, 0)));
+//            c.setB(new Point3D(b.get(0,0), b.get(1, 0), b.get(2, 0)));
+//        }
 
+        return usePerspective(connectedPoints3D);
+    }
+
+//    private void clipZf(List<ConnectedPoints3D> connectedPoints3D){
+//        Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
+//        while(it.hasNext()){
+//            ConnectedPoints3D c = it.next();
+//            boolean behindZfA = c.getA().getZ() > worldParameters.getZf();
+//            boolean behindZfB = c.getB().getZ() > worldParameters.getZf();
+//            if(behindZfA && !behindZfB){
+//                double dz = c.getB().getZ() - c.getA().getZ();
+//                double coefficient = (worldParameters.getZf() - c.getA().getZ())/dz;
+//                double newX = (c.getA().getX() + coefficient * (c.getB().getX() - c.getA().getX()));
+//                double newY = (c.getA().getY() + coefficient * (c.getB().getY() - c.getA().getY()));
+//                c.setB(new Point3D(newX, newY, worldParameters.getZf()));
+//            }
+//            if(!behindZfA && behindZfB){
+//                double dz = c.getA().getZ() - c.getB().getZ();
+//                double coefficient = (worldParameters.getZf() - c.getB().getZ())/dz;
+//                double newX = (c.getB().getX() + coefficient * (c.getA().getX() - c.getB().getX()));
+//                double newY = (c.getB().getY() + coefficient * (c.getA().getY() - c.getB().getY()));
+//                c.setA(new Point3D(newX, newY, worldParameters.getZf()));
+//            }
+//            if(!behindZfA && !behindZfB){
+//                it.remove();
+//            }
+//        }
+//    }
+
+    private boolean clipLineInCube(SimpleMatrix p1, SimpleMatrix p2,
+                                double minX, double maxX,
+                                double minY, double maxY,
+                                double minZ, double maxZ){
+        int b1 = Utils.checkBounds(p1, minX, maxX, minY, maxY, minZ, maxZ);
+        int b2 = Utils.checkBounds(p2, minX, maxX, minY, maxY, minZ, maxZ);
+
+        double normF = (p2.minus(p1)).normF();
+        SimpleMatrix delta = (p2.minus(p1)).divide(normF);
+
+        while (true){
+            if((b1 | b2) == 0){
+                return true;
+            }
+            if ((b1 & b2) != 0){
+                return false;
+            }
+            int b = b1 != 0 ? b1 : b2;
+            double t = 0;
+            boolean invert = false;
+
+            if((b & Utils.TOP) != 0){
+                t = (maxY - p1.get(1, 0))/delta.get(1,0);
+                if (p1.get(1, 0) > maxY){
+                    invert = true;
+                }
+            }
+            else if ((b & Utils.BOTTOM) != 0){
+                t = (minY - p1.get(1, 0))/delta.get(1,0);
+                if (p1.get(1, 0) < minY){
+                    invert = true;
+                }
+            }
+            else if ((b & Utils.RIGHT) != 0){
+                t = (maxX -  p1.get(0, 0))/delta.get(0, 0);
+                if (p1.get(0, 0) > maxX) {
+                    invert = true;
+                }
+            }
+            else if ((b & Utils.LEFT) != 0){
+                t = (minX - p1.get(0, 0))/delta.get(0, 0);
+                if (p1.get(0, 0) < minX) {
+                    invert = true;
+                }
+            } else if ((b & Utils.FAR) != 0){
+                t = (maxZ - p1.get(2, 0))/delta.get(2, 0);
+                if (p1.get(2, 0) > maxZ){
+                    invert = true;
+                }
+            } else if ((b & Utils.NEAR) != 0){
+                t = (minZ - p1.get(2, 0))/delta.get(2, 0);
+                if (p1.get(2, 0) < minZ)
+                    invert = true;
+            }
+
+            if (invert){
+                p1.set(p1.plus(delta.divide(1 / t)));
+                b1 = Utils.checkBounds(p1, minX, maxX, minY, maxY, minZ, maxZ);
+            } else{
+                p2.set(p1.plus(delta.divide(1 / t)));
+                b2 = Utils.checkBounds(p2, minX, maxX, minY, maxY, minZ, maxZ);
+            }
+        }
+    }
+
+    private List<ConnectedPoints2D> usePerspective(List<ConnectedPoints3D> connectedPoints3D){
+        List<ConnectedPoints2D> connectedPoints2D = new ArrayList<>();
         SimpleMatrix perspectiveMtx = MatrixGenerator.projectionMatrix(worldParameters.getZf());
         for(ConnectedPoints3D c : connectedPoints3D){
             SimpleMatrix coordinatesA = new SimpleMatrix(new double[][] {{c.getA().getX()},
