@@ -26,4 +26,6 @@ public interface World3D {
     void setWorldParameters(WorldParameters wp);
 
     void scale(double ds);
+
+    void settingsButtonPressed();
 }

@@ -43,7 +43,6 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
 
     @Override
     public void setBSpline(BufferedImage bSpline) {
-        setVisible(true);
         imageManager.setImage(bSpline);
         repaint();
         pack();
@@ -67,6 +66,12 @@ public class BSplineWindow extends JFrame implements BSplineObserver {
     @Override
     public void changeFigureName(String name, int index) {
         splines.rename(name, index);
+    }
+
+    @Override
+    public void openFrame() {
+        splines.openFrame();
+        setVisible(true);
     }
 
     private class MyMouseAdapter extends MouseAdapter {

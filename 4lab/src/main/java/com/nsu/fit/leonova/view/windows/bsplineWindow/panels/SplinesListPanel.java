@@ -70,6 +70,17 @@ public class SplinesListPanel extends JPanel {
         repaint();
     }
 
+    public void openFrame(){
+        selectedButton.setSelected(false);
+        JPanel panel = splines.get(0);
+        for (Component c : panel.getComponents()){
+            if (c instanceof JToggleButton){
+                selectedButton = (JToggleButton)c;
+            }
+        }
+        selectedButton.setSelected(true);
+    }
+
     public void rename(String name, int idx){
         JPanel panel = splines.get(idx);
         for (Component c : panel.getComponents()){

@@ -20,6 +20,9 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     private List<Figure> figures = new ArrayList<>();
     private Figure currentWorkingFigure;
 
+    private SimpleMatrix worldRotation = MatrixGenerator.identity4();
+    private SimpleMatrix shiftWorld = MatrixGenerator.shiftMatrix(0, 0, 0);
+
     private WorldParameters worldParameters = new WorldParameters();
 
     @Override
@@ -34,27 +37,6 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
                     figure.getParameters().getK(), figure.getPointsToRotateCount());
 
             graphics.setPaint(figure.getParameters().getColor());
-
-//            for(int i = 1; i < figure.getPointsToRotateCount(); ++i){
-//                for(int j = 0; j < figure.getParameters().getM(); j++){
-//                    try{
-//                      //  graphics.drawLine(connectedPoints2D[i - 1][j].x, transformedPoints3D[i - 1][j].y, transformedPoints3D[i][j].x, transformedPoints3D[i][j].y);
-//                        graphics.drawLine(connectedPoints2D.);
-//                    }
-//                    catch (ArrayIndexOutOfBoundsException e){
-//                        System.out.println("!!!");
-//                        throw e;
-//                    }
-//                }
-//            }
-//
-//            for(int i = 0; i < figure.getPointsToRotateCount(); i += figure.getParameters().getK()){
-//                for(int j = 1; j < figure.getParameters().getM(); j++){
-//                    if(transformedPoints3D[i][j - 1] != null && transformedPoints3D[i][j] != null){
-//                        graphics.drawLine(transformedPoints3D[i][j - 1].x, transformedPoints3D[i][j - 1].y, transformedPoints3D[i][j].x, transformedPoints3D[i][j].y);
-//                    }
-//                }
-//            }
             for(ConnectedPoints2D pair : connectedPoints2D){
                 graphics.drawLine(pair.getA().x, pair.getA().y, pair.getB().x, pair.getB().y);
             }
@@ -68,14 +50,24 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     @Override
     public void rotationForOX(int shift) {
         double d = Math.toRadians(shift * 0.5);
-        currentWorkingFigure.rotateForOX(d);
+        if(currentWorkingFigure != null){
+            currentWorkingFigure.rotateForOX(d);
+        }
+        else{
+            worldRotation = MatrixGenerator.rotationMatrix4OX(d).mult(worldRotation);
+        }
         showSpline3D();
     }
 
     @Override
     public void rotationForOY(int shift) {
         double d = Math.toRadians(shift * 0.5);
-        currentWorkingFigure.rotateForOY(d);
+        if(currentWorkingFigure != null){
+            currentWorkingFigure.rotateForOY(d);
+        }
+        else {
+            worldRotation = MatrixGenerator.rotationMatrix4OY(d).mult(worldRotation);
+        }
         showSpline3D();
     }
 
@@ -136,38 +128,48 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
     @Override
     public void setSplineParameters(SplineParameters parameters) {
-        currentWorkingFigure.setBsplineParameters(parameters);
-        for(BSplineObserver obs : bSplineObservers){
-            obs.changeFigureName(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
-        }
-        for(WorldObserver obs : worldObservers){
-            obs.renameFigure(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
+        if(currentWorkingFigure != null){
+            currentWorkingFigure.setBsplineParameters(parameters);
+            for(BSplineObserver obs : bSplineObservers){
+                obs.changeFigureName(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
+            }
+            for(WorldObserver obs : worldObservers){
+                obs.renameFigure(parameters.getSplineName(), figures.indexOf(currentWorkingFigure));
+            }
         }
     }
 
     @Override
     public void setFigureCenter(Point3D figureCenter) {
-        currentWorkingFigure.shift(figureCenter);
+        if(currentWorkingFigure != null){
+            currentWorkingFigure.shift(figureCenter);
+        }
+        else{
+            shiftWorld = MatrixGenerator.shiftMatrix((int)Math.round(figureCenter.getX()),(int)Math.round(figureCenter.getY()),
+                    (int)Math.round(figureCenter.getZ()));
+        }
         showSpline3D();
     }
 
     @Override
     public void setSelectedFigure(int index) {
-        currentWorkingFigure = figures.get(index);
-        Point3D center = new Point3D(currentWorkingFigure.getShiftMatrix().get(0, 3),
-                currentWorkingFigure.getShiftMatrix().get(1, 3),
-                currentWorkingFigure.getShiftMatrix().get(2, 3));
-        for(WorldObserver obs : worldObservers){
-            obs.setInfo(center);
+        if (index == -1) {
+            currentWorkingFigure = null;
+        }
+        else{
+            currentWorkingFigure = figures.get(index);
+            Point3D center = new Point3D(currentWorkingFigure.getShiftMatrix().get(0, 3),
+                    currentWorkingFigure.getShiftMatrix().get(1, 3),
+                    currentWorkingFigure.getShiftMatrix().get(2, 3));
+            for(WorldObserver obs : worldObservers){
+                obs.setInfo(center);
+            }
         }
     }
 
     @Override
     public void setWorldParameters(WorldParameters wp) {
         worldParameters = wp;
-//        for(Figure figure : figures){
-//            /figure.setWorldParameters(wp);
-//        }
         showSpline3D();
     }
 
@@ -175,6 +177,14 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     public void scale(double ds) {
         for(Figure figure : figures){
             figure.changeScale(ds);
+        }
+    }
+
+    @Override
+    public void settingsButtonPressed() {
+        showBSplineInfo(0);
+        for(BSplineObserver obs : bSplineObservers){
+            obs.openFrame();
         }
     }
 
@@ -220,12 +230,17 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             }
         }
 
+        shiftAndRotateWorld(connectedPoints3D);
+
         Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
         while(it.hasNext()){
             ConnectedPoints3D c = it.next();
             SimpleMatrix a = new SimpleMatrix(new double[][]{{c.getA().getX()}, {c.getA().getY()}, {c.getA().getZ()}});
             SimpleMatrix b = new SimpleMatrix(new double[][]{{c.getB().getX()}, {c.getB().getY()}, {c.getB().getZ()}});
-            if(clipLineInCube(a, b, -300, 300, -300, 300, worldParameters.getZf(), worldParameters.getZb())){
+            boolean inCube = clipLineInCube(a, b, -worldParameters.getSw() / 2.0, worldParameters.getSw() / 2.0,
+                    -worldParameters.getSh() / 2.0, worldParameters.getSh() / 2.0,
+                    worldParameters.getZf(), worldParameters.getZb());
+            if(inCube){
                 c.setA(new Point3D(a.get(0,0), a.get(1, 0), a.get(2, 0)));
                 c.setB(new Point3D(b.get(0,0), b.get(1, 0), b.get(2, 0)));
             }
@@ -234,43 +249,8 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             }
         }
 
-//        for(ConnectedPoints3D c : connectedPoints3D){
-//            SimpleMatrix a = new SimpleMatrix(new double[][]{{c.getA().getX()}, {c.getA().getY()}, {c.getA().getZ()}});
-//            SimpleMatrix b = new SimpleMatrix(new double[][]{{c.getB().getX()}, {c.getB().getY()}, {c.getB().getZ()}});
-//            clipLineInCube(a, b, -300, 300, -300, 300, worldParameters.getZf(), worldParameters.getZb());
-//
-//            c.setA(new Point3D(a.get(0,0), a.get(1, 0), a.get(2, 0)));
-//            c.setB(new Point3D(b.get(0,0), b.get(1, 0), b.get(2, 0)));
-//        }
-
-        return usePerspective(connectedPoints3D);
+        return perspective(connectedPoints3D);
     }
-
-//    private void clipZf(List<ConnectedPoints3D> connectedPoints3D){
-//        Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
-//        while(it.hasNext()){
-//            ConnectedPoints3D c = it.next();
-//            boolean behindZfA = c.getA().getZ() > worldParameters.getZf();
-//            boolean behindZfB = c.getB().getZ() > worldParameters.getZf();
-//            if(behindZfA && !behindZfB){
-//                double dz = c.getB().getZ() - c.getA().getZ();
-//                double coefficient = (worldParameters.getZf() - c.getA().getZ())/dz;
-//                double newX = (c.getA().getX() + coefficient * (c.getB().getX() - c.getA().getX()));
-//                double newY = (c.getA().getY() + coefficient * (c.getB().getY() - c.getA().getY()));
-//                c.setB(new Point3D(newX, newY, worldParameters.getZf()));
-//            }
-//            if(!behindZfA && behindZfB){
-//                double dz = c.getA().getZ() - c.getB().getZ();
-//                double coefficient = (worldParameters.getZf() - c.getB().getZ())/dz;
-//                double newX = (c.getB().getX() + coefficient * (c.getA().getX() - c.getB().getX()));
-//                double newY = (c.getB().getY() + coefficient * (c.getA().getY() - c.getB().getY()));
-//                c.setA(new Point3D(newX, newY, worldParameters.getZf()));
-//            }
-//            if(!behindZfA && !behindZfB){
-//                it.remove();
-//            }
-//        }
-//    }
 
     private boolean clipLineInCube(SimpleMatrix p1, SimpleMatrix p2,
                                 double minX, double maxX,
@@ -337,7 +317,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         }
     }
 
-    private List<ConnectedPoints2D> usePerspective(List<ConnectedPoints3D> connectedPoints3D){
+    private List<ConnectedPoints2D> perspective(List<ConnectedPoints3D> connectedPoints3D){
         List<ConnectedPoints2D> connectedPoints2D = new ArrayList<>();
         SimpleMatrix perspectiveMtx = MatrixGenerator.projectionMatrix(worldParameters.getZf());
         for(ConnectedPoints3D c : connectedPoints3D){
@@ -349,6 +329,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
                     {c.getB().getY()},
                     {c.getB().getZ()},
                     {1}});
+
             coordinatesA = perspectiveMtx.mult(coordinatesA);
             coordinatesB = perspectiveMtx.mult(coordinatesB);
             coordinatesA = coordinatesA.divide(coordinatesA.get(3, 0));
@@ -360,5 +341,26 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
                             new Point((int)Math.round(coordinatesB.get(0,0)) + Globals.IMAGE_WIDTH/2, (int)Math.round(coordinatesB.get(1, 0)) + Globals.IMAGE_HEIGHT/2)));
         }
         return connectedPoints2D;
+    }
+
+    private void shiftAndRotateWorld(List<ConnectedPoints3D> connectedPoints3D){
+        for(ConnectedPoints3D c : connectedPoints3D){
+            SimpleMatrix coordinatesA = new SimpleMatrix(new double[][] {{c.getA().getX()},
+                    {c.getA().getY()},
+                    {c.getA().getZ()},
+                    {1}});
+            SimpleMatrix coordinatesB = new SimpleMatrix(new double[][] {{c.getB().getX()},
+                    {c.getB().getY()},
+                    {c.getB().getZ()},
+                    {1}});
+
+            coordinatesA = worldRotation.mult(coordinatesA);
+            coordinatesB = worldRotation.mult(coordinatesB);
+            coordinatesA = shiftWorld.mult(coordinatesA);
+            coordinatesB = shiftWorld.mult(coordinatesB);
+
+            c.setA(new Point3D(coordinatesA.get(0, 0), coordinatesA.get(1, 0), coordinatesA.get(2, 0)));
+            c.setB(new Point3D(coordinatesB.get(0, 0), coordinatesB.get(1, 0), coordinatesB.get(2, 0)));
+        }
     }
 }

@@ -19,7 +19,6 @@ public class Figure implements BSplineObservable {
     private boolean isActualSplinePoints3D = false;
     private Point3D transformedPoints3D[][];
     private boolean isActualTransformedPoints3D = false;
-    //private WorldParameters wp = new WorldParameters();
 
     public Figure(List<BSplineObserver> obs, int index) {
         parameters.setSplineName("Figure #" + index);
@@ -42,11 +41,6 @@ public class Figure implements BSplineObservable {
     public void changeScale(double ds){
         bSpline.changeScale(ds);
     }
-
-//    public void setWorldParameters(WorldParameters wp) {
-//        this.wp = wp;
-//        isActualTransformedPoints3D = isActualSplinePoints3D = false;
-//    }
 
     public void showBspline() {
         bSpline.showBspline();
@@ -140,10 +134,6 @@ public class Figure implements BSplineObservable {
                 transformedPoints3D[k][v] = new Point3D((int)Math.round(coordinates.get(0,0)),
                         (int)Math.round(coordinates.get(1,0)),
                                 (int)Math.round(coordinates.get(2,0)));
-//                coordinates = MatrixGenerator.projectionMatrix(wp.getZf()).mult(coordinates);
-//                coordinates = coordinates.divide(coordinates.get(3, 0));
-//                transformedPoints3D[k][v] = new Point((int)Math.round(coordinates.get(0, 0) + Globals.IMAGE_WIDTH / 2.0),
-//                        (int)Math.round(coordinates.get(1, 0) + Globals.IMAGE_HEIGHT /2.0));
             }
         }
         isActualTransformedPoints3D = true;

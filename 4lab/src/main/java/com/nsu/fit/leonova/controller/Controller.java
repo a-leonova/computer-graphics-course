@@ -67,7 +67,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void settingsButtonPressed() {
-        world3D.showBSplineInfo(0);
+        world3D.settingsButtonPressed();
     }
 
     @Override

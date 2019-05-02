@@ -39,6 +39,7 @@ public class FigureSettingsPanel extends JPanel {
         ((JSpinner.DefaultEditor) spinnerZ.getEditor()).getTextField().setColumns(10);
         ((JSpinner.DefaultEditor) spinnerZf.getEditor()).getTextField().setColumns(10);
 
+        box.addItem("World");
         box.addItem(Globals.FIRST_FIGURE_NAME);
         figures.add(Globals.FIRST_FIGURE_NAME);
 
@@ -66,7 +67,13 @@ public class FigureSettingsPanel extends JPanel {
 
         box.addItemListener(e -> {
             String name = (String)e.getItem();
-            int index = figures.indexOf(name);
+            int index;
+            if(name.equalsIgnoreCase("world")){
+                index = -1;
+            }
+            else {
+                index = figures.indexOf(name);
+            }
             System.out.println(index);
             controller.setSelectedFigure(index);
         });
@@ -79,14 +86,14 @@ public class FigureSettingsPanel extends JPanel {
 
     public void removeFigure(int idx){
         figures.remove(idx);
-        box.remove(idx);
+        box.remove(idx + 1);
     }
 
     public void renameFigure(String name, int idx){
         figures.set(idx, name);
-        box.removeItemAt(idx);
-        box.insertItemAt(name, idx);
-        box.setSelectedIndex(idx);
+        box.removeItemAt(idx + 1);
+        box.insertItemAt(name, idx + 1);
+        box.setSelectedIndex(idx + 1);
     }
 
     public void setInfo(Point3D figureCenter){
