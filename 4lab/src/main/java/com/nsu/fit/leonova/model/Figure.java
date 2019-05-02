@@ -93,6 +93,11 @@ public class Figure implements BSplineObservable {
         return bSpline.getPointsToRotate().size();
     }
 
+    public void setRotation(SimpleMatrix rotationMatrix){
+        this.rotationMatrix = rotationMatrix;
+        isActualTransformedPoints3D = false;
+    }
+
     public void rotateForOX(double angle){
         rotationMatrix = MatrixGenerator.rotationMatrix4OX(angle).mult(rotationMatrix);
         isActualTransformedPoints3D = false;
@@ -129,7 +134,6 @@ public class Figure implements BSplineObservable {
                         {splinePoints3D[k][v].getZ()},
                         {1}});
                 coordinates = rotationMatrix.mult(coordinates);
-                //TODO: camera in z = -1000, remove below line
                 coordinates = shiftMatrix.mult(coordinates);
                 transformedPoints3D[k][v] = new Point3D((int)Math.round(coordinates.get(0,0)),
                         (int)Math.round(coordinates.get(1,0)),

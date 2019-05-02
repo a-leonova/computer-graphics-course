@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.globals.Globals;
+import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
@@ -21,14 +22,30 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     private Figure currentWorkingFigure;
 
     private SimpleMatrix worldRotation = MatrixGenerator.identity4();
-    private SimpleMatrix shiftWorld = MatrixGenerator.shiftMatrix(0, 0, 0);
+    private SimpleMatrix shiftWorld = MatrixGenerator.shiftMatrix(0, 0, 500);
 
     private WorldParameters worldParameters = new WorldParameters();
+
+    private Color backgroundColor = Color.BLACK;
+
+    public World3DImpl(){
+
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public void setWorldRotation(SimpleMatrix worldRotation) {
+        this.worldRotation = worldRotation;
+    }
 
     @Override
     public void showSpline3D() {
         BufferedImage image = new BufferedImage(Globals.IMAGE_WIDTH, Globals.IMAGE_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D graphics = image.createGraphics();
+        graphics.setPaint(backgroundColor);
+        graphics.drawRect(0, 0, image.getWidth(), image.getHeight());
 
         for(Figure figure : figures){
             Point3D[][] transformedPoints3D = figure.getTransformedPoints3D();
@@ -92,6 +109,13 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     @Override
+    public void setFigureRotation(SimpleMatrix rotationMatrix) {
+        if(currentWorkingFigure != null){
+            currentWorkingFigure.setRotation(rotationMatrix);
+        }
+    }
+
+    @Override
     public void showBSplineInfo(int index) {
         if (figures.size() <= index){
             throw new IllegalArgumentException("Impossible! Size: " + figures.size() + " Index: " + index);
@@ -123,7 +147,22 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for(WorldObserver obs : worldObservers){
             obs.removeFigure(index);
         }
-        showBSplineInfo(figures.size() - 1);
+        if(figures.size() > 0){
+            showBSplineInfo(figures.size() - 1);
+        }
+    }
+
+    @Override
+    public void removeAllSplines() {
+        for(int i = 0; i < figures.size(); ++i){
+            for(BSplineObserver obs : bSplineObservers){
+                obs.removeSpline(0);
+            }
+            for(WorldObserver obs : worldObservers){
+                obs.removeFigure(0);
+            }
+        }
+        figures.clear();
     }
 
     @Override
@@ -153,17 +192,21 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
     @Override
     public void setSelectedFigure(int index) {
+        Point3D center;
         if (index == -1) {
             currentWorkingFigure = null;
+            center = new Point3D(shiftWorld.get(0, 3),
+                    shiftWorld.get(1, 3),
+                    shiftWorld.get(2, 3));
         }
         else{
             currentWorkingFigure = figures.get(index);
-            Point3D center = new Point3D(currentWorkingFigure.getShiftMatrix().get(0, 3),
+            center = new Point3D(currentWorkingFigure.getShiftMatrix().get(0, 3),
                     currentWorkingFigure.getShiftMatrix().get(1, 3),
                     currentWorkingFigure.getShiftMatrix().get(2, 3));
-            for(WorldObserver obs : worldObservers){
-                obs.setInfo(center);
-            }
+        }
+        for(WorldObserver obs : worldObservers){
+            obs.setInfo(center);
         }
     }
 
@@ -186,6 +229,16 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for(BSplineObserver obs : bSplineObservers){
             obs.openFrame();
         }
+    }
+
+    @Override
+    public List<BSplineObserver> getBSplineObserver() {
+        return bSplineObservers;
+    }
+
+    @Override
+    public List<WorldObserver> getWorldObserver() {
+        return worldObservers;
     }
 
     @Override

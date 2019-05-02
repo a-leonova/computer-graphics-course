@@ -92,7 +92,9 @@ public class SplinesListPanel extends JPanel {
     }
 
     public void removeSpline(int index){
-        mainList.remove(index);
+        JPanel panel = splines.get(index);
+        mainList.remove(panel);
+        splines.remove(index);
         validate();
         repaint();
     }

@@ -86,7 +86,7 @@ public class FigureSettingsPanel extends JPanel {
 
     public void removeFigure(int idx){
         figures.remove(idx);
-        box.remove(idx + 1);
+        box.removeItemAt(idx + 1);
     }
 
     public void renameFigure(String name, int idx){

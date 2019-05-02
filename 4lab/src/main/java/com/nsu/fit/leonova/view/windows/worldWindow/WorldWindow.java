@@ -44,7 +44,9 @@ public class WorldWindow extends JFrame implements WorldObserver {
     private JToolBar createToolBar() {
         JToolBar toolBar = new JToolBar();
         JButton settings = createButton(JButton.class, e -> worldController.settingsButtonPressed(),  "icons/icons8-table-of-content-16.png", "Create B-spline");
+        JButton openFile = createButton(JButton.class, e -> new OpenConfigFileHandler(worldController).openConfig(),  "icons/icons8-open-folder-16.png", "Open file");
         toolBar.add(settings);
+        toolBar.add(openFile);
         return toolBar;
     }
 

@@ -3,8 +3,8 @@ package com.nsu.fit.leonova.model;
 public class WorldParameters {
     private int zf = 200;
     private int zb = 2000;
-    private int sw = 200;
-    private int sh = 200;
+    private int sw = 500;
+    private int sh = 500;
 
     public WorldParameters() {
     }

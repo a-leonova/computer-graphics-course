@@ -22,6 +22,20 @@ public class Globals {
     private static final int ZF = 20;
     private static final int ZB = 100;
 
+    public static final int MIN_N = 5;
+    public static final int MIN_M = 5;
+    public static final int MIN_K = 2;
+
+    public static final double MIN_A = 0.0;
+    public static final double MIN_B = 0.1;
+    public static final double MIN_C = 0.0;
+    public static final double MIN_D = 0.1;
+    public static final double MAX_A = 0.9;
+    public static final double MAX_B = 1.0;
+    public static final double MAX_C = 6.18;
+    public static final double MAX_D = 6.28;
+
+
     //public static final SplineParameters SPLINE_PARAMETERS = new SplineParameters(N, M, K, A, B, C, D, new Color(255, 255, 0), SW, SH);
     public static final String FIRST_FIGURE_NAME = "Figure #0";
 

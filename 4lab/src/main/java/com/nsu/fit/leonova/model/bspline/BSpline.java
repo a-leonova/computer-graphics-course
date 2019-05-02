@@ -36,6 +36,14 @@ public class BSpline implements BSplineObservable {
     private List<Point2D> pointsToRotate = new ArrayList<>();
     private boolean correctPointsToRotate = false;
 
+    public BSpline(List<Point> pivots, SplineParameters parameters){
+        this.parameters = parameters;
+        for(Point p : pivots){
+            pivotPoints.add(intPointToDoublePoint(p));
+        }
+        createBSpline();
+    }
+
     public BSpline(SplineParameters parameters) {
         this.parameters = parameters;
         addPoint(new Point(20, 100));

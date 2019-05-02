@@ -2,10 +2,15 @@ package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.World3D;
+import com.nsu.fit.leonova.model.World3DImpl;
 import com.nsu.fit.leonova.model.WorldParameters;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
+import com.nsu.fit.leonova.observer.BSplineObserver;
+import com.nsu.fit.leonova.observer.WorldObserver;
 
 import java.awt.*;
+import java.io.File;
+import java.util.List;
 
 public class Controller implements BSplineController, WorldController{
     private World3D world3D;
@@ -86,7 +91,17 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void openButtonPressed(File file) {
+        FileManager fileManager = new FileManager(world3D);
+        world3D.removeAllSplines();
+        fileManager.openFile(file);
+        world3D.showSpline3D();
+    }
+
+    @Override
     public void showBSplineInfo(int index) {
         world3D.showBSplineInfo(index);
     }
+
+
 }
