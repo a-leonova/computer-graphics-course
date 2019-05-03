@@ -53,7 +53,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         for (Figure figure : figures) {
             Point3D[][] transformedPoints3D = figure.getTransformedPoints3D();
 
-            List<ConnectedPoints2D> connectedPoints2D = clipAndPerspective(transformedPoints3D, figure.getParameters().getM(),
+            List<ConnectedPoints2D> connectedPoints2D = findFigurePointsToDraw(transformedPoints3D, figure.getParameters().getM(),
                     figure.getParameters().getK(), figure.getPointsToRotateCount());
 
             graphics.setPaint(figure.getParameters().getColor());
@@ -61,7 +61,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
                 graphics.drawLine(pair.getA().x, pair.getA().y, pair.getB().x, pair.getB().y);
             }
         }
-
+        drawAxis(graphics);
         for (WorldObserver worldObserver : worldObservers) {
             worldObserver.setMainImage(image);
         }
@@ -288,7 +288,49 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         }
     }
 
-    private List<ConnectedPoints2D> clipAndPerspective(Point3D[][] points, int m, int k, int pointToRotateSize) {
+    private void drawAxis(Graphics2D graphics2D){
+        List<ConnectedPoints3D> connectedPoints3D = new ArrayList<>(3);
+        Point3D center = new Point3D(0, 0, 0);
+        Point3D axisX = new Point3D(1000000, 0, 0);
+        Point3D axisY = new Point3D(0, 1000000, 0);
+        Point3D axisZ = new Point3D(0, 0, 1000000);
+        connectedPoints3D.add(new ConnectedPoints3D(center, axisX));
+        connectedPoints3D.add(new ConnectedPoints3D(center, axisY));
+        connectedPoints3D.add(new ConnectedPoints3D(center, axisZ));
+        List<ConnectedPoints2D> points = clipAndTransform(connectedPoints3D);
+
+        if(points.size() == 3){
+            graphics2D.setPaint(Color.RED);
+            graphics2D.drawLine(points.get(0).getA().x, points.get(0).getA().y, points.get(0).getB().x, points.get(0).getB().y);
+            graphics2D.setPaint(Color.GREEN);
+            graphics2D.drawLine(points.get(1).getA().x, points.get(1).getA().y, points.get(1).getB().x, points.get(1).getB().y);
+            graphics2D.setPaint(Color.BLUE);
+            graphics2D.drawLine(points.get(2).getA().x, points.get(2).getA().y, points.get(2).getB().x, points.get(2).getB().y);
+        }
+    }
+
+    private List<ConnectedPoints2D> clipAndTransform(List<ConnectedPoints3D> connectedPoints3D){
+        shiftAndRotateWorld(connectedPoints3D);
+        Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
+        while (it.hasNext()) {
+            ConnectedPoints3D c = it.next();
+            Vector3D a = new Vector3D(c.getA().getX(), c.getA().getY(), c.getA().getZ());
+            Vector3D b = new Vector3D(c.getB().getX(), c.getB().getY(), c.getB().getZ());
+            boolean inCube = Utils.clipLineInCube(a, b, -worldParameters.getSw() / 2.0, worldParameters.getSw() / 2.0,
+                    -worldParameters.getSh() / 2.0, worldParameters.getSh() / 2.0,
+                    worldParameters.getZf(), worldParameters.getZb());
+            if (inCube) {
+                c.setA(new Point3D(a.get(0), a.get(1), a.get(2)));
+                c.setB(new Point3D(b.get(0), b.get(1), b.get(2)));
+            }
+            else {
+                it.remove();
+            }
+        }
+        return perspective(connectedPoints3D);
+    }
+
+    private List<ConnectedPoints2D> findFigurePointsToDraw(Point3D[][] points, int m, int k, int pointToRotateSize) {
         List<ConnectedPoints3D> connectedPoints3D = new ArrayList<>();
 
         for (int i = 1; i < pointToRotateSize; ++i) {
@@ -303,24 +345,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             }
         }
 
-        shiftAndRotateWorld(connectedPoints3D);
-
-        Iterator<ConnectedPoints3D> it = connectedPoints3D.iterator();
-        while (it.hasNext()) {
-            ConnectedPoints3D c = it.next();
-            Vector3D a = new Vector3D(c.getA().getX(), c.getA().getY(), c.getA().getZ());
-            Vector3D b = new Vector3D(c.getB().getX(), c.getB().getY(), c.getB().getZ());
-            boolean inCube = Utils.clipLineInCube(a, b, -worldParameters.getSw() / 2.0, worldParameters.getSw() / 2.0,
-                    -worldParameters.getSh() / 2.0, worldParameters.getSh() / 2.0,
-                    worldParameters.getZf(), worldParameters.getZb());
-            if (inCube) {
-                c.setA(new Point3D(a.get(0), a.get(1), a.get(2)));
-                c.setB(new Point3D(b.get(0), b.get(1), b.get(2)));
-            } else {
-                it.remove();
-            }
-        }
-        return perspective(connectedPoints3D);
+        return clipAndTransform(connectedPoints3D);
     }
 
     private List<ConnectedPoints2D> perspective(List<ConnectedPoints3D> connectedPoints3D) {
