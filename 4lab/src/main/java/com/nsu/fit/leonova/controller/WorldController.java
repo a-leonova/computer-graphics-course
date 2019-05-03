@@ -16,4 +16,5 @@ public interface WorldController {
     void setWorldParameters(WorldParameters wp);
 
     void openButtonPressed(File file);
+    void saveButtonPressed(File file);
 }

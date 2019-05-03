@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.model.bspline;
 
 import com.nsu.fit.leonova.model.Point2D;
+import com.nsu.fit.leonova.model.memento.BSplineMemento;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
 import org.ejml.simple.SimpleMatrix;
@@ -128,6 +129,14 @@ public class BSpline implements BSplineObservable {
         for (BSplineObserver observer : observers){
             observer.setBSplineParameters(parameters);
         }
+    }
+
+    public BSplineMemento getMemento(){
+        List<Point> pivots = new ArrayList<>();
+        for(Point2D p : pivotPoints){
+            pivots.add(doublePointToIntPoint(p));
+        }
+        return new BSplineMemento(pivots);
     }
 
     private void countPointsToRotate(){

@@ -2,6 +2,7 @@ package com.nsu.fit.leonova.view.windows.worldWindow;
 
 import com.nsu.fit.leonova.controller.WorldController;
 import com.nsu.fit.leonova.model.Point3D;
+import com.nsu.fit.leonova.model.WorldParameters;
 import com.nsu.fit.leonova.observer.WorldObserver;
 import com.nsu.fit.leonova.view.ImageManager;
 
@@ -31,7 +32,6 @@ public class WorldWindow extends JFrame implements WorldObserver {
         add(imageManager, BorderLayout.CENTER);
         add(figureSettingsPanel, BorderLayout.EAST);
         setJMenuBar(menuBar);
-        //setMinimumSize(new Dimension(Globals.MIN_FRAME_WIDTH, Globals.MIN_FRAME_HEIGHT));
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -45,8 +45,10 @@ public class WorldWindow extends JFrame implements WorldObserver {
         JToolBar toolBar = new JToolBar();
         JButton settings = createButton(JButton.class, e -> worldController.settingsButtonPressed(),  "icons/icons8-table-of-content-16.png", "Create B-spline");
         JButton openFile = createButton(JButton.class, e -> new OpenConfigFileHandler(worldController).openConfig(),  "icons/icons8-open-folder-16.png", "Open file");
+        JButton saveFile = createButton(JButton.class, e -> new SaveFileHandler(worldController).saveFile(),  "icons/icons8-save-16.png", "Save file");
         toolBar.add(settings);
         toolBar.add(openFile);
+        toolBar.add(saveFile);
         return toolBar;
     }
 
@@ -96,6 +98,11 @@ public class WorldWindow extends JFrame implements WorldObserver {
     @Override
     public void setInfo(Point3D figureCenter) {
         figureSettingsPanel.setInfo(figureCenter);
+    }
+
+    @Override
+    public void updateWorldParameters(WorldParameters worldParameters) {
+        figureSettingsPanel.updateWorldParameters(worldParameters);
     }
 
     private class MyMouseAdapter extends MouseAdapter {

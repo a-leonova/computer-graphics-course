@@ -1,13 +1,10 @@
 package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
-import com.nsu.fit.leonova.observer.BSplineObserver;
-import com.nsu.fit.leonova.observer.WorldObserver;
+import com.nsu.fit.leonova.model.memento.WorldMemento;
 import org.ejml.simple.SimpleMatrix;
 
 import java.awt.*;
-import java.util.List;
-
 
 public interface World3D {
     void showSpline3D();
@@ -37,8 +34,9 @@ public interface World3D {
 
     void settingsButtonPressed();
 
-    List<BSplineObserver> getBSplineObserver();
-    List<WorldObserver> getWorldObserver();
+    void updateWorldParameters();
+
+    WorldMemento getWorldMemento();
 
     void setBackgroundColor(Color backgroundColor);
     void setWorldRotation(SimpleMatrix worldRotation);

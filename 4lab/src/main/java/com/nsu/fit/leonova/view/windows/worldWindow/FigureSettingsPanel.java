@@ -79,6 +79,13 @@ public class FigureSettingsPanel extends JPanel {
         });
     }
 
+    public void updateWorldParameters(WorldParameters wp){
+        spinnerZf.setValue(wp.getZf());
+        spinnerZb.setValue(wp.getZb());
+        spinnerSw.setValue(wp.getSw());
+        spinnerSh.setValue(wp.getSh());
+    }
+
     public void addFigure(String name){
         figures.add(name);
         box.addItem(name);

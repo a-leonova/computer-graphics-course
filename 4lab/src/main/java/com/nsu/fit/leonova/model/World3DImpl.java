@@ -3,6 +3,8 @@ package com.nsu.fit.leonova.model;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
+import com.nsu.fit.leonova.model.memento.FigureMemento;
+import com.nsu.fit.leonova.model.memento.WorldMemento;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
 import com.nsu.fit.leonova.observer.WorldObservable;
@@ -44,8 +46,9 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     public void showSpline3D() {
         BufferedImage image = new BufferedImage(Globals.IMAGE_WIDTH, Globals.IMAGE_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D graphics = image.createGraphics();
+
         graphics.setPaint(backgroundColor);
-        graphics.drawRect(0, 0, image.getWidth(), image.getHeight());
+        graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
 
         for(Figure figure : figures){
             Point3D[][] transformedPoints3D = figure.getTransformedPoints3D();
@@ -232,13 +235,27 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
     }
 
     @Override
-    public List<BSplineObserver> getBSplineObserver() {
-        return bSplineObservers;
+    public void updateWorldParameters() {
+        for(WorldObserver obs : worldObservers){
+            obs.updateWorldParameters(worldParameters);
+        }
     }
 
     @Override
-    public List<WorldObserver> getWorldObserver() {
-        return worldObservers;
+    public WorldMemento getWorldMemento() {
+
+        List<FigureMemento> figureMementos = new ArrayList<>();
+        for(Figure figure : figures){
+            figureMementos.add(figure.getMemento());
+        }
+        Figure figure = figures.get(0);
+        SplineParameters splineParameters=  figure.getParameters();
+        double[][] rotation = new double[][]{
+                {worldRotation.get(0, 0), worldRotation.get(0, 1), worldRotation.get(0, 2)},
+                {worldRotation.get(1, 0), worldRotation.get(1, 1), worldRotation.get(1, 2)},
+                {worldRotation.get(2, 0), worldRotation.get(2, 1), worldRotation.get(2, 2)}};
+
+        return new WorldMemento(splineParameters, worldParameters, rotation, backgroundColor, figureMementos);
     }
 
     @Override

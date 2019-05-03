@@ -2,6 +2,8 @@ package com.nsu.fit.leonova.model;
 
 import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
+import com.nsu.fit.leonova.model.memento.BSplineMemento;
+import com.nsu.fit.leonova.model.memento.FigureMemento;
 import com.nsu.fit.leonova.observer.BSplineObservable;
 import com.nsu.fit.leonova.observer.BSplineObserver;
 import org.ejml.simple.SimpleMatrix;
@@ -106,6 +108,18 @@ public class Figure implements BSplineObservable {
     public void rotateForOY(double angle){
         rotationMatrix = MatrixGenerator.rotationMatrix4OY(angle).mult(rotationMatrix);
         isActualTransformedPoints3D = false;
+    }
+
+    public FigureMemento getMemento(){
+
+        int[] shift = new int[]{(int)(shiftMatrix.get(0, 3)), (int)(shiftMatrix.get(1, 3)), (int)(shiftMatrix.get(2, 3))};
+        BSplineMemento bSplineMemento = bSpline.getMemento();
+        double[][] rotation = new double[][]{
+                {rotationMatrix.get(0, 0), rotationMatrix.get(0, 1), rotationMatrix.get(0, 2)},
+                {rotationMatrix.get(1, 0), rotationMatrix.get(1, 1), rotationMatrix.get(1, 2)},
+                {rotationMatrix.get(2, 0), rotationMatrix.get(2, 1), rotationMatrix.get(2, 2)}};
+        return new FigureMemento(bSplineMemento, parameters.getColor(), shift, rotation);
+
     }
 
     private void countBSpline3D(){
