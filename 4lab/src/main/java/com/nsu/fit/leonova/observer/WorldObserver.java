@@ -1,7 +1,7 @@
 package com.nsu.fit.leonova.observer;
 
 import com.nsu.fit.leonova.model.Point3D;
-import com.nsu.fit.leonova.model.WorldParameters;
+import com.nsu.fit.leonova.model.world.WorldParameters;
 
 import java.awt.image.BufferedImage;
 

@@ -1,5 +1,6 @@
-package com.nsu.fit.leonova.model;
+package com.nsu.fit.leonova.model.world;
 
+import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.model.memento.WorldMemento;
 import org.ejml.simple.SimpleMatrix;

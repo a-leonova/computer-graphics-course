@@ -1,8 +1,8 @@
 package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Point3D;
-import com.nsu.fit.leonova.model.World3D;
-import com.nsu.fit.leonova.model.WorldParameters;
+import com.nsu.fit.leonova.model.world.World3D;
+import com.nsu.fit.leonova.model.world.WorldParameters;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 
 import java.awt.*;

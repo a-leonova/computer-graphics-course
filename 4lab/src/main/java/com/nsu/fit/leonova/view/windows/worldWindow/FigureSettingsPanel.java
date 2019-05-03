@@ -3,7 +3,7 @@ package com.nsu.fit.leonova.view.windows.worldWindow;
 import com.nsu.fit.leonova.controller.WorldController;
 import com.nsu.fit.leonova.globals.Globals;
 import com.nsu.fit.leonova.model.Point3D;
-import com.nsu.fit.leonova.model.WorldParameters;
+import com.nsu.fit.leonova.model.world.WorldParameters;
 
 import javax.swing.*;
 import java.awt.*;

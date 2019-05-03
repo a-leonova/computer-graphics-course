@@ -6,6 +6,8 @@ import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.model.memento.BSplineMemento;
 import com.nsu.fit.leonova.model.memento.FigureMemento;
 import com.nsu.fit.leonova.model.memento.WorldMemento;
+import com.nsu.fit.leonova.model.world.World3D;
+import com.nsu.fit.leonova.model.world.WorldParameters;
 import org.ejml.simple.SimpleMatrix;
 
 import java.awt.*;

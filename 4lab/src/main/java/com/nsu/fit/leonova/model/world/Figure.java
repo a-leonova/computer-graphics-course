@@ -1,5 +1,8 @@
-package com.nsu.fit.leonova.model;
+package com.nsu.fit.leonova.model.world;
 
+import com.nsu.fit.leonova.model.MatrixGenerator;
+import com.nsu.fit.leonova.model.Point2D;
+import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.bspline.BSpline;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.model.memento.BSplineMemento;
