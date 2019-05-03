@@ -17,4 +17,6 @@ public interface WorldController {
 
     void openButtonPressed(File file);
     void saveButtonPressed(File file);
+
+    void resetAngles();
 }

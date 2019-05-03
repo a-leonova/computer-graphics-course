@@ -38,6 +38,8 @@ public interface World3D {
 
     WorldMemento getWorldMemento();
 
+    void resetAngles();
+
     void setBackgroundColor(Color backgroundColor);
     void setWorldRotation(SimpleMatrix worldRotation);
 }

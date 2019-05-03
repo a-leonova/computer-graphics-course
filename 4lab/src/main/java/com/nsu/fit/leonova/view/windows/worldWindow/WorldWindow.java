@@ -46,9 +46,11 @@ public class WorldWindow extends JFrame implements WorldObserver {
         JButton settings = createButton(JButton.class, e -> worldController.settingsButtonPressed(),  "icons/icons8-table-of-content-16.png", "Create B-spline");
         JButton openFile = createButton(JButton.class, e -> new OpenConfigFileHandler(worldController).openConfig(),  "icons/icons8-open-folder-16.png", "Open file");
         JButton saveFile = createButton(JButton.class, e -> new SaveFileHandler(worldController).saveFile(),  "icons/icons8-save-16.png", "Save file");
+        JButton resetAngles = createButton(JButton.class, e -> worldController.resetAngles(),  "icons/icons8-measurement-tool-16.png", "Reset angles");
         toolBar.add(settings);
         toolBar.add(openFile);
         toolBar.add(saveFile);
+        toolBar.add(resetAngles);
         return toolBar;
     }
 

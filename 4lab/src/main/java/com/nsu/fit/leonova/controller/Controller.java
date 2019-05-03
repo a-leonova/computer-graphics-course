@@ -102,6 +102,11 @@ public class Controller implements BSplineController, WorldController{
     }
 
     @Override
+    public void resetAngles() {
+        world3D.resetAngles();
+    }
+
+    @Override
     public void showBSplineInfo(int index) {
         world3D.showBSplineInfo(index);
     }

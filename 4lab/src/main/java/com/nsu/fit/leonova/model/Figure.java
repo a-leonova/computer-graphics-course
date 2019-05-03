@@ -111,7 +111,6 @@ public class Figure implements BSplineObservable {
     }
 
     public FigureMemento getMemento(){
-
         int[] shift = new int[]{(int)(shiftMatrix.get(0, 3)), (int)(shiftMatrix.get(1, 3)), (int)(shiftMatrix.get(2, 3))};
         BSplineMemento bSplineMemento = bSpline.getMemento();
         double[][] rotation = new double[][]{
@@ -120,6 +119,11 @@ public class Figure implements BSplineObservable {
                 {rotationMatrix.get(2, 0), rotationMatrix.get(2, 1), rotationMatrix.get(2, 2)}};
         return new FigureMemento(bSplineMemento, parameters.getColor(), shift, rotation);
 
+    }
+
+    public void resetAngles(){
+        rotationMatrix = MatrixGenerator.identity4();
+        isActualTransformedPoints3D = false;
     }
 
     private void countBSpline3D(){
