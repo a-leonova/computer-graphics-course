@@ -5,6 +5,7 @@ import com.nsu.fit.leonova.model.Point3D;
 import com.nsu.fit.leonova.model.world.WorldParameters;
 import com.nsu.fit.leonova.observer.WorldObserver;
 import com.nsu.fit.leonova.view.ImageManager;
+import com.nsu.fit.leonova.view.windows.AboutWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class WorldWindow extends JFrame implements WorldObserver {
     private ImageManager imageManager;
     private WorldController worldController;
     private FigureSettingsPanel figureSettingsPanel;
+    private AboutWindow aboutWindow = new AboutWindow();
 
     public WorldWindow(int width, int height, WorldController worldController) throws HeadlessException {
         super("Wireframe");
@@ -47,10 +49,12 @@ public class WorldWindow extends JFrame implements WorldObserver {
         JButton openFile = createButton(JButton.class, e -> new OpenConfigFileHandler(worldController).openConfig(),  "icons/icons8-open-folder-16.png", "Open file");
         JButton saveFile = createButton(JButton.class, e -> new SaveFileHandler(worldController).saveFile(),  "icons/icons8-save-16.png", "Save file");
         JButton resetAngles = createButton(JButton.class, e -> worldController.resetAngles(),  "icons/icons8-measurement-tool-16.png", "Reset angles");
-        toolBar.add(settings);
+        JButton about = createButton(JButton.class, e -> aboutWindow.setVisible(true),  "icons/icons8-question-mark-in-a-chat-bubble-16.png", "About");
         toolBar.add(openFile);
         toolBar.add(saveFile);
         toolBar.add(resetAngles);
+        toolBar.add(settings);
+        toolBar.add(about);
         return toolBar;
     }
 
