@@ -9,7 +9,7 @@ import com.nsu.fit.leonova.view.windows.worldWindow.WorldWindow;
 public class Main {
     public static void main(String[] args) {
         World3DImpl world = new World3DImpl();
-        Controller controller = new Controller(world);
+        Controller controller = new Controller(world, world);
         BSplineWindow bSplineWindow = new BSplineWindow(controller);
         WorldWindow worldWindow = new WorldWindow(Globals.IMAGE_WIDTH, Globals.IMAGE_HEIGHT, controller);
 

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class World3DImpl implements World3D, WorldObservable, BSplineObservable {
+public class World3DImpl implements World3D, WorldObservable, BSplineObservable, InfoManager {
     private List<WorldObserver> worldObservers = new ArrayList<>();
     private List<BSplineObserver> bSplineObservers = new ArrayList<>();
     private List<Figure> figures = new ArrayList<>();
@@ -212,8 +212,14 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
     @Override
     public void setWorldParameters(WorldParameters wp) {
-        worldParameters = wp;
-        showSpline3D();
+        if(wp.getZf() < wp.getZb()){
+            worldParameters = wp;
+            showSpline3D();
+        }
+        else{
+            showError("Must be: zf < zb");
+            updateWorldParameters();
+        }
     }
 
     @Override
@@ -397,6 +403,13 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
 
             c.setA(new Point3D(coordinatesA.get(0, 0), coordinatesA.get(1, 0), coordinatesA.get(2, 0)));
             c.setB(new Point3D(coordinatesB.get(0, 0), coordinatesB.get(1, 0), coordinatesB.get(2, 0)));
+        }
+    }
+
+    @Override
+    public void showError(String message) {
+        for(WorldObserver obs : worldObservers){
+            obs.showError(message);
         }
     }
 }

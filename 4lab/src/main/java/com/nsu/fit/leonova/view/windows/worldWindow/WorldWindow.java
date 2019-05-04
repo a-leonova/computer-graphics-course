@@ -6,6 +6,7 @@ import com.nsu.fit.leonova.model.world.WorldParameters;
 import com.nsu.fit.leonova.observer.WorldObserver;
 import com.nsu.fit.leonova.view.ImageManager;
 import com.nsu.fit.leonova.view.windows.AboutWindow;
+import com.nsu.fit.leonova.view.windows.ErrorWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +74,7 @@ public class WorldWindow extends JFrame implements WorldObserver {
         world.add(resetAngles);
 
         JMenu aboutMenu = new JMenu("About");
-        JMenuItem about = createButton(JMenuItem.class, e -> aboutWindow.show(), "About");
+        JMenuItem about = createButton(JMenuItem.class, e -> aboutWindow.setVisible(true), "About");
         aboutMenu.add(about);
 
         menu.add(file);
@@ -129,6 +130,11 @@ public class WorldWindow extends JFrame implements WorldObserver {
     @Override
     public void updateWorldParameters(WorldParameters worldParameters) {
         figureSettingsPanel.updateWorldParameters(worldParameters);
+    }
+
+    @Override
+    public void showError(String message) {
+        new ErrorWindow(message).setVisible(true);
     }
 
     private class MyMouseAdapter extends MouseAdapter {

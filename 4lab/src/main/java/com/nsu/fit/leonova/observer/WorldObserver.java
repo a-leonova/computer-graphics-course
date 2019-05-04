@@ -13,5 +13,5 @@ public interface WorldObserver {
     void renameFigure(String name, int index);
     void setInfo(Point3D figureCenter);
     void updateWorldParameters(WorldParameters worldParameters);
-    //void changeCenter()
+    void showError(String message);
 }

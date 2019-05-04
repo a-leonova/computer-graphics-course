@@ -1,6 +1,7 @@
 package com.nsu.fit.leonova.controller;
 
 import com.nsu.fit.leonova.model.Point3D;
+import com.nsu.fit.leonova.model.world.InfoManager;
 import com.nsu.fit.leonova.model.world.World3D;
 import com.nsu.fit.leonova.model.world.WorldParameters;
 import com.nsu.fit.leonova.model.bspline.SplineParameters;
@@ -10,9 +11,11 @@ import java.io.File;
 
 public class Controller implements BSplineController, WorldController{
     private World3D world3D;
+    private InfoManager infoManager;
 
-    public Controller(World3D world3D) {
+    public Controller(World3D world3D, InfoManager infoManager) {
         this.world3D = world3D;
+        this.infoManager = infoManager;
     }
 
     @Override
@@ -88,7 +91,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void openButtonPressed(File file) {
-        FileManager fileManager = new FileManager(world3D);
+        FileManager fileManager = new FileManager(world3D, infoManager);
         world3D.removeAllSplines();
         fileManager.openFile(file);
         world3D.updateWorldParameters();
@@ -97,7 +100,7 @@ public class Controller implements BSplineController, WorldController{
 
     @Override
     public void saveButtonPressed(File file) {
-        FileManager fileManager = new FileManager(world3D);
+        FileManager fileManager = new FileManager(world3D, infoManager);
         fileManager.save(file);
     }
 

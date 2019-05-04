@@ -6,6 +6,7 @@ import com.nsu.fit.leonova.model.bspline.SplineParameters;
 import com.nsu.fit.leonova.model.memento.BSplineMemento;
 import com.nsu.fit.leonova.model.memento.FigureMemento;
 import com.nsu.fit.leonova.model.memento.WorldMemento;
+import com.nsu.fit.leonova.model.world.InfoManager;
 import com.nsu.fit.leonova.model.world.World3D;
 import com.nsu.fit.leonova.model.world.WorldParameters;
 import org.ejml.simple.SimpleMatrix;
@@ -17,12 +18,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FileManager {
-
     private double[] commonParametersArray;
     private World3D world3D;
+    private InfoManager infoManager;
 
-    public FileManager(World3D world3D) {
+
+    public FileManager(World3D world3D, InfoManager infoManager) {
         this.world3D = world3D;
+        this.infoManager = infoManager;
     }
 
     public void openFile(File file) {
@@ -43,7 +46,7 @@ public class FileManager {
             world3D.setWorldRotation(worldRotation);
 
         } catch (FileNotFoundException | IllegalArgumentException e) {
-//            infoManager.showError(e.getMessage());
+            infoManager.showError(e.getMessage());
         }
     }
 
