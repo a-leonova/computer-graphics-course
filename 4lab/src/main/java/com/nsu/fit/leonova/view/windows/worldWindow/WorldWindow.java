@@ -60,6 +60,26 @@ public class WorldWindow extends JFrame implements WorldObserver {
 
     private JMenuBar createMenuBar() {
         JMenuBar menu = new JMenuBar();
+        JMenu file = new JMenu("File");
+        JMenuItem openConfigs = createButton(JMenuItem.class, e -> new OpenConfigFileHandler(worldController).openConfig(), "Open configuration file");
+        JMenuItem saveFile = createButton(JMenuItem.class, e -> new SaveFileHandler(worldController).saveFile(), "Save file");
+        file.add(saveFile);
+        file.add(openConfigs);
+
+        JMenu world = new JMenu("World");
+        JMenuItem resetAngles = createButton(JMenuItem.class, e -> worldController.resetAngles(), "Reset angles");
+        JMenuItem settings = createButton(JMenuItem.class, e -> worldController.settingsButtonPressed(), "Settings");
+        world.add(settings);
+        world.add(resetAngles);
+
+        JMenu aboutMenu = new JMenu("About");
+        JMenuItem about = createButton(JMenuItem.class, e -> aboutWindow.show(), "About");
+        aboutMenu.add(about);
+
+        menu.add(file);
+        menu.add(world);
+        menu.add(aboutMenu);
+
         return menu;
     }
 
