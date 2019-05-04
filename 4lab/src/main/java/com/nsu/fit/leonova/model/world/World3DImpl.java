@@ -60,8 +60,9 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
             for (ConnectedPoints2D pair : connectedPoints2D) {
                 graphics.drawLine(pair.getA().x, pair.getA().y, pair.getB().x, pair.getB().y);
             }
+            drawAxis(graphics, figure.getAxis());
         }
-        drawAxis(graphics);
+        createAndDrawWorldAxis(graphics);
         for (WorldObserver worldObserver : worldObservers) {
             worldObserver.setMainImage(image);
         }
@@ -288,7 +289,7 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         }
     }
 
-    private void drawAxis(Graphics2D graphics2D){
+    private void createAndDrawWorldAxis(Graphics2D graphics2D){
         List<ConnectedPoints3D> connectedPoints3D = new ArrayList<>(3);
         Point3D center = new Point3D(0, 0, 0);
         Point3D axisX = new Point3D(1000000, 0, 0);
@@ -297,6 +298,10 @@ public class World3DImpl implements World3D, WorldObservable, BSplineObservable 
         connectedPoints3D.add(new ConnectedPoints3D(center, axisX));
         connectedPoints3D.add(new ConnectedPoints3D(center, axisY));
         connectedPoints3D.add(new ConnectedPoints3D(center, axisZ));
+        drawAxis(graphics2D, connectedPoints3D);
+    }
+
+    private void drawAxis(Graphics2D graphics2D, List<ConnectedPoints3D> connectedPoints3D){
         List<ConnectedPoints2D> points = clipAndTransform(connectedPoints3D);
 
         if(points.size() == 3){

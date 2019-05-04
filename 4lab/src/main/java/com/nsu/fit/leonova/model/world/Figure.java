@@ -1,5 +1,6 @@
 package com.nsu.fit.leonova.model.world;
 
+import com.nsu.fit.leonova.model.ConnectedPoints3D;
 import com.nsu.fit.leonova.model.MatrixGenerator;
 import com.nsu.fit.leonova.model.Point2D;
 import com.nsu.fit.leonova.model.Point3D;
@@ -12,6 +13,7 @@ import com.nsu.fit.leonova.observer.BSplineObserver;
 import org.ejml.simple.SimpleMatrix;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Figure implements BSplineObservable {
@@ -24,6 +26,8 @@ public class Figure implements BSplineObservable {
     private boolean isActualSplinePoints3D = false;
     private Point3D transformedPoints3D[][];
     private boolean isActualTransformedPoints3D = false;
+
+    private List<ConnectedPoints3D> axis = new ArrayList<>(3);
 
     public Figure(List<BSplineObserver> obs, int index) {
         parameters.setSplineName("Figure #" + index);
@@ -41,6 +45,11 @@ public class Figure implements BSplineObservable {
             useTransformation();
         }
         return transformedPoints3D;
+    }
+
+    public List<ConnectedPoints3D> getAxis() {
+        createAxis();
+        return axis;
     }
 
     public void changeScale(double ds){
@@ -129,6 +138,16 @@ public class Figure implements BSplineObservable {
         isActualTransformedPoints3D = false;
     }
 
+    @Override
+    public void addObserver(BSplineObserver obs) {
+        bSpline.addObserver(obs);
+    }
+
+    @Override
+    public void removeObserver(BSplineObserver obs) {
+        bSpline.removeObserver(obs);
+    }
+
     private void countBSpline3D(){
         List<Point2D> points = bSpline.getPointsToRotate();
         splinePoints3D = new Point3D[points.size()][parameters.getM()];
@@ -164,13 +183,33 @@ public class Figure implements BSplineObservable {
         isActualTransformedPoints3D = true;
     }
 
-    @Override
-    public void addObserver(BSplineObserver obs) {
-        bSpline.addObserver(obs);
-    }
+    private void createAxis(){
+        axis.clear();
+        Point3D center = new Point3D(0, 0, 0);
+        Point3D axisX = new Point3D(50, 0, 0);
+        Point3D axisY = new Point3D(0, 50, 0);
+        Point3D axisZ = new Point3D(0, 0, 50);
+        axis.add(new ConnectedPoints3D(center, axisX));
+        axis.add(new ConnectedPoints3D(center, axisY));
+        axis.add(new ConnectedPoints3D(center, axisZ));
 
-    @Override
-    public void removeObserver(BSplineObserver obs) {
-        bSpline.removeObserver(obs);
+        for (ConnectedPoints3D c : axis) {
+            SimpleMatrix coordinatesA = new SimpleMatrix(new double[][]{{c.getA().getX()},
+                    {c.getA().getY()},
+                    {c.getA().getZ()},
+                    {1}});
+            SimpleMatrix coordinatesB = new SimpleMatrix(new double[][]{{c.getB().getX()},
+                    {c.getB().getY()},
+                    {c.getB().getZ()},
+                    {1}});
+
+            coordinatesA = rotationMatrix.mult(coordinatesA);
+            coordinatesB = rotationMatrix.mult(coordinatesB);
+            coordinatesA = shiftMatrix.mult(coordinatesA);
+            coordinatesB = shiftMatrix.mult(coordinatesB);
+
+            c.setA(new Point3D(coordinatesA.get(0, 0), coordinatesA.get(1, 0), coordinatesA.get(2, 0)));
+            c.setB(new Point3D(coordinatesB.get(0, 0), coordinatesB.get(1, 0), coordinatesB.get(2, 0)));
+        }
     }
 }
